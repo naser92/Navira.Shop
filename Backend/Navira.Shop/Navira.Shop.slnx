@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/Api/">
+    <Project Path="Navira.Shop.Api/Navira.Shop.Api.csproj" />
+  </Folder>
+  <Folder Name="/Core/">
+    <Project Path="Navira.Shop.Core.Bus/Navira.Shop.Core.Bus.csproj" />
+    <Project Path="Navira.Shop.Core.Caching/Navira.Shop.Core.Caching.csproj" />
+    <Project Path="Navira.Shop.Core.Configuration/Navira.Shop.Core.Configuration.csproj" />
+    <Project Path="Navira.Shop.Core.Extensions/Navira.Shop.Core.Extensions.csproj" />
+    <Project Path="Navira.Shop.Core.Infrastructure/Navira.Shop.Core.Infrastructure.csproj" />
+    <Project Path="Navira.Shop.Core.Ioc/Navira.Shop.Core.Ioc.csproj" />
+    <Project Path="Navira.Shop.Core.Mapper/Navira.Shop.Core.Mapper.csproj" />
+    <Project Path="Navira.Shop.Core.Persistence.EF/Navira.Shop.Core.Persistence.EF.csproj" />
+    <Project Path="Navira.Shop.Core.Security/Navira.Shop.Core.Security.csproj" />
+    <Project Path="Navira.Shop.Core.Web/Navira.Shop.Core.Web.csproj" />
+    <Project Path="Navira.Shop.Core/Navira.Shop.Core.csproj" />
+    <Project Path="NaviraShop.Core.Mq/NaviraShop.Core.Mq.csproj" />
+  </Folder>
+</Solution>

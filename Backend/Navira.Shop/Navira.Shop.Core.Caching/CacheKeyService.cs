@@ -1,0 +1,179 @@
+﻿using Navira.Shop.Core.Configuration;
+using Navira.Shop.Core.Entity;
+using Navira.Shop.Core.Extensions;
+using System.Globalization;
+using System.Text;
+
+namespace Navira.Shop.Core.Caching
+{
+    /// <summary>
+    /// Represents the default cache key service implementation
+    /// </summary>
+    public abstract partial class CacheKeyService
+    {
+        #region Constants
+
+        /// <summary>
+        /// Gets an algorithm used to create the hash value of identifiers need to cache
+        /// </summary>
+        private string HashAlgorithm => "SHA1";
+        private string cacheKeyPrefix = "";
+
+        #endregion
+
+        #region Fields
+
+        protected readonly AppSettings _appSettings;
+
+        #endregion
+
+        #region Ctor
+
+        protected CacheKeyService(AppSettings appSettings)
+        {
+            _appSettings = appSettings;
+            cacheKeyPrefix = _appSettings.CacheConfig.CacheKeyPrefix;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Prepare the cache key prefix
+        /// </summary>
+        /// <param name="prefix">Cache key prefix</param>
+        /// <param name="prefixParameters">Parameters to create cache key prefix</param>
+        protected virtual string PrepareKeyPrefix(string prefix, params object[] prefixParameters)
+        {
+            var key = $"{prefix}";
+            return prefixParameters?.Any() ?? false
+                ? string.Format(key, prefixParameters.Select(CreateCacheKeyParameters).ToArray())
+                : key;
+        }
+
+        /// <summary>
+        /// Create the hash value of the passed identifiers
+        /// </summary>
+        /// <param name="ids">Collection of identifiers</param>
+        /// <returns>String hash value</returns>
+        protected virtual string CreateIdsHash<T>(IEnumerable<T> ids)
+        {
+            var identifiers = ids.ToList();
+
+            if (!identifiers.Any())
+                return string.Empty;
+
+            var identifiersString = string.Join(", ", identifiers.OrderBy(id => id));
+            return HashHelper.CreateHash(Encoding.UTF8.GetBytes(identifiersString), HashAlgorithm);
+        }
+
+        /// <summary>
+        /// Converts an object to cache parameter
+        /// </summary>
+        /// <param name="parameter">Object to convert</param>
+        /// <returns>Cache parameter</returns>
+        protected virtual object CreateCacheKeyParameters(object parameter)
+        {
+            return parameter switch
+            {
+                null => "null",
+                IEnumerable<Guid> ids => CreateIdsHash(ids),
+                IEnumerable<int> ids => CreateIdsHash(ids),
+                IEnumerable<IEntity<Guid>> entities => CreateIdsHash(entities.Select(entity => entity.Id)),
+                IEnumerable<IEntity<int>> entities => CreateIdsHash(entities.Select(entity => entity.Id)),
+                IEntity<Guid> entity => entity.Id,
+                IEntity<int> entity => entity.Id,
+                decimal param => param.ToString(CultureInfo.InvariantCulture),
+                _ => parameter
+            };
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Create a copy of cache key and fills it by passed parameters
+        /// </summary>
+        /// <param name="cacheKey">Initial cache key</param>
+        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
+        /// <returns>Cache key</returns>
+        public virtual CacheKey PrepareKey(CacheKey cacheKey, params object[] cacheKeyParameters)
+        {
+            return cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
+        }
+
+        /// <summary>
+        /// Create a copy of cache key using the default cache time and fills it by passed parameters
+        /// </summary>
+        /// <param name="cacheKey">Initial cache key</param>
+        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
+        /// <returns>Cache key</returns>
+        public virtual CacheKey PrepareKeyForDefaultCache(CacheKey cacheKey, params object[] cacheKeyParameters)
+        {
+            var key = cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
+
+            key.CacheTime = _appSettings.CacheConfig.DefaultCacheTime;
+
+            return key;
+        }
+
+        /// <summary>
+        /// Create a copy of cache key using the short cache time and fills it by passed parameters
+        /// </summary>
+        /// <param name="cacheKey">Initial cache key</param>
+        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
+        /// <returns>Cache key</returns>
+        public virtual CacheKey PrepareKeyForShortTermCache(CacheKey cacheKey, params object[] cacheKeyParameters)
+        {
+            var key = cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
+
+            key.CacheTime = _appSettings.CacheConfig.ShortTermCacheTime;
+
+            return key;
+        }
+
+        /// <summary>
+        /// Create a copy of cache key and fills it by passed parameters
+        /// </summary>
+        /// <param name="cacheKey">Initial cache key</param>
+        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
+        /// <returns>Cache key</returns>
+        public virtual CacheKey PrepareKeyWithDefaultPrefix(CacheKey cacheKey, params object[] cacheKeyParameters)
+        {
+            return cacheKey.Create(cacheKeyPrefix, CreateCacheKeyParameters, cacheKeyParameters);
+        }
+
+        /// <summary>
+        /// Create a copy of cache key using the default cache time and fills it by passed parameters
+        /// </summary>
+        /// <param name="cacheKey">Initial cache key</param>
+        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
+        /// <returns>Cache key</returns>
+        public virtual CacheKey PrepareKeyWithDefaultPrefixForDefaultCache(CacheKey cacheKey, params object[] cacheKeyParameters)
+        {
+            var key = cacheKey.Create(cacheKeyPrefix, CreateCacheKeyParameters, cacheKeyParameters);
+
+            key.CacheTime = _appSettings.CacheConfig.DefaultCacheTime;
+
+            return key;
+        }
+
+        /// <summary>
+        /// Create a copy of cache key using the short cache time and fills it by passed parameters
+        /// </summary>
+        /// <param name="cacheKey">Initial cache key</param>
+        /// <param name="cacheKeyParameters">Parameters to create cache key</param>
+        /// <returns>Cache key</returns>
+        public virtual CacheKey PrepareKeyWithDefaultPrefixForShortTermCache(CacheKey cacheKey, params object[] cacheKeyParameters)
+        {
+            var key = cacheKey.Create(cacheKeyPrefix, CreateCacheKeyParameters, cacheKeyParameters);
+
+            key.CacheTime = _appSettings.CacheConfig.ShortTermCacheTime;
+
+            return key;
+        }
+        #endregion
+    }
+}

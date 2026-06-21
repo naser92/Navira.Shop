@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="FluentValidation" Version="12.1.1" />
+	  <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
+	  <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.4" />
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.3.0" />
+	  <PackageReference Include="AspNetCore.HealthChecks.RabbitMQ" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Navira.Shop.Core.Configuration\Navira.Shop.Core.Configuration.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core.Infrastructure\Navira.Shop.Core.Infrastructure.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core.Ioc\Navira.Shop.Core.Ioc.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core\Navira.Shop.Core.csproj" />
+  </ItemGroup>
+
+</Project>

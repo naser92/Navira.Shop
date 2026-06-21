@@ -1,0 +1,6 @@
+@Navira.Shop.Api_HostAddress = http://localhost:5210
+
+GET {{Navira.Shop.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

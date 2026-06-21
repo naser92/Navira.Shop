@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="AspNetCore.Scalar" Version="1.2.0" />
+	  <PackageReference Include="DevExtreme.AspNet.Data" Version="5.1.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.10" />
+	  <PackageReference Include="RestEase" Version="1.6.4" />
+	  <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.10" />
+	  <PackageReference Include="Scalar.AspNetCore" Version="2.8.11" />
+	  <PackageReference Include="Dapper" Version="2.1.66" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Navira.Shop.Core.Bus\Navira.Shop.Core.Bus.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core.Caching\Navira.Shop.Core.Caching.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core.Configuration\Navira.Shop.Core.Configuration.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core.Infrastructure\Navira.Shop.Core.Infrastructure.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core.Persistence.EF\Navira.Shop.Core.Persistence.EF.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core.Security\Navira.Shop.Core.Security.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core\Navira.Shop.Core.csproj" />
+  </ItemGroup>
+
+</Project>
