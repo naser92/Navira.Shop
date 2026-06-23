@@ -11,6 +11,7 @@ namespace Navira.Shop.Core.Configuration
         public CacheConfig CacheConfig { get; set; } = new();
         public RedisConfig RedisConfig { get; set; } = new();
         public List<string> IgnoreCheckPath { get; set; } = new();
+        public RabbitMQConfig RabbitMQ { get; set; } = new();
         public IDictionary<string, string> Values { get; set; }
         public string GetValue(string name)
         {

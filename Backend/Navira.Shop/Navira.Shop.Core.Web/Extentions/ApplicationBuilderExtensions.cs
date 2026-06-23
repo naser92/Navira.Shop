@@ -6,7 +6,6 @@ using Navira.Shop.Core.Caching;
 using Navira.Shop.Core.Configuration;
 using Navira.Shop.Core.Extensions;
 using Navira.Shop.Core.Infrastructure;
-using NaviraShop.Core.Mq;
 using Scalar.AspNetCore;
 
 namespace Navira.Shop.Core.Web
@@ -20,7 +19,7 @@ namespace Navira.Shop.Core.Web
             var staticCacheManager = serviceprovider.GetRequiredService<IStaticCacheManager>();
             var appSettings = serviceprovider.GetRequiredService<AppSettings>();
             var typeFinder = serviceprovider.GetRequiredService<ITypeFinder>();
-            var publisher = serviceprovider.GetRequiredService<IPublisher>();
+            // var publisher = serviceprovider.GetRequiredService<IPublisher>();
 
 
             if (appSettings?.Scalar?.Enabled == true)
@@ -127,7 +126,7 @@ namespace Navira.Shop.Core.Web
             //    }
             //});
             app.CallAppConfigs(typeFinder, appSettings);
-            publisher.Log($"{appSettings?.SystemInfo?.Name} started ");
+            //publisher.Log($"{appSettings?.SystemInfo?.Name} started ");
             return app;
         }
 

@@ -16,6 +16,7 @@ using Navira.Shop.Core.Mapper;
 using Navira.Shop.Core.Persistence.EF;
 using Navira.Shop.Core.Security;
 using Navira.Shop.Core.Service;
+using NaviraShop.Core.Mq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Globalization;
@@ -49,6 +50,9 @@ namespace Navira.Shop.Core.Web
                   options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                   options.SerializerSettings.Formatting = Formatting.Indented;
               });
+
+            if (builder.Environment.IsNotNull())
+                GlobalData.DefaultFileProvider = new CoreFileProvider(builder.Environment.ContentRootPath, builder.Environment.WebRootPath);
 
             // تنظیم محدودیت حجم فرم‌ها
             serviceCollection.Configure<FormOptions>(options =>
@@ -122,13 +126,14 @@ namespace Navira.Shop.Core.Web
             ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("fa");
             serviceCollection.Register(typeFinder, typeof(AbstractValidator<>), ServiceLifetime.Singleton);
 
-            //serviceCollection.AddMq();
-            serviceCollection.RegisterDependencyes(typeFinder, appSettings);
+            serviceCollection.AddSingleton<IPublisher, Publisher>();
+            serviceCollection.AddSingleton<IMessageFactory, MessageFactory>();
+            //serviceCollection.RegisterDependencyes(typeFinder, appSettings);
 
             serviceCollection.RegisterMapConfigs(typeFinder);
 
 
-            //serviceCollection.ConfigMassTransit(appSettings);
+            serviceCollection.ConfigMassTransit(appSettings);
 
             //serviceCollection.AddScoped<UserActivityMonitor>();
             return serviceCollection;
