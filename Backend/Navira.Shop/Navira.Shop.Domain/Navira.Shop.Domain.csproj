@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Class1.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Navira.Shop.Core.Domain\Navira.Shop.Core.Domain.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core\Navira.Shop.Core.csproj" />
+  </ItemGroup>
+
 </Project>

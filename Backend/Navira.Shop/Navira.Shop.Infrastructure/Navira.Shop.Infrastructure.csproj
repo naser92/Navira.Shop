@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Navira.Shop.Core.Bus\Navira.Shop.Core.Bus.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core\Navira.Shop.Core.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Domain\Navira.Shop.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

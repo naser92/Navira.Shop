@@ -3,6 +3,7 @@
     <Project Path="Navira.Shop.Core.Bus/Navira.Shop.Core.Bus.csproj" />
     <Project Path="Navira.Shop.Core.Caching/Navira.Shop.Core.Caching.csproj" />
     <Project Path="Navira.Shop.Core.Configuration/Navira.Shop.Core.Configuration.csproj" />
+    <Project Path="Navira.Shop.Core.Domain/Navira.Shop.Core.Domain.csproj" Id="8fc2d907-f44b-48cf-a84b-9f1026f1e6f5" />
     <Project Path="Navira.Shop.Core.Extensions/Navira.Shop.Core.Extensions.csproj" />
     <Project Path="Navira.Shop.Core.Infrastructure/Navira.Shop.Core.Infrastructure.csproj" />
     <Project Path="Navira.Shop.Core.Ioc/Navira.Shop.Core.Ioc.csproj" />

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GreenPipes" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Navira.Shop.Core.Extensions\Navira.Shop.Core.Extensions.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core.Mapper\Navira.Shop.Core.Mapper.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core.Security\Navira.Shop.Core.Security.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core\Navira.Shop.Core.csproj" />
+  </ItemGroup>
+
+</Project>
