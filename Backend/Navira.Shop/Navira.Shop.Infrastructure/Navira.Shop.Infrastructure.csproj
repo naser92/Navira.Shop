@@ -7,9 +7,36 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Catalog\Repositories\CategoryRepositorydel.cs" />
+    <Compile Remove="Persistence\EfUnitOfWork.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Navira.Shop.Application\Navira.Shop.Application.csproj" />
     <ProjectReference Include="..\Navira.Shop.Core.Bus\Navira.Shop.Core.Bus.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core.Domain\Navira.Shop.Core.Domain.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core.Persistence.EF\Navira.Shop.Core.Persistence.EF.csproj" />
     <ProjectReference Include="..\Navira.Shop.Core\Navira.Shop.Core.csproj" />
     <ProjectReference Include="..\Navira.Shop.Domain\Navira.Shop.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Catalog\Repositories\" />
   </ItemGroup>
 
 </Project>

@@ -51,11 +51,11 @@ namespace Navira.Shop.Domain.Catalog.Entities
 
         internal void Activate() => IsActive = true;
 
-        internal void SetAttributeValue(ProductVariantAttributeValue value)
-        {
-            _attributeValues.RemoveAll(v => v.ProductAttributeId == value.ProductAttributeId);
-            _attributeValues.Add(value);
-        }
+        //internal void SetAttributeValue(ProductVariantAttributeValue value)
+        //{
+        //    _attributeValues.RemoveAll(v => v.ProductAttributeId == value.ProductAttributeId);
+        //    _attributeValues.Add(value);
+        //}
     }
 
 }

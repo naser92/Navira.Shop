@@ -14,7 +14,7 @@ namespace Navira.Shop.Domain.Catalog.Entities
     public sealed class Product : AggregateRoot<int>
     {
         private readonly List<ProductVariant> _variants = new();
-        private readonly List<ProductAttributeValue> _attributeValues = new();
+        //private readonly List<ProductAttributeValue> _attributeValues = new();
 
         public string Name { get; private set; } = default!;
         public string Slug { get; private set; } = default!;
@@ -32,7 +32,7 @@ namespace Navira.Shop.Domain.Catalog.Entities
         public DateTime? UpdatedOnUtc { get; private set; }
 
         public IReadOnlyCollection<ProductVariant> Variants => _variants.AsReadOnly();
-        public IReadOnlyCollection<ProductAttributeValue> AttributeValues => _attributeValues.AsReadOnly();
+        //public IReadOnlyCollection<ProductAttributeValue> AttributeValues => _attributeValues.AsReadOnly();
 
         // EF materialization constructor. Kept private so application code can't bypass
         // invariants by `new Product()`-ing an empty shell; configure EF to use this via
@@ -63,7 +63,7 @@ namespace Navira.Shop.Domain.Catalog.Entities
                 throw new DomainException("Product must belong to a valid category.");
 
             var product = new Product(name.Trim(), slug.Trim().ToLowerInvariant(), categoryId, brand);
-            product.Raise(new ProductCreatedEvent(product.Id, product.Name));
+            //product.Raise(new ProductCreatedEvent(product.Id, product.Name));
             return product;
         }
 
@@ -103,7 +103,7 @@ namespace Navira.Shop.Domain.Catalog.Entities
 
             var variant = ProductVariant.Create(Id, sku, price, weightKg, costPrice);
             _variants.Add(variant);
-            Raise(new VariantAddedToProductEvent(Id, variant.Id, sku.ToString()));
+            //Raise(new VariantAddedToProductEvent(Id, variant.Id, sku.ToString()));
             Touch();
             return variant;
         }
@@ -113,7 +113,7 @@ namespace Navira.Shop.Domain.Catalog.Entities
             var variant = GetVariantOrThrow(variantId);
             var oldPrice = variant.Price;
             variant.ChangePrice(newPrice);
-            Raise(new ProductPriceChangedEvent(Id, variantId, oldPrice.Amount, newPrice.Amount));
+            //Raise(new ProductPriceChangedEvent(Id, variantId, oldPrice.Amount, newPrice.Amount));
             Touch();
         }
 
@@ -129,12 +129,12 @@ namespace Navira.Shop.Domain.Catalog.Entities
         /// e.g. Material = Ceramic. Variant-defining attributes (Color, Capacity) belong on
         /// ProductVariant.SetAttributeValue instead.
         /// </summary>
-        public void SetAttributeValue(ProductAttributeValue value)
-        {
-            _attributeValues.RemoveAll(v => v.ProductAttributeId == value.ProductAttributeId);
-            _attributeValues.Add(value);
-            Touch();
-        }
+        //public void SetAttributeValue(ProductAttributeValue value)
+        //{
+        //    _attributeValues.RemoveAll(v => v.ProductAttributeId == value.ProductAttributeId);
+        //    _attributeValues.Add(value);
+        //    Touch();
+        //}
 
         public void Discontinue()
         {
@@ -144,7 +144,7 @@ namespace Navira.Shop.Domain.Catalog.Entities
             foreach (var variant in _variants)
                 variant.Deactivate();
 
-            Raise(new ProductDiscontinuedEvent(Id));
+            //Raise(new ProductDiscontinuedEvent(Id));
             Touch();
         }
 
