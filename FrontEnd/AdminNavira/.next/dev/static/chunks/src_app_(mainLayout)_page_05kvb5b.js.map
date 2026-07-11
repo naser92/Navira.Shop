@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/projects/Navira.Shop/FrontEnd/AdminNavira/src/app/%28mainLayout%29/page.js"],"sourcesContent":["'use client'\nimport React from 'react'\nimport { Col } from 'reactstrap'\n\nconst HomePage = () => {\n    return (\n        <Col sm=\"12\">\n            <h1>Welcome </h1>\n            <p>Your admin dashboard is up and running.</p>\n        </Col>\n    )\n}\n\nexport default HomePage\n"],"names":["HomePage","sm"],"mappings":";;;;;AACA;AACA;AAFA;;;;AAIA,MAAMA,WAAW;IACb,qBACI,6LAAC,oLAAG;QAACC,IAAG;;0BACJ,6LAAC;0BAAG;;;;;;0BACJ,6LAAC;0BAAE;;;;;;;;;;;;AAGf;KAPMD;uCASSA"}}]
+}

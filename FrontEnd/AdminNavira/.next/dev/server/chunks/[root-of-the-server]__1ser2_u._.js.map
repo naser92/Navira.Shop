@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 70, "column": 0}, "map": {"version":3,"sources":["file:///C:/projects/Navira.Shop/FrontEnd/AdminNavira/src/proxy.js"],"sourcesContent":["export async function proxy(request) {\r\n    \r\n}\r\n\r\nexport const config = {\r\n    matcher : [\r\n        \"/\"\r\n    ]\r\n}"],"names":["proxy","request","config","matcher"],"mappings":";;;;;;AAAO,eAAeA,MAAMC,OAAO,GAEnC;AAEO,MAAMC,SAAS;IAClBC,SAAU;QACN;KACH;AACL"}}]
+}
