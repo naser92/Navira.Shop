@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Navira.Shop.Core.Extensions;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+
 
 namespace Navira.Shop.Core.Security
 {
@@ -14,67 +16,46 @@ namespace Navira.Shop.Core.Security
         }
 
         public IHttpContextAccessor HttpContextAccessor => _httpContextAccessor;
-        public Guid UserId => GetCurrentUserInfo().UserId.Value;
+        public Guid UserId => GetCurrentUserInfo().UserId ?? Guid.Empty;
         public bool IsAdmin => GetCurrentUserInfo().IsAdmin;
-        public Guid? TraceId => GetCurrentUserInfo()?.TraceId;
-        public int? UserType => GetCurrentUserInfo()?.UserType;
+        public Guid? TraceId => GetCurrentUserInfo().TraceId;
+        public int? UserType => GetCurrentUserInfo().UserType;
 
         public UserInfoDto GetCurrentUserInfo()
         {
-            TokenSensitiveData sensitiveData = null;
-            JwtSecurityToken claimsIdentity = null;
+            var user = _httpContextAccessor.HttpContext?.User;
 
-            var token = GrtTokenFromHeader();
-            if (string.IsNullOrWhiteSpace(token))
-                token = GrtTokenQuery();
-            //if (token.IsNotNullOrEmpty())
-            //    token = GrtTokenFromBody();
-            if (!string.IsNullOrWhiteSpace(token))
-            {
-                var handler = new JwtSecurityTokenHandler();
-                if (handler.CanReadToken(token))
-                {
-                    claimsIdentity = handler.ReadJwtToken(token);
-                }
-            }
-
-
-            if ((claimsIdentity?.Claims).IsNullOrEmpty())
+            if (user?.Identity?.IsAuthenticated != true)
                 return new UserInfoDto();
 
-            var sensitiveDataContent = claimsIdentity.Claims.SingleOrDefault(c => c.Type == "sd")?.Value;
-            var Jti = claimsIdentity.Claims.SingleOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
-            var userName = claimsIdentity.Claims.SingleOrDefault(c => c.Type == JwtRegisteredClaimNames.Name)?.Value;
+            var userInfo = new UserInfoDto();
 
-            sensitiveData = TokenSensitiveData.Decrypt(sensitiveDataContent);
+            var userIdValue =
+                user.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
+                user.FindFirst(JwtRegisteredClaimNames.Sub)?.Value ??
+                user.FindFirst("sub")?.Value;
 
+            if (!string.IsNullOrWhiteSpace(userIdValue))
+                userInfo.UserId = userIdValue.TryParseGuid();
 
-            return new UserInfoDto()
-            {
-                UserId = sensitiveData.UserId,
-                IsAdmin = sensitiveData.IsAdmin,
-                UserType = sensitiveData.UserType,
-                TraceId = Jti.TryParseGuid(),
+            var traceIdValue =
+                user.FindFirst(JwtRegisteredClaimNames.Jti)?.Value ??
+                user.FindFirst("jti")?.Value;
 
+            if (!string.IsNullOrWhiteSpace(traceIdValue))
+                userInfo.TraceId = traceIdValue.TryParseGuid();
 
-            };
+            var userTypeValue = user.FindFirst("user_type")?.Value;
+            if (!string.IsNullOrWhiteSpace(userTypeValue) && int.TryParse(userTypeValue, out var userType))
+                userInfo.UserType = userType;
+
+            userInfo.IsAdmin =
+                user.IsInRole("admin") ||
+                user.Claims.Any(x => x.Type == ClaimTypes.Role && x.Value == "admin") ||
+                user.Claims.Any(x => x.Type == "role" && x.Value == "admin");
+
+            return userInfo;
         }
-
-        private string GrtTokenQuery()
-        {
-            return _httpContextAccessor.HttpContext?.Request?.Query["token"];
-        }
-        private string GrtTokenFromHeader()
-        {
-            string authorizationHeader = _httpContextAccessor.HttpContext?.Request?.Headers["Authorization"];
-            if (authorizationHeader != null && authorizationHeader.StartsWith("Bearer "))
-            {
-                return authorizationHeader.Substring("Bearer ".Length);
-                // Process the token
-            }
-            return null;
-        }
-
 
     }
 }

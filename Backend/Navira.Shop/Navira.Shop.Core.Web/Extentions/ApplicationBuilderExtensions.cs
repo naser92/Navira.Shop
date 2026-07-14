@@ -67,20 +67,23 @@ namespace Navira.Shop.Core.Web
 
             //Console.WriteLine($"-- UseRouting configured");
 
-            if (!appSettings.Issuer.IsNullOrWhiteSpace() &&
-               !appSettings.Audience.IsNullOrWhiteSpace() &&
-               !appSettings.SigningKey.IsNullOrWhiteSpace())
+            if (appSettings?.KeycloakConfig != null &&
+    !string.IsNullOrWhiteSpace(appSettings.KeycloakConfig.BaseUrl) &&
+    !string.IsNullOrWhiteSpace(appSettings.KeycloakConfig.Realm) &&
+    !string.IsNullOrWhiteSpace(appSettings.KeycloakConfig.ClientId))
             {
-
-                // Console.WriteLine($"- Config authentication start");
                 app.UseAuthentication();
-                var nonRedirectPaths = new[] {
-                            "/health",
-                            "/metrics"
-                        };
+
+                var nonRedirectPaths = new[]
+                {
+        "/health",
+        "/metrics"
+    };
+
                 app.Use(async (context, next) =>
                 {
                     await next();
+
                     bool isMatch = nonRedirectPaths.Any(path =>
                         context.Request.Path.StartsWithSegments(path, StringComparison.OrdinalIgnoreCase));
 
@@ -88,13 +91,13 @@ namespace Navira.Shop.Core.Web
                     {
                         context.Response.Clear();
                         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                        // هدر زیر برای اینکه PRTG بفهمد باید Basic Auth بفرستد ضروری است
-                        context.Response.Headers.WWWAuthenticate = "Basic realm=\"API Security\"";
+                        context.Response.Headers.WWWAuthenticate = "Bearer";
                     }
                 });
 
                 app.UseAuthorization();
             }
+
             //else
             // Console.WriteLine($"- Authentication not configured !!");
 

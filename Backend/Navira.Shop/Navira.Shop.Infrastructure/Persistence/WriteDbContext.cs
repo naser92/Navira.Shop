@@ -5,15 +5,10 @@ using Navira.Shop.Core.Bus;
 using Navira.Shop.Core.Infrastructure;
 using Navira.Shop.Core.Persistence.EF;
 using NaviraShop.Core.Mq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Navira.Shop.Infrastructure.Persistence
 {
-    public class WriteDbContext  : WriteFrameworkDbContext
+    public class WriteDbContext : WriteFrameworkDbContext
     {
         public WriteDbContext() : base()
         {
@@ -62,4 +57,4 @@ namespace Navira.Shop.Infrastructure.Persistence
         }
     }
 }
-}
+

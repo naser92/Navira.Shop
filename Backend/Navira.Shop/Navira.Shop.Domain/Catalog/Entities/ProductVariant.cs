@@ -10,7 +10,7 @@ namespace Navira.Shop.Domain.Catalog.Entities
     /// </summary>
     public sealed class ProductVariant : Entity<int>
     {
-        private readonly List<ProductVariantAttributeValue> _attributeValues = new();
+        //private readonly List<ProductVariantAttributeValue> _attributeValues = new();
 
         public int ProductId { get; private set; }
         public Sku Sku { get; private set; } = default!;
@@ -20,7 +20,7 @@ namespace Navira.Shop.Domain.Catalog.Entities
         public decimal WeightKg { get; private set; }
         public bool IsActive { get; private set; } = true;
 
-        public IReadOnlyCollection<ProductVariantAttributeValue> AttributeValues => _attributeValues.AsReadOnly();
+        //public IReadOnlyCollection<ProductVariantAttributeValue> AttributeValues => _attributeValues.AsReadOnly();
 
         private ProductVariant() { }
 

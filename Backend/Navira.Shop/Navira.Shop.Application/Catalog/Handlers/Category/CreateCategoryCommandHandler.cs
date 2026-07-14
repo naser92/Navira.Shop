@@ -1,4 +1,5 @@
 ﻿using Navira.Shop.Application.Catalog.Commands;
+using Navira.Shop.Application.Catalog.Repository;
 using Navira.Shop.Core.Bus;
 using Navira.Shop.Core.Domain;
 using Navira.Shop.Core.Persistence;
@@ -9,14 +10,33 @@ namespace Navira.Shop.Application.Handlers
 {
     public class CreateCategoryCommandHandler : CommandHandler, ICommandHandler<CreateCategoryCommand>
     {
-        private readonly IAggregateRepository<Category, int> _categories;
-        public CreateCategoryCommandHandler(IUnitOfWork uow) : base(uow)
+        private readonly ICategoryRepository _repository;
+        public CreateCategoryCommandHandler(IUnitOfWork uow, ICategoryRepository repository) : base(uow)
         {
+            _repository = repository;
         }
 
-        public Task<IResult> Handle(CreateCategoryCommand command)
+        public async Task<IResult> Handle(CreateCategoryCommand command)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var category = Category.Create(
+                                    command.Name,
+                                    command.Slug,
+                                    command.TaxCategoryId,
+                                    command.ParentCategoryId);
+
+                category.UpdateDescription(command.Description);
+                category.SetDisplayOrder(command.DisplayOrder);
+
+                await _repository.Insert(category);
+                return Result.Success("Category created successfully.");
+            }
+            catch (DomainException ex)
+            {
+                return Result.Fail(ex.Message);
+            }
+
         }
     }
 }

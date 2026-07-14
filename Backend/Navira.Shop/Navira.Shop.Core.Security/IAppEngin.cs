@@ -6,5 +6,6 @@
         Guid? TraceId { get; }
         bool IsAdmin { get; }
         int? UserType { get; }
+        UserInfoDto GetCurrentUserInfo();
     }
 }

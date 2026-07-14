@@ -1,11 +1,9 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Navira.Shop.Core.Bus;
 using Navira.Shop.Core.Caching;
 using Navira.Shop.Core.Configuration;
@@ -32,6 +30,8 @@ namespace Navira.Shop.Core.Web
         {
             var serviceCollection = builder.Services;
             var configuration = builder.Configuration;
+
+
 
             serviceCollection.AddHttpContextAccessor();
             serviceCollection.AddOpenApi();
@@ -71,7 +71,7 @@ namespace Navira.Shop.Core.Web
             configuration.Bind(appSettings);
             serviceCollection.AddSingleton(appSettings);
             serviceCollection.AddAuthentication(appSettings);
-
+            serviceCollection.AddAuthorization();
             serviceCollection.AddCors();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();
@@ -128,7 +128,7 @@ namespace Navira.Shop.Core.Web
 
             serviceCollection.AddSingleton<IPublisher, Publisher>();
             serviceCollection.AddSingleton<IMessageFactory, MessageFactory>();
-            //serviceCollection.RegisterDependencyes(typeFinder, appSettings);
+            serviceCollection.RegisterDependencyes(typeFinder, appSettings);
 
             serviceCollection.RegisterMapConfigs(typeFinder);
 
@@ -139,42 +139,75 @@ namespace Navira.Shop.Core.Web
             return serviceCollection;
         }
 
-        private static void AddAuthentication(this IServiceCollection service, AppSettings appSettings)
-        {
-            if (!appSettings.Issuer.IsNullOrWhiteSpace() &&
-                !appSettings.Audience.IsNullOrWhiteSpace() &&
-                !appSettings.SigningKey.IsNullOrWhiteSpace())
-            {
+        //private static void AddAuthentication(this IServiceCollection services, AppSettings appSettings)
+        //{
+        //    services
+        //        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        //        .AddJwtBearer(options =>
+        //        {
+        //            options.Authority = $"{appSettings.Keycloak.BaseUrl}/realms/{appSettings.Keycloak.Realm}";
+        //            options.Audience = appSettings.Keycloak.ClientId;
+        //            options.RequireHttpsMetadata = true;
 
-                var secretkey = Encoding.UTF8.GetBytes(appSettings.SigningKey);
-                //var encryptionkey = Encoding.UTF8.GetBytes(appSettings.EncryptionKey);
+        //            options.TokenValidationParameters = new TokenValidationParameters
+        //            {
+        //                ValidateIssuer = true,
+        //                ValidateAudience = true,
+        //                ValidateLifetime = true,
+        //                ValidateIssuerSigningKey = true,
+        //                NameClaimType = "preferred_username"
+        //            };
 
-                //Console.WriteLine($"- Config authentication start");
-                service.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddCookie()
-                    .AddJwtBearer(jwtBearerOptions =>
-                    {
+        //            options.Events = new JwtBearerEvents
+        //            {
+        //                OnTokenValidated = context =>
+        //                {
+        //                    var identity = context.Principal?.Identity as ClaimsIdentity;
+        //                    if (identity == null)
+        //                        return Task.CompletedTask;
 
-                        jwtBearerOptions.SaveToken = true;
-                        jwtBearerOptions.RequireHttpsMetadata = false;
-                        jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateActor = false,
-                            ValidateAudience = false,
-                            ValidateLifetime = true,
-                            ValidateIssuerSigningKey = true,
-                            ValidIssuer = appSettings.Issuer,
-                            ValidAudience = appSettings.Audience,
-                            IssuerSigningKey = new SymmetricSecurityKey(secretkey),
-                            //TokenDecryptionKey = new SymmetricSecurityKey(encryptionkey)
-                        };
+        //                    var realmAccess = context.Principal?.FindFirst("realm_access")?.Value;
+        //                    if (!string.IsNullOrWhiteSpace(realmAccess))
+        //                    {
+        //                        using var doc = JsonDocument.Parse(realmAccess);
+        //                        if (doc.RootElement.TryGetProperty("roles", out var rolesElement) &&
+        //                            rolesElement.ValueKind == JsonValueKind.Array)
+        //                        {
+        //                            foreach (var role in rolesElement.EnumerateArray())
+        //                            {
+        //                                var roleName = role.GetString();
+        //                                if (!string.IsNullOrWhiteSpace(roleName))
+        //                                    identity.AddClaim(new Claim(ClaimTypes.Role, roleName));
+        //                            }
+        //                        }
+        //                    }
 
-                    });
-                //Console.WriteLine($"- Config authentication done");
-            }
-            //else
-            //Console.WriteLine($"- Authentication do not Config!!");
-        }
+        //                    var resourceAccess = context.Principal?.FindFirst("resource_access")?.Value;
+        //                    if (!string.IsNullOrWhiteSpace(resourceAccess))
+        //                    {
+        //                        using var doc = JsonDocument.Parse(resourceAccess);
+        //                        if (doc.RootElement.TryGetProperty(appSettings.Keycloak.ClientId, out var clientNode) &&
+        //                            clientNode.TryGetProperty("roles", out var clientRoles) &&
+        //                            clientRoles.ValueKind == JsonValueKind.Array)
+        //                        {
+        //                            foreach (var role in clientRoles.EnumerateArray())
+        //                            {
+        //                                var roleName = role.GetString();
+        //                                if (!string.IsNullOrWhiteSpace(roleName))
+        //                                    identity.AddClaim(new Claim(ClaimTypes.Role, roleName));
+        //                            }
+        //                        }
+        //                    }
+
+        //                    return Task.CompletedTask;
+        //                }
+        //            };
+        //        });
+
+
+
+
+        //}
 
         private static void RegisterDependencyes(this IServiceCollection serviceCollection, ITypeFinder typeFinder, AppSettings appSettings)
         {

@@ -7,8 +7,9 @@ namespace Navira.Shop.Core.Configuration
         public ScalarConfig Scalar { get; set; }
         public SystemInfo SystemInfo { get; set; }
         public IDictionary<string, string> ConnectionStrings { get; set; }
-        public KeycloakConfig Keycloak { get; set; }
+        public KeycloakConfig KeycloakConfig { get; set; }
         public CacheConfig CacheConfig { get; set; } = new();
+        public JwtConfig JwtConfig { get; set; } = new JwtConfig();
         public RedisConfig RedisConfig { get; set; } = new();
         public List<string> IgnoreCheckPath { get; set; } = new();
         public RabbitMQConfig RabbitMQ { get; set; } = new();
@@ -37,9 +38,24 @@ namespace Navira.Shop.Core.Configuration
         }
         public IDictionary<string, RestConfig> RestsConfig { get; set; }
         public bool ShowErrorMessage { get; set; } = true;
-        public string Issuer { get; set; } = "WindowLink.Security.Bearer";
-        public string Audience { get; set; } = "WindowLink.Security.Bearer.User";
-        public string SigningKey { get; set; } = "1234567890123456789012345678901234567890";
+        //public string Issuer { get; set; } = "WindowLink.Security.Bearer";
+        //public string Audience { get; set; } = "WindowLink.Security.Bearer.User";
+        //public string SigningKey { get; set; } = "1234567890123456789012345678901234567890";
         public string EncryptionKey { get; set; } = "D7CE1D4D9E7F403";
+
+        public string GetConnectionStrings(string name)
+        {
+            if (ConnectionStrings.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            if (ConnectionStrings.ContainsKey(name))
+            {
+                return ConnectionStrings[name];
+            }
+
+            return null;
+        }
     }
 }
