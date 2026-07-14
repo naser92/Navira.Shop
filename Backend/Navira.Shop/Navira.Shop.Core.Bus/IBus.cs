@@ -4,12 +4,12 @@ namespace Navira.Shop.Core.Bus
 {
     public interface IBus
     {
-        Task<IResult> Send<TCommand>(TCommand command) where TCommand : ICommand;
+        Task<IResult> Send<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand;
     }
 
     public interface IQueryBus
     {
-        Task<IResult<TQueryResult>> Send<TQuery, TQueryResult>(TQuery query) where TQuery : ICommand;
+        Task<IResult<TQueryResult>> Send<TQuery, TQueryResult>(TQuery query, CancellationToken cancellationToken = default) where TQuery : ICommand;
     }
 
 }

@@ -7,12 +7,12 @@ namespace Navira.Shop.Core.Bus
     {
         IUnitOfWork Uow { get; }
 
-        Task<IResult> Handle(TCommand command);
+        Task<IResult> Handle(TCommand command, CancellationToken cancellationToken = default);
     }
 
     public interface IQueryHandler<TQuery, TQueryResult> where TQuery : ICommand
     {
-        Task<IResult<TQueryResult>> Handle(TQuery query);
+        Task<IResult<TQueryResult>> Handle(TQuery query, CancellationToken cancellationToken = default);
     }
 
     public abstract class CommandHandler

@@ -16,7 +16,7 @@ namespace Navira.Shop.Application.Handlers
             _repository = repository;
         }
 
-        public async Task<IResult> Handle(CreateCategoryCommand command)
+        public async Task<IResult> Handle(CreateCategoryCommand command, CancellationToken cancellationToken = default)
         {
             try
             {

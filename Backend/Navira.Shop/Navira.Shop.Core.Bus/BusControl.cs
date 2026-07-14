@@ -13,7 +13,8 @@ namespace Navira.Shop.Core.Bus
         }
 
 
-        public async Task<IResult> Send<TCommand>(TCommand command) where TCommand : ICommand
+
+        public async Task<IResult> Send<TCommand>(TCommand command, CancellationToken cancellationToken = default) where TCommand : ICommand
         {
             await ValidateAsync(command).ConfigureAwait(false);
 
@@ -47,7 +48,7 @@ namespace Navira.Shop.Core.Bus
         }
 
 
-        public async Task<IResult<TQueryResult>> Send<TQuery, TQueryResult>(TQuery query) where TQuery : ICommand
+        public async Task<IResult<TQueryResult>> Send<TQuery, TQueryResult>(TQuery query, CancellationToken cancellationToken = default) where TQuery : ICommand
         {
             await ValidateAsync(query).ConfigureAwait(false);
 
