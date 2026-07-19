@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Navira.Shop.Core.Bus;
 using Navira.Shop.Core.Infrastructure;
 using Navira.Shop.Core.Persistence.EF;
+using Navira.Shop.Infrastructure.Catalog.Mappers;
 using NaviraShop.Core.Mq;
 
 namespace Navira.Shop.Infrastructure.Persistence
@@ -19,11 +20,11 @@ namespace Navira.Shop.Infrastructure.Persistence
         {
         }
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.ApplyConfigurationsFromAssembly(typeof(BaseBuyerTypeMapping).Assembly);
-        //    base.OnModelCreating(modelBuilder);
-        //}
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CategoriesMapper).Assembly);
+            base.OnModelCreating(modelBuilder);
+        }
     }
 
     public class WriteDbContextFactory : IDesignTimeDbContextFactory<WriteDbContext>
