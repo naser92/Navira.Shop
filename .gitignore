@@ -368,3 +368,6 @@ PDN.TPS.Taxpayer.Api/appsettings.Akbari.json
 /FrontEnd/AdminNavira/.next
 *.sst
 /FrontEnd/AdminNavira/.next
+/FrontEnd/AdminNavira/.next
+FrontEnd/AdminNavira/.env.local
+FrontEnd/AdminNavira/.next/app-path-routes-manifest.json

@@ -1,3 +1,0 @@
-module.exports=[29735,a=>{"use strict";var b=a.i(7997);async function c({children:a}){return(0,b.jsxs)("html",{"data-scroll-behavior":"smooth",suppressHydrationWarning:!0,children:[(0,b.jsxs)("head",{children:[(0,b.jsx)("link",{rel:"preconnect",href:"https://fonts.googleapis.com"}),(0,b.jsx)("link",{rel:"preconnect",href:"https://fonts.gstatic.com",crossOrigin:"true"}),(0,b.jsx)("link",{href:"https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap",rel:"stylesheet"})]}),(0,b.jsx)("body",{children:a})]})}a.s(["default",0,c])},81967,a=>{a.n(a.i(29735))}];
-
-//# sourceMappingURL=src_app_layout_0i0xrt7.js.map
