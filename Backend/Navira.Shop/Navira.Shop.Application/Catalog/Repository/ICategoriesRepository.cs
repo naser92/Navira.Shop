@@ -3,7 +3,7 @@ using Navira.Shop.Domain.Catalog.Entities;
 
 namespace Navira.Shop.Application.Catalog.Repository
 {
-    public interface ICategoryRepository : IWriteRepository<Category,int>
+    public interface ICategoriesRepository : IWriteRepository<Categories, int>
     {
     }
 }

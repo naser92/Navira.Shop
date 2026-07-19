@@ -6,23 +6,16 @@ namespace Navira.Shop.Core.Security
     public class PermissionAttribute : AuthorizeAttribute
     {
 
-        public PermissionAttribute(string method, string controller, string app)
+        public PermissionAttribute()
         {
-            Policy = $"{method}.{controller}.{app}";
         }
 
-        public PermissionAttribute(string permission)
+        public PermissionAttribute(string scope)
         {
-            Policy = permission;
+            Scope = scope;
         }
 
-        public string Permission
-        {
-            get => Policy?.StartsWith($"{PermissionRequirement.PolicyPrefix}:", StringComparison.Ordinal) == true
-                ? Policy.Substring($"{PermissionRequirement.PolicyPrefix}:".Length)
-                : string.Empty;
-            set => Policy = $"{PermissionRequirement.PolicyPrefix}:{value}";
-        }
+        public string? Scope { get; }
     }
 }
 

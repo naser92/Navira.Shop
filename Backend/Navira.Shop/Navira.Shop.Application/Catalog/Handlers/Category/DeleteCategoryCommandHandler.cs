@@ -8,8 +8,8 @@ namespace Navira.Shop.Application.Handlers
 {
     public class DeleteCategoryCommandHandler : CommandHandler, ICommandHandler<DeleteCategoryCommand>
     {
-        private readonly ICategoryRepository _repository;
-        public DeleteCategoryCommandHandler(IUnitOfWork uow, ICategoryRepository repository) : base(uow)
+        private readonly ICategoriesRepository _repository;
+        public DeleteCategoryCommandHandler(IUnitOfWork uow, ICategoriesRepository repository) : base(uow)
         {
             _repository = repository;
         }

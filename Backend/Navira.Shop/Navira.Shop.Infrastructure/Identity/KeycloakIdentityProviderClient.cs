@@ -46,6 +46,7 @@ namespace Navira.Shop.Infrastructure.Identity
         {
             var tokenEndpoint = BuildTokenEndpoint();
 
+
             using var response = await _httpClient.PostAsync(
                 tokenEndpoint,
                 new FormUrlEncodedContent(form),

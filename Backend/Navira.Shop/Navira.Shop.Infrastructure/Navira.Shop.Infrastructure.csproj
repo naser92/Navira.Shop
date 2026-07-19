@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Compile Remove="Catalog\Repositories\CategoryRepositorydel.cs" />
+    <Compile Remove="Class1.cs" />
     <Compile Remove="Persistence\EfUnitOfWork.cs" />
   </ItemGroup>
 

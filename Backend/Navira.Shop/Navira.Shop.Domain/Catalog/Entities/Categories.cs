@@ -3,7 +3,7 @@ using Navira.Shop.Core.Entity;
 
 namespace Navira.Shop.Domain.Catalog.Entities
 {
-    public sealed class Category : AggregateRoot<int>, IFullAuditableEntity<Guid>, ISoftDeletableEntity
+    public sealed class Categories : AggregateRoot<int>, IFullAuditableEntity<Guid>, ISoftDeletableEntity
     {
         public string Name { get; private set; } = default!;
         public string Slug { get; private set; } = default!;
@@ -15,9 +15,9 @@ namespace Navira.Shop.Domain.Catalog.Entities
 
         public bool IsDeleted { get; set; }
 
-        private Category() { }
+        private Categories() { }
 
-        private Category(string name, string slug, int taxCategoryId, int? parentCategoryId)
+        private Categories(string name, string slug, int taxCategoryId, int? parentCategoryId)
         {
             Name = name;
             Slug = slug;
@@ -25,14 +25,14 @@ namespace Navira.Shop.Domain.Catalog.Entities
             ParentCategoryId = parentCategoryId;
         }
 
-        public static Category Create(string name, string slug, int taxCategoryId, int? parentCategoryId = null)
+        public static Categories Create(string name, string slug, int taxCategoryId, int? parentCategoryId = null)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new DomainException("Category name cannot be empty.");
             if (taxCategoryId <= 0)
                 throw new DomainException("Category must have a valid tax category.");
 
-            return new Category(name.Trim(), slug.Trim().ToLowerInvariant(), taxCategoryId, parentCategoryId);
+            return new Categories(name.Trim(), slug.Trim().ToLowerInvariant(), taxCategoryId, parentCategoryId);
         }
 
         public void Rename(string name, string slug)
@@ -67,6 +67,8 @@ namespace Navira.Shop.Domain.Catalog.Entities
                 throw new DomainException("Cannot activate a deleted category.");
             IsActive = true;
         }
+
+
 
         public void Deactivate() => IsActive = false;
 

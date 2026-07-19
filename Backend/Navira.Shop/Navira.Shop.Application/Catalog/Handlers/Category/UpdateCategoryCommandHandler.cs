@@ -8,8 +8,8 @@ namespace Navira.Shop.Application.Handlers
 {
     public class UpdateCategoryCommandHandler : CommandHandler, ICommandHandler<UpdateCategoryCommand>
     {
-        private readonly ICategoryRepository _repository;
-        public UpdateCategoryCommandHandler(IUnitOfWork uow, ICategoryRepository repository) : base(uow)
+        private readonly ICategoriesRepository _repository;
+        public UpdateCategoryCommandHandler(IUnitOfWork uow, ICategoriesRepository repository) : base(uow)
         {
 
             _repository = repository;

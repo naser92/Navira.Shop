@@ -29,5 +29,21 @@ namespace Navira.Shop.Api.Controllers
         {
             return await _queryBus.Send<LoginCommand, AuthTokenDto>(command, cancellationToken).ApiResultAsync();
         }
+
+
+        [AllowAnonymous]
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenCommand command, CancellationToken cancellationToken)
+        {
+            return await _queryBus.Send<RefreshTokenCommand, AuthTokenDto>(command, cancellationToken).ApiResultAsync();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("me")]
+        public async Task Me()
+        {
+            Ok("me");
+        }
+
     }
 }
