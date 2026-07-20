@@ -48,5 +48,16 @@
   "ProductBoxTwelve": "باکس محصول ۱۲",
   "LayoutVariation": "تنوع چیدمان",
   "CategoryProduct1": "محصولات دسته‌بندی ۱",
-  "GridBanner": "بنر شبکه‌ای"
+  "GridBanner": "بنر شبکه‌ای",
+  "LogInYourAccount": "ورود به حساب کاربری",
+  "Username": "نام کاربری",
+  "Password": "رمز عبور",
+  "ForgotPassword": "فراموشی رمز عبور",
+  "Login": "ورود",
+  "Logging in...": "...در حال ورود",
+  "Don't Have Seller Account?": "حساب فروشندگی ندارید؟",
+  "Sign Up": "ثبت‌نام",
+  "Login successful": "ورود با موفقیت انجام شد",
+  "Username or password is incorrect": "نام کاربری یا رمز عبور اشتباه است",
+  "ForgotPassword?": "رمز عبور خود را فراموش کرده‌اید؟"
 }

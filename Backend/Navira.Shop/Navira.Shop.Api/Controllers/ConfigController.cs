@@ -1,6 +1,25 @@
-﻿namespace Navira.Shop.Api.Controllers
+﻿using Microsoft.AspNetCore.Mvc;
+using Navira.Shop.Core.Extensions;
+using System.ComponentModel.DataAnnotations;
+
+namespace Navira.Shop.Api.Controllers
 {
-    public class ConfigController
+    [ApiController]
+    [Route("api/[controller]")]
+    [Display(Name = "identity", Description = "تنظیمات")]
+    public class ConfigController :  ControllerBase
     {
+        private readonly IPublishMenuAndPermissionService _permissionService;
+
+        [HttpGet("PublishPermissions/{name}")]
+        public IActionResult PublishPermissions(string name)
+        {
+            if (name.IsNullOrWhiteSpace())
+            {
+                return Fail("نام کنترولر را وارد کنید");
+            }
+            _permissionService.BuildPermissionAndMenu(name);
+            return Success("انجام شد.");
+        }
     }
 }

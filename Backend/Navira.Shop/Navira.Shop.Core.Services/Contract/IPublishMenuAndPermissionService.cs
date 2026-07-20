@@ -1,9 +1,9 @@
 ﻿using Navira.Shop.Core.Service;
 
-namespace PDN.TPS.Framework.Services
+namespace Navira.Shop.Core.Services
 {
     public interface IPublishMenuAndPermissionService : IBaseService
     {
-        void BuildPermissionAndMenu(params string[] controllerNames);
+        Task BuildPermissionAndMenu(params string[] controllerNames);
     }
 }

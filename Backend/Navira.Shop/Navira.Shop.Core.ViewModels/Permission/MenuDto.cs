@@ -4,9 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Navira.Shop.Core.ViewModels.Permission
+namespace Navira.Shop.Core.ViewModels
 {
-    internal class MenuDto
+    public sealed class MenuDto
     {
+        public string Title { get; init; } = default!;
+
+        public string? Parent { get; init; }
+
+        public int Order { get; init; }
+
+        public string? Icon { get; init; }
     }
 }

@@ -1,6 +1,8 @@
-/**=====================
-    Log In And Sign up CSS Start
-==========================**/
+.log-in-section[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
 .log-in-section {
   overflow-x: hidden;
   display: flex;
@@ -9,7 +11,7 @@
   z-index: 0;
   min-height: 100vh;
   overflow: auto;
-  padding: calc(25px + (60 - 25) * ((100vw - 320px) / (1920 - 320))) 0;
+  padding: 20px 15px;
 
   .form-floating {
     &.mb-4 {
@@ -36,17 +38,21 @@
   }
 
   .inputs {
-    margin: calc(-2px + (-8 - 2) * ((100vw - 320px) / (1920 - 320)));
+    margin: -10px;
 
     input {
-      margin: calc(2px + (8 - 2) * ((100vw - 320px) / (1920 - 320)));
+      margin: 5px;
       border: none;
     }
   }
 
   .log-in-box {
     background-color: $white;
-    padding: calc(16px + (50 - 16) * ((100vw - 320px) / (1920 - 320)));
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    max-width: 100%;
+    margin: 0 auto;
 
     .logo-img {
       width: 140px;
@@ -70,7 +76,10 @@
 
     .form-control {
       border: 1px solid #eee;
-      border-radius: 0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 16px;
+      min-height: 48px;
 
       body.dark-only & {
         border-color: $dark-card-border;
@@ -79,6 +88,11 @@
 
       &:focus{
         border-color: var(--theme-color);
+        box-shadow: 0 0 0 3px rgba(var(--theme-color-rgb), 0.15);
+      }
+
+      [dir="rtl"] & {
+        text-align: right;
       }
     }
 
@@ -102,34 +116,39 @@
     }
 
     .logo-name {
-      margin-bottom: calc(20px + (30 - 20) * ((100vw - 320px) / (1920 - 320)));
-      margin-top: -10px;
+      margin-bottom: 24px;
+      margin-top: 0;
 
       a {
-        font-size: calc(28px + (35 - 28) * ((100vw - 320px) / (1920 - 320)));
+        font-size: 28px;
         font-weight: bold;
         color: $title-color;
         font-family: $montserrat;
         display: block;
 
         img {
-          width: calc(150px + (225 - 150) * ((100vw - 320px) / (1920 - 320)));
+          width: auto;
+          max-width: 180px;
+          height: auto;
         }
       }
     }
 
     .log-in-title {
-      margin-bottom: calc(12px + (20 - 12) * ((100vw - 320px) / (1920 - 320)));
+      margin-bottom: 16px;
+      padding: 0 10px;
 
       h3 {
-        margin-bottom: calc(1px + (6 - 1) * ((100vw - 320px) / (1920 - 320)));
-        font-size: calc(18px + (21 - 18) * ((100vw - 320px) / (1920 - 320)));
+        margin-bottom: 8px;
+        font-size: 18px;
         color: var(--theme-color);
         font-weight: 600;
       }
 
       img {
-        width: 140px;
+        width: auto;
+        max-width: 140px;
+        height: auto;
         margin: 0 auto 20px;
         display: block;
       }
@@ -138,6 +157,8 @@
       h5 {
         color: $content-color;
         margin-block: 8px 40px;
+        font-size: 16px;
+        line-height: 1.5;
       }
     }
 
@@ -151,6 +172,7 @@
 
         [dir="rtl"] & {
           padding-right: 0;
+          padding-left: unset;
         }
 
         li {
@@ -160,16 +182,17 @@
 
           a {
             @include flex_common;
-            font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (1920 - 320)));
+            font-size: 16px;
             color: $title-color;
-            border-radius: 0;
-            padding: calc(10px + (16 - 10) * ((100vw - 320px) / (1920 - 320))) calc(18px + (30 - 18) * ((100vw - 320px) / (1920 - 320)));
+            border-radius: 8px;
+            padding: 12px 20px;
             flex-wrap: wrap;
-            gap: calc(8px + (10 - 8) * ((100vw - 320px) / (1920 - 320)));
+            gap: 10px;
             background-color: $light-color;
 
             img {
-              width: calc(18px + (24 - 18) * ((100vw - 320px) / (1920 - 320)));
+              width: 20px;
+              height: 20px;
             }
           }
         }
@@ -181,6 +204,11 @@
 
       @media (max-width: 1366px) {
         display: block;
+      }
+
+      [dir="rtl"] & {
+        flex-direction: row-reverse;
+        text-align: right;
       }
     }
 
@@ -202,15 +230,24 @@
           color: var(--theme-color);
         }
       }
+
+      [dir="rtl"] & {
+        flex-direction: row-reverse;
+        justify-content: flex-start;
+      }
     }
 
     .forgot-password {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 500;
       display: block;
 
       &:hover {
         color: var(--theme-color);
+      }
+
+      [dir="rtl"] & {
+        text-align: right;
       }
     }
 
@@ -224,6 +261,7 @@
         @include center(vertical);
         @include pseudowh($width: 100%, $height: 1px);
         left: 0;
+        right: auto;
         background-color: #ddd;
         z-index: 0;
       }
@@ -235,6 +273,7 @@
         padding: 0 14px;
         display: inline-block;
         text-transform: uppercase;
+        font-size: 14px;
       }
     }
 
@@ -244,19 +283,26 @@
 
       h4 {
         color: $content-color;
-        font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (1920 - 320)));
-        margin-bottom: calc(0px + (3 - 0) * ((100vw - 320px) / (1920 - 320)));
+        font-size: 15px;
+        margin-bottom: 8px;
+        line-height: 1.5;
       }
 
       a {
         font-weight: 500;
-        font-size: calc(15px + (17 - 15) * ((100vw - 320px) / (1920 - 320)));
+        font-size: 16px;
+        padding: 8px 16px;
+        border-radius: 6px;
         margin-bottom: -4px;
         display: block;
 
         &:hover {
           color: var(--theme-color);
         }
+      }
+
+      [dir="rtl"] & {
+        direction: rtl;
       }
     }
 
@@ -289,6 +335,8 @@
           [dir="rtl"] & {
             left: unset;
             right: 0;
+            padding-right: 16px;
+            padding-left: unset;
           }
 
           &::after {
@@ -300,11 +348,15 @@
           &:not(:placeholder-shown) {
             ~label {
               [dir="rtl"] & {
-                transform: scale(0.85) translateY(-0.5rem) translateX(0.95rem);
+                transform: scale(0.85) translateY(-0.5rem) translateX(-0.95rem);
               }
             }
           }
         }
+      }
+
+      [dir="rtl"] & {
+        direction: rtl;
       }
     }
 
@@ -312,21 +364,22 @@
       .custom-select-box {
         height: calc(100% - 2px);
         left: 1px;
+        right: auto;
         border-left: unset;
+        border-right: unset;
         border-block: unset;
         padding-inline: unset;
 
         html[dir="rtl"] & {
-          left: unset;
+          left: auto;
           right: 1px;
         }
 
         .form-select {
-          border-left: unset;
           border-block: unset;
           height: 56px;
           background-color: $white;
-          padding-inline: 7px 10px;
+          padding-inline: 10px 7px;
 
           body.dark-only & {
             border-color: #404040 !important;
@@ -341,5 +394,315 @@
         }
       }
     }
+  }
+}
+
+/* ===================== RTL Specific Overrides ===================== */
+[dir="rtl"] .log-in-box {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .log-in-box .log-in-title {
+  direction: rtl;
+}
+
+[dir="rtl"] .log-in-box .sign-up-box {
+  direction: rtl;
+}
+
+[dir="rtl"] .log-in-box .form-control {
+  text-align: right;
+  padding-right: 16px;
+  padding-left: 12px;
+}
+
+/* ===================== Responsive Breakpoints ===================== */
+
+/* Large Tablets and Small Desktops */
+@media (max-width: 1200px) {
+  .log-in-box {
+    padding: 24px;
+  }
+
+  .log-in-title img {
+    width: 130px;
+    max-width: 130px;
+  }
+
+  .log-in-title h4,
+  .log-in-title h5 {
+    font-size: 15px;
+  }
+}
+
+/* Tablets */
+@media (max-width: 991px) {
+  .log-in-section {
+    padding: 25px 20px;
+    align-items: flex-start;
+    padding-top: 40px;
+  }
+
+  .log-in-box {
+    padding: 28px;
+    margin: 10px 0;
+  }
+
+  .log-in-title img {
+    width: 130px;
+    max-width: 130px;
+  }
+
+  .log-in-title h4,
+  .log-in-title h5 {
+    font-size: 15px;
+    margin-block: 6px 24px;
+  }
+
+  .form-control {
+    font-size: 15px;
+    padding: 11px 14px;
+    min-height: 46px;
+  }
+
+  .sign-up-box h4 {
+    font-size: 14px;
+  }
+
+  .sign-up-box a {
+    font-size: 15px;
+  }
+}
+
+/* Small Tablets and Large Phones */
+@media (max-width: 767px) {
+  .log-in-section {
+    padding: 20px 16px;
+    align-items: flex-start;
+    padding-top: 24px;
+  }
+
+  .log-in-box {
+    padding: 22px 20px;
+    border-radius: 10px;
+    margin: 8px 0;
+  }
+
+  .log-in-title {
+    padding: 0 6px;
+    margin-bottom: 14px;
+  }
+
+  .log-in-title img {
+    width: 120px;
+    max-width: 120px;
+    margin-bottom: 16px;
+  }
+
+  .log-in-title h4,
+  .log-in-title h5 {
+    font-size: 14px;
+    margin-block: 4px 20px;
+  }
+
+  .form-control {
+    font-size: 14px;
+    padding: 10px 14px;
+    min-height: 44px;
+    border-radius: 6px;
+  }
+
+  .log-in-button .btn {
+    font-size: 14px;
+    padding: 10px 16px;
+    min-height: 44px;
+  }
+
+  .forgot-password {
+    font-size: 14px;
+  }
+
+  .sign-up-box {
+    margin-top: 16px;
+  }
+
+  .sign-up-box h4 {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .sign-up-box a {
+    font-size: 14px;
+  }
+
+  [dir="rtl"] .form-control {
+    padding-right: 14px;
+    padding-left: 10px;
+  }
+}
+
+/* Mobile Phones */
+@media (max-width: 575px) {
+  .log-in-section {
+    padding: 16px 12px;
+    align-items: flex-start;
+    padding-top: 16px;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .log-in-box {
+    padding: 18px 16px;
+    border-radius: 8px;
+    margin: 4px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .log-in-title {
+    padding: 0 4px;
+    margin-bottom: 12px;
+  }
+
+  .log-in-title img {
+    width: 110px;
+    max-width: 110px;
+    height: auto;
+    margin-bottom: 14px;
+  }
+
+  .log-in-title h3 {
+    font-size: 16px;
+  }
+
+  .log-in-title h4,
+  .log-in-title h5 {
+    font-size: 13px;
+    margin-block: 4px 16px;
+  }
+
+  .form-control {
+    font-size: 16px;
+    padding: 12px 14px;
+    min-height: 44px;
+    border-radius: 6px;
+  }
+
+  .form-floating > label {
+    font-size: 14px;
+  }
+
+  .log-in-button .btn {
+    font-size: 14px;
+    padding: 12px 16px;
+    min-height: 44px;
+    border-radius: 6px;
+  }
+
+  .forgot-box {
+    margin-bottom: 4px;
+  }
+
+  .forgot-password {
+    font-size: 14px;
+  }
+
+  .sign-up-box {
+    margin-top: 14px;
+  }
+
+  .sign-up-box h4 {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .sign-up-box a {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  [dir="rtl"] .form-control {
+    padding-right: 14px;
+    padding-left: 10px;
+  }
+
+  [dir="rtl"] .form-floating > label {
+    padding-right: 14px;
+    padding-left: unset;
+  }
+
+  .input-box .form-floating > .form-control:not(:placeholder-shown) ~ label {
+    [dir="rtl"] & {
+      transform: scale(0.85) translateY(-0.5rem) translateX(-0.9rem);
+    }
+  }
+}
+
+/* Extra Small Phones */
+@media (max-width: 374px) {
+  .log-in-section {
+    padding: 12px 10px;
+    padding-top: 12px;
+  }
+
+  .log-in-box {
+    padding: 16px 12px;
+    border-radius: 6px;
+  }
+
+  .log-in-title img {
+    width: 100px;
+    max-width: 100px;
+  }
+
+  .log-in-title h4,
+  .log-in-title h5 {
+    font-size: 12px;
+  }
+
+  .form-control {
+    font-size: 15px;
+    padding: 10px 12px;
+  }
+
+  .log-in-button .btn {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  .sign-up-box h4 {
+    font-size: 11px;
+  }
+
+  .sign-up-box a {
+    font-size: 13px;
+  }
+}
+
+/* Landscape phones */
+@media (max-height: 500px) and (orientation: landscape) {
+  .log-in-section {
+    padding: 10px 16px;
+    align-items: flex-start;
+  }
+
+  .log-in-box {
+    padding: 16px;
+    margin: 4px 0;
+  }
+
+  .log-in-title img {
+    width: 100px;
+    max-width: 100px;
+    margin-bottom: 10px;
+  }
+
+  .log-in-title h4,
+  .log-in-title h5 {
+    margin-block: 2px 12px;
+  }
+
+  .sign-up-box {
+    margin-top: 12px;
   }
 }

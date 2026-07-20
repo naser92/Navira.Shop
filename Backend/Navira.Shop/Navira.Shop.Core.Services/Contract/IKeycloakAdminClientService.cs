@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Navira.Shop.Core.Services.Contract
+namespace Navira.Shop.Core.Services
 {
-    internal interface IKeycloakAdminClientService
+    public interface IKeycloakAdminClientService
     {
+        Task<string> EnsureResourceAsync(string resourceName);
+        Task EnsureScopeAsync(string scopeName);
+        Task AttachScopeToResourceAsync(string resourceId, string scopeName);
     }
 }

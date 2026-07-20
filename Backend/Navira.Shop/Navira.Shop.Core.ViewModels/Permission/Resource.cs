@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Navira.Shop.Core.ViewModels.Permission
+namespace Navira.Shop.Core.ViewModels
 {
-    internal class Resource
+    public class Resource
     {
+        public string Name { get; set; }
+        public string DisplayName { get; set; }
+        public string Type { get; set; }
     }
 }

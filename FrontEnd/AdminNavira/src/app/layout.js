@@ -36,7 +36,7 @@ export default  function RootLayout({ children }) {
    
   return (
    
-        <html  data-scroll-behavior="smooth" suppressHydrationWarning={true}>
+        <html dir="rtl" lang="fa" data-scroll-behavior="smooth" suppressHydrationWarning={true}>
               <head>
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link

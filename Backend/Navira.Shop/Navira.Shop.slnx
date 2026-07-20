@@ -1,23 +1,25 @@
 <Solution>
   <Folder Name="/Core/">
-    <Project Path="Navira.Shop.Core.Bus/Navira.Shop.Core.Bus.csproj" />
-    <Project Path="Navira.Shop.Core.Caching/Navira.Shop.Core.Caching.csproj" />
-    <Project Path="Navira.Shop.Core.Configuration/Navira.Shop.Core.Configuration.csproj" />
-    <Project Path="Navira.Shop.Core.Domain/Navira.Shop.Core.Domain.csproj" Id="8fc2d907-f44b-48cf-a84b-9f1026f1e6f5" />
-    <Project Path="Navira.Shop.Core.Extensions/Navira.Shop.Core.Extensions.csproj" />
-    <Project Path="Navira.Shop.Core.Infrastructure/Navira.Shop.Core.Infrastructure.csproj" />
-    <Project Path="Navira.Shop.Core.Ioc/Navira.Shop.Core.Ioc.csproj" />
-    <Project Path="Navira.Shop.Core.Mapper/Navira.Shop.Core.Mapper.csproj" />
-    <Project Path="Navira.Shop.Core.Persistence.EF/Navira.Shop.Core.Persistence.EF.csproj" />
-    <Project Path="Navira.Shop.Core.Security/Navira.Shop.Core.Security.csproj" />
-    <Project Path="Navira.Shop.Core.Web/Navira.Shop.Core.Web.csproj" />
-    <Project Path="Navira.Shop.Core/Navira.Shop.Core.csproj" />
-    <Project Path="NaviraShop.Core.Mq/NaviraShop.Core.Mq.csproj" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Core.Bus/Navira.Shop.Core.Bus.csproj" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Core.Caching/Navira.Shop.Core.Caching.csproj" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Core.Configuration/Navira.Shop.Core.Configuration.csproj" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Core.Domain/Navira.Shop.Core.Domain.csproj" Id="8fc2d907-f44b-48cf-a84b-9f1026f1e6f5" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Core.Extensions/Navira.Shop.Core.Extensions.csproj" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Core.Infrastructure/Navira.Shop.Core.Infrastructure.csproj" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Core.Ioc/Navira.Shop.Core.Ioc.csproj" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Core.Mapper/Navira.Shop.Core.Mapper.csproj" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Core.Persistence.EF/Navira.Shop.Core.Persistence.EF.csproj" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Core.Security/Navira.Shop.Core.Security.csproj" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Core.Services/Navira.Shop.Core.Services.csproj" Id="c9bd484f-2876-4e79-9b70-59543de165e2" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Core.ViewModels/Navira.Shop.Core.ViewModels.csproj" Id="04797e76-6cbd-42f2-8fc0-e8b85bcea580" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Core.Web/Navira.Shop.Core.Web.csproj" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Core/Navira.Shop.Core.csproj" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/NaviraShop.Core.Mq/NaviraShop.Core.Mq.csproj" />
   </Folder>
   <Folder Name="/Src/">
-    <Project Path="Navira.Shop.Api/Navira.Shop.Api.csproj" />
-    <Project Path="Navira.Shop.Application/Navira.Shop.Application.csproj" Id="6203d543-413e-442b-bac9-e35acd31032a" />
-    <Project Path="Navira.Shop.Domain/Navira.Shop.Domain.csproj" Id="0f9ab40a-4d1d-4a8e-b593-3bb3ca07a746" />
-    <Project Path="Navira.Shop.Infrastructure/Navira.Shop.Infrastructure.csproj" Id="f495c161-e7cb-4fa2-aac3-53df2c4e1d2a" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Api/Navira.Shop.Api.csproj" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Application/Navira.Shop.Application.csproj" Id="6203d543-413e-442b-bac9-e35acd31032a" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Domain/Navira.Shop.Domain.csproj" Id="0f9ab40a-4d1d-4a8e-b593-3bb3ca07a746" />
+    <Project Path="../../../../../../../../projects/Navira.Shop/Backend/Navira.Shop/Navira.Shop.Infrastructure/Navira.Shop.Infrastructure.csproj" Id="f495c161-e7cb-4fa2-aac3-53df2c4e1d2a" />
   </Folder>
 </Solution>

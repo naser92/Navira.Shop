@@ -11,25 +11,38 @@ import Image from "next/image";
 import Link from "next/link";
 import { useContext, useRef, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { useTranslation } from "react-i18next";
 import { Col } from "reactstrap";
 import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api/clientApi";
+import useAccount from "@/helper/accountContext/useAccount";
+
+const loginTexts = {
+  LogInYourAccount: "ورود به حساب کاربری",
+  Username: "نام کاربری",
+  Password: "رمز عبور",
+  ForgotPassword: "رمز عبور خود را فراموش کرده‌اید؟",
+  Login: "ورود",
+  Logging: "...در حال ورود",
+  DontHaveSellerAccount: "حساب فروشندگی ندارید؟",
+  SignUp: "ثبت‌نام",
+  LoginSuccessful: "ورود با موفقیت انجام شد",
+  InvalidCredentials: "نام کاربری یا رمز عبور اشتباه است",
+};
 
 const Login = () => {
   const [showBoxMessage, setShowBoxMessage] = useState();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { settingObj, state } = useContext(SettingContext);
-  const { t } = useTranslation("common");
   const reCaptchaRef = useRef();
   const router = useRouter();
+  const { storeTokens, refreshProfile } = useAccount();
 
   const handleLogin = async (values) => {
     try {
       setIsSubmitting(true);
       setShowBoxMessage(undefined);
 
-      await apiFetch("/api/auth/login", {
+      const result = await apiFetch("/api/auth/login", {
         method: "POST",
         body: JSON.stringify({
           username: values.username,
@@ -37,16 +50,22 @@ const Login = () => {
         }),
       });
 
+      storeTokens({
+        accessToken: result?.data?.accessToken ?? null,
+        refreshToken: result?.data?.refreshToken ?? null,
+      });
+
       setShowBoxMessage({
-        message: "Login successful",
+        message: loginTexts.LoginSuccessful,
         type: "success",
       });
 
+      await refreshProfile();
       router.replace("/dashboard");
       router.refresh();
     } catch (error) {
       setShowBoxMessage({
-        message: error.message || "Username or password is incorrect",
+        message: error.message || loginTexts.InvalidCredentials,
         type: "danger",
       });
 
@@ -59,7 +78,7 @@ const Login = () => {
   };
 
   return (
-    <div className="box-wrapper">
+    <div className="box-wrapper" dir="rtl">
       <ShowBox showBoxMessage={showBoxMessage} />
       <LoginBoxWrapper>
         <div className="log-in-title text-center">
@@ -71,7 +90,7 @@ const Login = () => {
             height={28}
             priority
           />
-          <h4>{t("LogInYourAccount")}</h4>
+          <h4>{loginTexts.LogInYourAccount}</h4>
         </div>
 
         <div className="input-box">
@@ -88,7 +107,7 @@ const Login = () => {
             onSubmit={handleLogin}
           >
             {({ errors, touched, setFieldValue }) => (
-              <Form className="row g-4">
+              <Form className="row g-4" dir="rtl">
                 <Col sm="12">
                   <Field
                     inputprops={{ noExtraSpace: true }}
@@ -98,8 +117,8 @@ const Login = () => {
                     component={ReactstrapInput}
                     className="form-control"
                     id="username"
-                    placeholder="Username"
-                    label="Username"
+                    placeholder={loginTexts.Username}
+                    label={loginTexts.Username}
                   />
                 </Col>
 
@@ -111,8 +130,8 @@ const Login = () => {
                     type="password"
                     className="form-control"
                     id="password"
-                    placeholder="Password"
-                    label="Password"
+                    placeholder={loginTexts.Password}
+                    label={loginTexts.Password}
                   />
                 </Col>
 
@@ -137,14 +156,14 @@ const Login = () => {
                 <Col sm="12">
                   <div className="forgot-box">
                     <Link href={`/auth/forgot-password`} className="forgot-password">
-                      {t("ForgotPassword")}?
+                      {loginTexts.ForgotPassword}
                     </Link>
                   </div>
                 </Col>
 
                 <Col sm="12">
                   <Btn
-                    title={isSubmitting ? "Logging in..." : "Login"}
+                    title={isSubmitting ? loginTexts.Logging : loginTexts.Login}
                     className="btn btn-animation w-100 justify-content-center"
                     type="submit"
                     color="false"
@@ -152,8 +171,8 @@ const Login = () => {
                   />
 
                   <div className="sign-up-box">
-                    <h4>{"Don't Have Seller Account?"}</h4>
-                    <Link href={`/auth/register`}>{"Sign Up"}</Link>
+                    <h4>{loginTexts.DontHaveSellerAccount}</h4>
+                    <Link href={`/auth/register`}>{loginTexts.SignUp}</Link>
                   </div>
                 </Col>
               </Form>

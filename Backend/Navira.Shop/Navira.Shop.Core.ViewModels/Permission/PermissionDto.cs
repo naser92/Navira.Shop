@@ -4,9 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Navira.Shop.Core.ViewModels.Permission
+namespace Navira.Shop.Core.ViewModels
 {
-    internal class PermissionDto
+    public class PermissionDto
     {
+        public int BaseSubSystemId { get; set; }
+
+        public string Scope { get; set; }
+
+        public string Title { get; set; }
+
+        public string ControllerName { get; set; }
+
+        
     }
 }

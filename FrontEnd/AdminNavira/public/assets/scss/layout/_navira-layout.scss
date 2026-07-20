@@ -1,0 +1,82 @@
+/* =====================================================================
+   Navira admin layout fixes (RTL, monolingual Persian)
+   Loaded last so it overrides the base theme rules above.
+   ===================================================================== */
+
+.page-wrapper.compact-wrapper {
+  /* ------------------------------------------------------------------
+     Desktop (>= 992px)
+     - Sidebar is always fixed/visible on the right.
+     - The duplicate logo block inside the offset header is hidden
+       (the sidebar owns the logo), removing the "double sidebar" look.
+     ------------------------------------------------------------------ */
+  @media (min-width: 992px) {
+    .page-header {
+      .header-wrapper {
+        .header-logo-wrapper {
+          .logo-wrapper {
+            display: none !important;
+          }
+        }
+      }
+    }
+  }
+
+  /* ------------------------------------------------------------------
+     Mobile / tablet (<= 991px)
+     - Header spans full width (no sidebar offset) and shows the logo.
+     - Sidebar is off-canvas on the right; `.sidebar-open` slides it in.
+     - `.bg-overlay1.active` is the backdrop that closes it on tap.
+     ------------------------------------------------------------------ */
+  @media (max-width: 991px) {
+    .page-header {
+      margin-right: 0;
+      margin-left: 0;
+      width: 100%;
+
+      .header-wrapper {
+        .header-logo-wrapper {
+          .logo-wrapper {
+            display: flex !important;
+          }
+        }
+      }
+    }
+
+    .page-body-wrapper {
+      .page-body {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+      }
+
+      footer {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+      }
+
+      div.sidebar-wrapper {
+        right: -260px;
+        left: unset;
+        transition: right 0.3s ease;
+
+        &.sidebar-open {
+          right: 0;
+          left: unset;
+        }
+      }
+    }
+
+    .bg-overlay1 {
+      &.active {
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 6;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(0, 0, 0, 0.2);
+        transition: 0.3s;
+      }
+    }
+  }
+}
