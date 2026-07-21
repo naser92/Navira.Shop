@@ -11,7 +11,8 @@ namespace Navira.Shop.Api.Controllers
     [Route("api/[controller]")]
     [Display(Name = "دسته ها", Description = "مدیریت دسته ها")]
     [CustomAuthorize(AuthenticationSchemes = "Bearer")]
-
+    [Permission("دسته بندی")]
+    [Menu("Category.Controller", "دسته بندی")]
     public class CategoryController : ControllerBase
     {
         private readonly IBus _bus;
@@ -24,6 +25,8 @@ namespace Navira.Shop.Api.Controllers
         }
 
         [HttpPost]
+        [Permission("Register", "ثبت دسته بندی")]
+        [Menu("Category.Register", "ثبت دسته بندی جدید")]
         public virtual async Task<IActionResult> Create(CreateCategoryCommand command)
         {
             return await _bus.Send(command).ApiResultAsync();
@@ -31,6 +34,7 @@ namespace Navira.Shop.Api.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Permission("Update", "بروز رسانی دسته بندی")]
         public async Task<IActionResult> Update(int id, UpdateCategoryCommand command)
         {
             command.Id = id;

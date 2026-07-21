@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Navira.Shop.Core.ViewModels.Permission
+﻿namespace Navira.Shop.Core.ViewModels
 {
-    internal class RegisterMenuAndPermissionEvent
+    public class RegisterMenuAndPermissionEvent
     {
+        public List<PermissionDto> Permission { get; set; }
+        public List<MenuDto> Menus { get; set; }
     }
 }

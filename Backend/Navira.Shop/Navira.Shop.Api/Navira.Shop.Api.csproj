@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Navira.Shop.Application\Navira.Shop.Application.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core.Services\Navira.Shop.Core.Services.csproj" />
     <ProjectReference Include="..\Navira.Shop.Core.Web\Navira.Shop.Core.Web.csproj" />
     <ProjectReference Include="..\Navira.Shop.Infrastructure\Navira.Shop.Infrastructure.csproj" />
   </ItemGroup>

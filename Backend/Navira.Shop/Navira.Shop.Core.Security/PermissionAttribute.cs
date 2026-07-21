@@ -6,8 +6,9 @@ namespace Navira.Shop.Core.Security
     public class PermissionAttribute : AuthorizeAttribute
     {
 
-        public PermissionAttribute()
+        public PermissionAttribute(string title)
         {
+            Title = title;
         }
 
         public PermissionAttribute(string scope, string title)
