@@ -5,27 +5,6 @@ import { useRouter } from "next/navigation";
 import AccountContext from "./accountContext";
 import { apiFetch } from "@/lib/api/clientApi";
 
-let authTokens = {
-  accessToken: null,
-  refreshToken: null,
-};
-
-export const getAuthTokens = () => authTokens;
-
-export const setAuthTokens = ({ accessToken, refreshToken }) => {
-  authTokens = {
-    accessToken: accessToken ?? authTokens.accessToken,
-    refreshToken: refreshToken ?? authTokens.refreshToken,
-  };
-};
-
-export const clearAuthTokens = () => {
-  authTokens = {
-    accessToken: null,
-    refreshToken: null,
-  };
-};
-
 export default function AccountProvider({ children }) {
   const router = useRouter();
 
@@ -33,15 +12,6 @@ export default function AccountProvider({ children }) {
   const [userAccess, setUserAccess] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [tokens, setTokens] = useState({ accessToken: null, refreshToken: null });
-
-  const storeTokens = useCallback((newTokens) => {
-    setAuthTokens(newTokens || {});
-    setTokens({
-      accessToken: newTokens?.accessToken ?? null,
-      refreshToken: newTokens?.refreshToken ?? null,
-    });
-  }, []);
 
   const refreshProfile = useCallback(async () => {
     try {
@@ -62,8 +32,6 @@ export default function AccountProvider({ children }) {
       setUserInfo(null);
       setUserAccess([]);
       setIsAuthenticated(false);
-      clearAuthTokens();
-      setTokens({ accessToken: null, refreshToken: null });
       return null;
     } finally {
       setIsLoading(false);
@@ -79,8 +47,6 @@ export default function AccountProvider({ children }) {
       setUserInfo(null);
       setUserAccess([]);
       setIsAuthenticated(false);
-      clearAuthTokens();
-      setTokens({ accessToken: null, refreshToken: null });
       router.replace("/auth/login");
       router.refresh();
     }
@@ -96,13 +62,10 @@ export default function AccountProvider({ children }) {
       userAccess,
       isAuthenticated,
       isLoading,
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
-      storeTokens,
       refreshProfile,
       logout,
     }),
-    [userInfo, userAccess, isAuthenticated, isLoading, tokens, storeTokens, refreshProfile, logout]
+    [userInfo, userAccess, isAuthenticated, isLoading, refreshProfile, logout]
   );
 
   return <AccountContext.Provider value={value}>{children}</AccountContext.Provider>;

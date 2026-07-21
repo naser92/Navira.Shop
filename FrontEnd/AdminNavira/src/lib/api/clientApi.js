@@ -15,7 +15,11 @@ export async function apiFetch(url, options = {}) {
     data = null;
   }
 
-  if (!response.ok) {
+  // Treat HTTP errors AND business-logic errors (error: true / success: false)
+  // as failures so callers always land in their catch block with the backend message.
+  const isError = !response.ok || data?.error === true || data?.success === false;
+
+  if (isError) {
     const error = new Error(data?.message || "Request failed");
     error.status = response.status;
     error.data = data;

@@ -1,9 +1,10 @@
 "use client";
 
 import { ReactstrapInput } from "@/components/reactstrapFormik";
-import ShowBox from "@/elements/alerts&Modals/ShowBox";
+import Toast from "@/lib/toast";
 import Btn from "@/elements/buttons/Btn";
 import SettingContext from "@/helper/settingContext";
+import AccountContext from "@/helper/accountContext/accountContext";
 import LoginBoxWrapper from "@/utils/hoc/LoginBoxWrapper";
 import { YupObject, nameSchema } from "@/utils/validation/ValidationSchemas";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -14,7 +15,6 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { Col } from "reactstrap";
 import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api/clientApi";
-import useAccount from "@/helper/accountContext/useAccount";
 
 const loginTexts = {
   LogInYourAccount: "ورود به حساب کاربری",
@@ -30,19 +30,17 @@ const loginTexts = {
 };
 
 const Login = () => {
-  const [showBoxMessage, setShowBoxMessage] = useState();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { settingObj, state } = useContext(SettingContext);
   const reCaptchaRef = useRef();
   const router = useRouter();
-  const { storeTokens, refreshProfile } = useAccount();
+  const { refreshProfile } = useContext(AccountContext);
 
   const handleLogin = async (values) => {
     try {
       setIsSubmitting(true);
-      setShowBoxMessage(undefined);
 
-      const result = await apiFetch("/api/auth/login", {
+      await apiFetch("/api/auth/login", {
         method: "POST",
         body: JSON.stringify({
           username: values.username,
@@ -50,24 +48,13 @@ const Login = () => {
         }),
       });
 
-      storeTokens({
-        accessToken: result?.data?.accessToken ?? null,
-        refreshToken: result?.data?.refreshToken ?? null,
-      });
-
-      setShowBoxMessage({
-        message: loginTexts.LoginSuccessful,
-        type: "success",
-      });
+      Toast.success(loginTexts.LoginSuccessful);
 
       await refreshProfile();
       router.replace("/dashboard");
       router.refresh();
     } catch (error) {
-      setShowBoxMessage({
-        message: error.message || loginTexts.InvalidCredentials,
-        type: "danger",
-      });
+      Toast.error(error.message || loginTexts.InvalidCredentials);
 
       if (settingObj?.google_reCaptcha?.status && reCaptchaRef.current) {
         reCaptchaRef.current.reset();
@@ -79,7 +66,6 @@ const Login = () => {
 
   return (
     <div className="box-wrapper" dir="rtl">
-      <ShowBox showBoxMessage={showBoxMessage} />
       <LoginBoxWrapper>
         <div className="log-in-title text-center">
           <Image
@@ -147,7 +133,11 @@ const Login = () => {
                     {errors.recaptcha && touched.recaptcha && (
                       <ErrorMessage
                         name="recaptcha"
-                        render={() => <div className="invalid-feedback d-block">{errors.recaptcha}</div>}
+                        render={(msg) => (
+                          <div className="invalid-feedback d-block">
+                            {typeof msg === "string" ? msg : msg?.message}
+                          </div>
+                        )}
                       />
                     )}
                   </Col>

@@ -1,15 +1,24 @@
-import { useTranslation } from "react-i18next";
+"use client";
+
 import { BiCheckShield, BiError } from "react-icons/bi";
 
 const ShowBox = ({ showBoxMessage }) => {
-  const { t } = useTranslation("common");
   if (!showBoxMessage) return null;
+
+  // Support both a plain string and a { message, type } object.
+  const message =
+    typeof showBoxMessage === "string" ? showBoxMessage : showBoxMessage?.message;
+  const isSuccess =
+    typeof showBoxMessage === "object" && showBoxMessage?.type === "success";
+
+  if (!message) return null;
+
   return (
-    <div className={showBoxMessage ? "error-box" : "success-box"}>
-      {showBoxMessage ? <BiError /> : <BiCheckShield />}
+    <div className={isSuccess ? "success-box" : "error-box"} dir="rtl">
+      {isSuccess ? <BiCheckShield /> : <BiError />}
       <div>
-        <h4>{showBoxMessage ? t("ThereWasAProblem") : t("Success")} </h4>
-        <p>{t(showBoxMessage)}</p>
+        <h4>{isSuccess ? "موفقیت" : "خطا"}</h4>
+        <p>{message}</p>
       </div>
     </div>
   );

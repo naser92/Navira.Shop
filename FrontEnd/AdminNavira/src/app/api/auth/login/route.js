@@ -26,37 +26,36 @@ export async function POST(request) {
           success: false,
           message: result?.message || "Login failed",
         },
-        { status: backendResponse.status || 400 }
+        { status: backendResponse.ok ? 401 : backendResponse.status || 400 }
       );
     }
 
     const { accessToken, refreshToken, expiresIn, refreshExpiresIn } = result.data;
 
+    // Tokens are delivered to the browser ONLY as httpOnly cookies so that
+    // client-side JavaScript can never read them (mitigates XSS token theft).
+    // The raw token values are intentionally NOT included in the JSON body.
     const response = NextResponse.json({
       success: true,
       message: result?.message || "Login successful",
-      data: {
-        accessToken,
-        refreshToken,
-        expiresIn,
-        refreshExpiresIn,
-      },
     });
+
+    const isProduction = process.env.NODE_ENV === "production";
 
     response.cookies.set("access_token", accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: isProduction,
       sameSite: "lax",
       path: "/",
-      maxAge: Number(expiresIn || 3600),
+      maxAge: Number(expiresIn || 300),
     });
 
     response.cookies.set("refresh_token", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: isProduction,
       sameSite: "lax",
       path: "/",
-      maxAge: Number(refreshExpiresIn || 604800),
+      maxAge: Number(refreshExpiresIn || 1800),
     });
 
     return response;

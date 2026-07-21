@@ -24,7 +24,6 @@ namespace Navira.Shop.Api.Controllers
         }
 
         [HttpPost]
-        [Permission("Create")]
         public virtual async Task<IActionResult> Create(CreateCategoryCommand command)
         {
             return await _bus.Send(command).ApiResultAsync();

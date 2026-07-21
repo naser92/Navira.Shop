@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ClosedXML;
+using Microsoft.AspNetCore.Mvc;
 using Navira.Shop.Core.Configuration;
 using Navira.Shop.Core.Extensions;
 using Navira.Shop.Core.Infrastructure;
@@ -17,45 +18,69 @@ namespace Navira.Shop.Core.Services
     {
         //private PermissionDto _permission;
         //private List<MenuDto> _menus;
-        private readonly IKeycloakAdminClientService _keycloak;
+
         private readonly IPublisher _publisher;
         private readonly ITypeFinder _typeFinder;
-        private int _subSystemName;
+        private int _subsystemId;
         private readonly AppSettings _appSettings;
+        private List<MenuDto> _menus;
+        private List<PermissionDto> _permissions;
 
-        public PublishMenuAndPermissionService(IPublisher publisher, ITypeFinder typeFinder, AppSettings appSettings, IKeycloakAdminClientService keycloak)
+        public PublishMenuAndPermissionService(IPublisher publisher, ITypeFinder typeFinder, AppSettings appSettings)
         {
             _publisher = publisher;
             _typeFinder = typeFinder;
             _appSettings = appSettings;
-            _keycloak = keycloak;
         }
         public async Task BuildPermissionAndMenu(params string[] controllerNames)
         {
 
 
-            _subsystemId = _appSettings.SystemInfo.Id;
+            _subsystemId = 1;// _appSettings.SystemInfo.Id;
             var permissions = Scan(controllerNames);
+            var controllers = _typeFinder.FindClassesOfType<Controller>();
 
-            foreach (var item in permissions)
+            if (controllerNames.IsNotNullOrEmpty())
+                controllers = controllers.Where(x => controllerNames.Any(y => y == x.Name));
+
+            _menus = new List<MenuDto>();
+
+            if (controllers.IsNotNullOrEmpty())
             {
-                //1- Create Resource
-                var resourceId = await _keycloak.EnsureResourceAsync(item.Resource);
+                foreach (var controller in controllers)
+                {
+                    var display = controller.GetCustomAttribute<DisplayAttribute>();
+                    var controllerTitle = display.IsNull() ? "" : display.Name;
+                    var controllerName = controller.Name.Replace("Controller", "");
 
+                    var permissionAttribute = controller.GetCustomAttribute<PermissionAttribute>();
+                    var menuAttribute = controller.GetCustomAttribute<MenuAttribute>();
 
-                //2- Create Scope
-                await _keycloak.EnsureScopeAsync(item.Scope);
+                    if (!permissionAttribute.IsNull())
+                    {
+                        controller.GetMethods().Where(w => w.HasAttribute<PermissionAttribute>()).ToList().ForEach(
+                            action =>
+                            {
+                                var actionPermission = action.GetCustomAttribute<PermissionAttribute>();
+                                _permissions.Add(new PermissionDto
+                                {
+                                    BaseSubSystemId = _subsystemId,
+                                    ControllerName = controllerName,
+                                    Scope = actionPermission.Scope,
+                                    Code = $"{controllerName}.{actionPermission.Scope}"
+                                });
+                            }
+                            );
+                    }
+                }
 
-                //3- Attach Scope
-
-                await _keycloak.AttachScopeToResourceAsync(resourceId,item.Scope);
             }
-        }
-
-     
 
 
-        private  IReadOnlyList<PermissionDto> Scan(params string[] controllerNames)
+
+
+
+        private IReadOnlyList<PermissionDto> Scan(params string[] controllerNames)
         {
             var result = new List<PermissionDto>();
             var controllers = _typeFinder.FindClassesOfType<Controller>();

@@ -15,15 +15,13 @@ namespace Navira.Shop.Application.Auth.Handlers
 
         public async Task<IResult<AuthTokenDto>> Handle(LoginCommand query, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                return await _authService.LoginAsync(query, cancellationToken).ResultAsync();
-            }
-            catch (Exception ex)
-            {
-                AuthTokenDto result = null;
-                return result.FailResult(ex.Message);
-            }
+
+            var result = await _authService.LoginAsync(query, cancellationToken);
+            if (!string.IsNullOrWhiteSpace(result.Error))
+                throw new ResultException("نام کاربری و یا کلمه عبور اشتباه است");
+
+            return result.SuccessResult();
+
 
         }
     }

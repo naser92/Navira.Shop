@@ -27,7 +27,7 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="page-header" dir="rtl">
+    <div className={`page-header ${sidebarOpen ? "close_icon" : ""}`} dir="rtl">
       <div className="header-wrapper m-0">
         <div className="header-logo-wrapper p-0 d-flex align-items-center gap-2">
           <div className="logo-wrapper">

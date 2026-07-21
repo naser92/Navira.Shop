@@ -26,7 +26,8 @@ namespace Navira.Shop.Infrastructure.Identity
                 ["password"] = password
             };
 
-            return RequestTokenAsync(form, cancellationToken);
+            var result = RequestTokenAsync(form, cancellationToken);
+            return result;
         }
 
         public Task<AuthTokenDto> RefreshAsync(string refreshToken, CancellationToken cancellationToken)
@@ -54,8 +55,8 @@ namespace Navira.Shop.Infrastructure.Identity
 
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
-            if (!response.IsSuccessStatusCode)
-                throw new UnauthorizedAccessException(content);
+            //if (!response.IsSuccessStatusCode)
+            //    throw new UnauthorizedAccessException(content);
 
             var token = JsonSerializer.Deserialize<AuthTokenDto>(
                 content,
