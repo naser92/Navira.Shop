@@ -10,23 +10,35 @@ namespace Navira.Shop.Core.Security
         {
         }
 
-        public override Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
+        public override async Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
         {
-            if (!string.IsNullOrWhiteSpace(policyName) &&
-                policyName.StartsWith($"{PermissionRequirement.PolicyPrefix}:", StringComparison.OrdinalIgnoreCase))
-            {
-                var permission = policyName.Substring($"{PermissionRequirement.PolicyPrefix}:".Length);
+            //if (!string.IsNullOrWhiteSpace(policyName) &&
+            //    policyName.StartsWith($"{PermissionRequirement.PolicyPrefix}:", StringComparison.OrdinalIgnoreCase))
+            //{
+            //    var permission = policyName.Substring($"{PermissionRequirement.PolicyPrefix}:".Length);
 
-                var policy = new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes("Bearer")
-                    .RequireAuthenticatedUser()
-                    .AddRequirements(new PermissionRequirement(permission))
-                    .Build();
+            //    var policy = new AuthorizationPolicyBuilder()
+            //        .AddAuthenticationSchemes("Bearer")
+            //        .RequireAuthenticatedUser()
+            //        .AddRequirements(new PermissionRequirement(permission))
+            //        .Build();
 
-                return Task.FromResult<AuthorizationPolicy?>(policy);
-            }
+            //    return Task.FromResult<AuthorizationPolicy?>(policy);
+            //}
 
-            return base.GetPolicyAsync(policyName);
+            //return base.GetPolicyAsync(policyName);
+
+            // اگر Policyهای معمولی باشد
+            var policy = await base.GetPolicyAsync(policyName);
+
+            if (policy != null)
+                return policy;
+
+            // Permission Policy
+            return new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .AddRequirements(new PermissionRequirement(policyName))
+                .Build();
         }
     }
 }

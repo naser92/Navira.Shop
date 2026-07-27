@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Hosting;
 using Navira.Shop.Core.Configuration;
 using Navira.Shop.Core.Security;
 using System.Security.Claims;
@@ -11,51 +13,33 @@ namespace Navira.Shop.Core.Web
 {
     public static class AuthExtensions
     {
-        public static IServiceCollection AddAuthentication(this IServiceCollection services, AppSettings appSettings)
+        public static IServiceCollection AddKeycloakAuthentication(this IServiceCollection services, AppSettings appSettings, IWebHostEnvironment environment)
         {
-            var keycloak = appSettings?.KeycloakConfig;
-
-            if (keycloak == null ||
-               string.IsNullOrWhiteSpace(keycloak.BaseUrl) ||
-               string.IsNullOrWhiteSpace(keycloak.Realm) ||
-               string.IsNullOrWhiteSpace(keycloak.ClientId))
-            {
-                return services;
-            }
+            var keycloak = appSettings?.KeycloakConfig
+                    ?? throw new InvalidOperationException("Keycloak configuration is missing.");
 
 
 
             var authority = BuildAuthority(keycloak.BaseUrl, keycloak.Realm);
 
             services
-                .AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.Authority = authority;
                     options.Audience = keycloak.ClientId;
-                    options.RequireHttpsMetadata = !authority.StartsWith("http://", StringComparison.OrdinalIgnoreCase);
-                    options.SaveToken = true;
+
                     options.MapInboundClaims = false;
+                    options.SaveToken = false;
 
-                    options.TokenValidationParameters = new TokenValidationParameters
+                    options.RequireHttpsMetadata = !environment.IsDevelopment();
+                    options.IncludeErrorDetails = environment.IsDevelopment();
+                    options.RefreshOnIssuerKeyNotFound = true;
+
+                    options.TokenValidationParameters = new()
                     {
-                        ValidateIssuer = true,
-                        ValidIssuer = authority,
-
-                        ValidateAudience = true,
-                        ValidAudience = keycloak.ClientId,
-
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-
                         NameClaimType = "preferred_username",
                         RoleClaimType = ClaimTypes.Role,
-
                         ClockSkew = TimeSpan.FromMinutes(1)
                     };
 
@@ -63,79 +47,75 @@ namespace Navira.Shop.Core.Web
                     {
                         OnTokenValidated = context =>
                         {
-                            var identity = context.Principal?.Identity as ClaimsIdentity;
-                            if (identity != null)
+                            if (context.Principal?.Identity is ClaimsIdentity identity)
                             {
-                                MapKeycloakRoles(identity, context.Options.Audience);
+                                MapKeycloakRoles(identity, keycloak.ClientId);
                             }
 
                             return Task.CompletedTask;
+                        },
+
+                        OnAuthenticationFailed = context =>
+                        {
+                            // TODO:
+                            // ILogger.LogWarning(context.Exception,...)
+
+                            return Task.CompletedTask;
+                        },
+
+
+                        OnChallenge = async context =>
+                         {
+                             context.HandleResponse();
+
+                             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                             context.Response.ContentType = "application/json";
+
+                             await context.Response.WriteAsJsonAsync(new
+                             {
+                                 status = 401,
+                                 error = "Unauthorized"
+                             });
+                         },
+
+                        OnForbidden = async context =>
+                        {
+                            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                            context.Response.ContentType = "application/json";
+
+                            await context.Response.WriteAsJsonAsync(new
+                            {
+                                status = 403,
+                                error = "Forbidden"
+                            });
                         }
-                        //OnMessageReceived = context =>
-                        //{
-                        //    // backward compatibility with current AppEngin behavior
-                        //    // current code also reads token from query string
-                        //    var token = context.Request.Query["token"].FirstOrDefault();
-                        //    if (!string.IsNullOrWhiteSpace(token))
-                        //        context.Token = token;
 
-                        //    return Task.CompletedTask;
-                        //},
-
-                        //OnTokenValidated = context =>
-                        //{
-                        //    if (context.Principal?.Identity is not ClaimsIdentity identity)
-                        //        return Task.CompletedTask;
-
-                        //    AddRealmRoles(identity, context.Principal);
-                        //    AddResourceRoles(identity, context.Principal, keycloak.ClientId);
-
-                        //    // normalize sub => NameIdentifier for easier use in app
-                        //    var sub = context.Principal.FindFirst("sub")?.Value;
-                        //    if (!string.IsNullOrWhiteSpace(sub) &&
-                        //        !identity.HasClaim(c => c.Type == ClaimTypes.NameIdentifier))
-                        //    {
-                        //        identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, sub));
-                        //    }
-
-                        //    return Task.CompletedTask;
-                        //},
-
-                        //OnChallenge = context =>
-                        //{
-                        //    return Task.CompletedTask;
-                        //},
-
-                        //OnAuthenticationFailed = context =>
-                        //{
-                        //    return Task.CompletedTask;
-                        //}
                     };
                 });
 
-            //services.AddAuthorization(options =>
-            //{
-            //    // fallback: authenticated user required unless [AllowAnonymous]
-            //    options.FallbackPolicy = options.DefaultPolicy;
-            //});
 
-            services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
-            services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
             return services;
         }
 
         private static string BuildAuthority(string baseUrl, string realm)
         {
-            var normalizedBaseUrl = baseUrl.TrimEnd('/');
+            return $"{baseUrl.TrimEnd('/')}/realms/{realm}";
+        }
 
-            if (normalizedBaseUrl.EndsWith($"/realms/{realm}", StringComparison.OrdinalIgnoreCase))
-                return normalizedBaseUrl;
+        public static IServiceCollection AddPermissionAuthorization(this IServiceCollection services)
+        {
+            services.AddAuthorization();
 
-            if (normalizedBaseUrl.EndsWith("/auth", StringComparison.OrdinalIgnoreCase))
-                return $"{normalizedBaseUrl}/realms/{realm}";
+            services.AddSingleton<
+                IAuthorizationPolicyProvider,
+                PermissionPolicyProvider>();
 
-            return $"{normalizedBaseUrl}/realms/{realm}";
+            services.AddScoped<
+                IAuthorizationHandler,
+                PermissionAuthorizationHandler>();
+
+            return services;
         }
 
         private static void AddRealmRoles(ClaimsIdentity identity, ClaimsPrincipal principal)

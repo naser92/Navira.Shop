@@ -1,7 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Navira.Shop.Core.Bus;
@@ -15,12 +13,8 @@ using Navira.Shop.Core.Persistence.EF;
 using Navira.Shop.Core.Security;
 using Navira.Shop.Core.Service;
 using NaviraShop.Core.Mq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System.Globalization;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Navira.Shop.Core.Web
 {
@@ -28,53 +22,81 @@ namespace Navira.Shop.Core.Web
     {
         public static IServiceCollection ConfigureApplicationServices(this WebApplicationBuilder builder)
         {
-            var serviceCollection = builder.Services;
+            var services = builder.Services;
             var configuration = builder.Configuration;
+            var environment = builder.Environment;
 
 
+            // -------------------------------------------------
+            // Configuration
+            // -------------------------------------------------
 
-            serviceCollection.AddHttpContextAccessor();
-            serviceCollection.AddOpenApi();
-            serviceCollection.AddControllers()
-              .AddJsonOptions(options =>
-              {
-                  options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-                  options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                  options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-                  options.JsonSerializerOptions.Converters.Add(new MethodBaseConverter());
-              })
-              .AddNewtonsoftJson(options =>
-              {
-                  options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                  options.SerializerSettings.ContractResolver = new IgnoreMethodBaseResolver();
-                  options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                  options.SerializerSettings.Formatting = Formatting.Indented;
-              });
+            var appSettings = configuration.Get<AppSettings>() ?? new AppSettings();
+            services.AddSingleton(appSettings);
 
-            if (builder.Environment.IsNotNull())
-                GlobalData.DefaultFileProvider = new CoreFileProvider(builder.Environment.ContentRootPath, builder.Environment.WebRootPath);
 
-            // تنظیم محدودیت حجم فرم‌ها
-            serviceCollection.Configure<FormOptions>(options =>
-            {
-                options.MultipartBodyLengthLimit = 104857600; // 100 MB
-            });
+            // -------------------------------------------------
+            // ASP.NET Core
+            // -------------------------------------------------
 
-            // تنظیم محدودیت حجم Kestrel
-            builder.WebHost.ConfigureKestrel(serverOptions =>
-            {
-                serverOptions.Limits.MaxRequestBodySize = 104857600; // 100 MB
-            });
+            services.ConfigureMvc();
+            services.ConfigureRequestLimits(builder);
+            services.AddHttpContextAccessor();
+            services.AddCors();
+            services.AddMemoryCache();
+            services.AddOpenApi();
 
-            var appSettings = new AppSettings();
+            // -------------------------------------------------
+            // File Provider
+            // -------------------------------------------------
+            GlobalData.DefaultFileProvider = new CoreFileProvider(
+                                                environment.ContentRootPath,
+                                                environment.WebRootPath);
 
-            configuration.Bind(appSettings);
-            serviceCollection.AddSingleton(appSettings);
-            serviceCollection.AddAuthentication(appSettings);
-            serviceCollection.AddAuthorization();
-            serviceCollection.AddCors();
 
-            var serviceProvider = serviceCollection.BuildServiceProvider();
+            // -------------------------------------------------
+            // Authentication
+            // -------------------------------------------------
+
+            services.AddKeycloakAuthentication(appSettings, environment);
+
+
+            // -------------------------------------------------
+            // Authorization
+            // -------------------------------------------------
+
+            services.AddPermissionAuthorization();
+
+
+            // -------------------------------------------------
+            // Infrastructure
+            // -------------------------------------------------
+
+            var typeFinder = new WebAppTypeFinder();
+            services.AddSingleton(typeof(ITypeFinder), typeFinder);
+
+            services.ConfigureCaching(appSettings);
+
+            services.ConfigureRepositories(typeFinder);
+
+            services.ConfigureMessaging(appSettings);
+
+            services.ConfigureValidation(typeFinder);
+
+            services.ConfigureMapping(typeFinder);
+
+            services.ConfigureApplication(appSettings, typeFinder);
+
+            // -------------------------------------------------
+            // Dependency Injection
+            // -------------------------------------------------
+
+            services.RegisterDependencyes(typeFinder, appSettings);
+
+
+            // -------------------------------------------------
+            // Misc
+            // -------------------------------------------------
 
             if (!appSettings.SystemInfo.IsNull())
             {
@@ -83,131 +105,83 @@ namespace Navira.Shop.Core.Web
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            //var memoryCache = new MemoryCache(new MemoryCacheOptions());
-            //serviceCollection.AddSingleton<IMemoryCache>(memoryCache);
-            serviceCollection.AddMemoryCache();
+            ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("fa");
 
-            var typeFinder = new WebAppTypeFinder();
-            serviceCollection.AddSingleton(typeof(ITypeFinder), typeFinder);
+            return services;
 
-            serviceCollection.AddScoped<IBus, BusControl>();
-            serviceCollection.AddScoped<IQueryBus, BusControl>();
+
+        }
+
+        private static void ConfigureApplication(this IServiceCollection services, AppSettings appSettings, WebAppTypeFinder typeFinder)
+        {
+            services.AddSingleton<IAppEngin, AppEngin>();
+            services.AddSingleton<IPermissionProvider, RedisPermissionProvider>();
+
+
+            services.Register<IBaseService>(typeFinder, ServiceLifetime.Scoped);
+
+
+            services.Register(typeFinder, typeof(ICommandHandler<>), ServiceLifetime.Scoped);
+
+            services.Register(typeFinder, typeof(IQueryHandler<,>), ServiceLifetime.Scoped);
+        }
+
+        private static void ConfigureMapping(this IServiceCollection services, WebAppTypeFinder typeFinder)
+        {
+            services.RegisterMapConfigs(typeFinder);
+
+        }
+
+        private static void ConfigureValidation(this IServiceCollection services, WebAppTypeFinder typeFinder)
+        {
+
+            services.Register(typeFinder, typeof(AbstractValidator<>), ServiceLifetime.Singleton);
+
+        }
+
+        private static void ConfigureMessaging(this IServiceCollection services, AppSettings appSettings)
+        {
+            services.AddScoped<IBus, BusControl>();
+            services.AddScoped<IQueryBus, BusControl>();
+            services.AddSingleton<IPublisher, Publisher>();
+            services.AddSingleton<IMessageFactory, MessageFactory>();
+
+            services.ConfigMassTransit(appSettings);
+
+        }
+
+        private static void ConfigureRepositories(this IServiceCollection service, WebAppTypeFinder typeFinder)
+        {
+
+            service.Register(typeFinder, typeof(Core.Persistence.IRepository<,>), ServiceLifetime.Scoped);
+
+            service.Register(typeFinder, typeof(IWriteRepository<,>), ServiceLifetime.Scoped);
+            service.Register(typeFinder, typeof(IQueryRepository<,>), ServiceLifetime.Scoped);
+
+        }
+
+        private static void ConfigureCaching(this IServiceCollection service, AppSettings appSettings)
+        {
+            service.AddMemoryCache();
 
             if (appSettings.RedisConfig.Enabled)
             {
-                serviceCollection.AddSingleton<ILocker, RedisConnectionWrapper>();
-                serviceCollection.AddSingleton<IRedisConnectionWrapper, RedisConnectionWrapper>();
+                service.AddSingleton<ILocker, RedisConnectionWrapper>();
+                service.AddSingleton<IRedisConnectionWrapper, RedisConnectionWrapper>();
             }
 
             if (appSettings.RedisConfig.Enabled && appSettings.RedisConfig.UseCaching)
             {
-                serviceCollection.AddSingleton<IStaticCacheManager, RedisCacheManager>();
+                service.AddSingleton<IStaticCacheManager, RedisCacheManager>();
             }
             else
             {
-                serviceCollection.AddSingleton<ILocker, MemoryCacheManager>();
-                serviceCollection.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
+                service.AddSingleton<ILocker, MemoryCacheManager>();
+                service.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
 
             }
-
-            serviceCollection.AddSingleton<IAppEngin, AppEngin>();
-
-            serviceCollection.Register<IBaseService>(typeFinder, ServiceLifetime.Scoped);
-
-            serviceCollection.Register(typeFinder, typeof(Core.Persistence.IRepository<,>), ServiceLifetime.Scoped);
-
-            serviceCollection.Register(typeFinder, typeof(IWriteRepository<,>), ServiceLifetime.Scoped);
-            serviceCollection.Register(typeFinder, typeof(IQueryRepository<,>), ServiceLifetime.Scoped);
-
-            serviceCollection.Register(typeFinder, typeof(ICommandHandler<>), ServiceLifetime.Scoped);
-
-            serviceCollection.Register(typeFinder, typeof(IQueryHandler<,>), ServiceLifetime.Scoped);
-
-            ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("fa");
-            serviceCollection.Register(typeFinder, typeof(AbstractValidator<>), ServiceLifetime.Singleton);
-
-            serviceCollection.AddSingleton<IPublisher, Publisher>();
-            serviceCollection.AddSingleton<IMessageFactory, MessageFactory>();
-            serviceCollection.RegisterDependencyes(typeFinder, appSettings);
-
-            serviceCollection.RegisterMapConfigs(typeFinder);
-
-
-            serviceCollection.ConfigMassTransit(appSettings);
-
-            //serviceCollection.AddScoped<UserActivityMonitor>();
-            return serviceCollection;
         }
 
-        //private static void AddAuthentication(this IServiceCollection services, AppSettings appSettings)
-        //{
-        //    services
-        //        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        //        .AddJwtBearer(options =>
-        //        {
-        //            options.Authority = $"{appSettings.Keycloak.BaseUrl}/realms/{appSettings.Keycloak.Realm}";
-        //            options.Audience = appSettings.Keycloak.ClientId;
-        //            options.RequireHttpsMetadata = true;
-
-        //            options.TokenValidationParameters = new TokenValidationParameters
-        //            {
-        //                ValidateIssuer = true,
-        //                ValidateAudience = true,
-        //                ValidateLifetime = true,
-        //                ValidateIssuerSigningKey = true,
-        //                NameClaimType = "preferred_username"
-        //            };
-
-        //            options.Events = new JwtBearerEvents
-        //            {
-        //                OnTokenValidated = context =>
-        //                {
-        //                    var identity = context.Principal?.Identity as ClaimsIdentity;
-        //                    if (identity == null)
-        //                        return Task.CompletedTask;
-
-        //                    var realmAccess = context.Principal?.FindFirst("realm_access")?.Value;
-        //                    if (!string.IsNullOrWhiteSpace(realmAccess))
-        //                    {
-        //                        using var doc = JsonDocument.Parse(realmAccess);
-        //                        if (doc.RootElement.TryGetProperty("roles", out var rolesElement) &&
-        //                            rolesElement.ValueKind == JsonValueKind.Array)
-        //                        {
-        //                            foreach (var role in rolesElement.EnumerateArray())
-        //                            {
-        //                                var roleName = role.GetString();
-        //                                if (!string.IsNullOrWhiteSpace(roleName))
-        //                                    identity.AddClaim(new Claim(ClaimTypes.Role, roleName));
-        //                            }
-        //                        }
-        //                    }
-
-        //                    var resourceAccess = context.Principal?.FindFirst("resource_access")?.Value;
-        //                    if (!string.IsNullOrWhiteSpace(resourceAccess))
-        //                    {
-        //                        using var doc = JsonDocument.Parse(resourceAccess);
-        //                        if (doc.RootElement.TryGetProperty(appSettings.Keycloak.ClientId, out var clientNode) &&
-        //                            clientNode.TryGetProperty("roles", out var clientRoles) &&
-        //                            clientRoles.ValueKind == JsonValueKind.Array)
-        //                        {
-        //                            foreach (var role in clientRoles.EnumerateArray())
-        //                            {
-        //                                var roleName = role.GetString();
-        //                                if (!string.IsNullOrWhiteSpace(roleName))
-        //                                    identity.AddClaim(new Claim(ClaimTypes.Role, roleName));
-        //                            }
-        //                        }
-        //                    }
-
-        //                    return Task.CompletedTask;
-        //                }
-        //            };
-        //        });
-
-
-
-
-        //}
 
         private static void RegisterDependencyes(this IServiceCollection serviceCollection, ITypeFinder typeFinder, AppSettings appSettings)
         {

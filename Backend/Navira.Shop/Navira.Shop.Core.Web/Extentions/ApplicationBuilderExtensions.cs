@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Navira.Shop.Core.Caching;
@@ -48,9 +47,7 @@ namespace Navira.Shop.Core.Web
             // Console.WriteLine($"-- ExceptionMiddleware configured");
 
             app.UseMiddleware<UserActivityMiddleware>();
-            //Console.WriteLine($"-- ExceptionMiddleware configured");
 
-            //app.UseContainerScope();
             app.UseRouting();
             app.UseCors(policyBuilder =>
             {
@@ -65,71 +62,45 @@ namespace Navira.Shop.Core.Web
                     policyBuilder.AllowAnyOrigin();
             });
 
-            //Console.WriteLine($"-- UseRouting configured");
 
-            if (appSettings?.KeycloakConfig != null &&
-    !string.IsNullOrWhiteSpace(appSettings.KeycloakConfig.BaseUrl) &&
-    !string.IsNullOrWhiteSpace(appSettings.KeycloakConfig.Realm) &&
-    !string.IsNullOrWhiteSpace(appSettings.KeycloakConfig.ClientId))
-            {
-                app.UseAuthentication();
+            //        if (appSettings?.KeycloakConfig != null &&
+            //            !string.IsNullOrWhiteSpace(appSettings.KeycloakConfig.BaseUrl) &&
+            //            !string.IsNullOrWhiteSpace(appSettings.KeycloakConfig.Realm) &&
+            //            !string.IsNullOrWhiteSpace(appSettings.KeycloakConfig.ClientId))
+            //        {
+            //            app.UseAuthentication();
 
-                var nonRedirectPaths = new[]
-                {
-        "/health",
-        "/metrics"
-    };
+            //            var nonRedirectPaths = new[]
+            //            {
+            //                "/health",
+            //                "/metrics"
+            //};
 
-                app.Use(async (context, next) =>
-                {
-                    await next();
+            //            app.Use(async (context, next) =>
+            //            {
+            //                await next();
 
-                    bool isMatch = nonRedirectPaths.Any(path =>
-                        context.Request.Path.StartsWithSegments(path, StringComparison.OrdinalIgnoreCase));
+            //                bool isMatch = nonRedirectPaths.Any(path =>
+            //                    context.Request.Path.StartsWithSegments(path, StringComparison.OrdinalIgnoreCase));
 
-                    if (isMatch && context.Response.StatusCode == StatusCodes.Status302Found)
-                    {
-                        context.Response.Clear();
-                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                        context.Response.Headers.WWWAuthenticate = "Bearer";
-                    }
-                });
+            //                if (isMatch && context.Response.StatusCode == StatusCodes.Status302Found)
+            //                {
+            //                    context.Response.Clear();
+            //                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            //                    context.Response.Headers.WWWAuthenticate = "Bearer";
+            //                }
+            //            });
 
-                app.UseAuthorization();
-            }
+            //            app.UseAuthorization();
+            //        }
+            app.UseAuthentication();
 
-            //else
-            // Console.WriteLine($"- Authentication not configured !!");
-
-
-            //Console.WriteLine($"- Root app config End");
+            app.UseAuthorization();
 
             app.MapControllers();
-            //app.MapHealthChecks("/config/status/v2", new HealthCheckOptions
-            //{
-            //    Predicate = check => !check.Name.Equals("masstransit-bus", StringComparison.OrdinalIgnoreCase),
-            //    ResponseWriter = async (context, report) =>
-            //    {
-            //        var publisher = context.RequestServices
-            //            .GetRequiredService<IPublisher>();
-            //        context.Response.ContentType = "application/json";
 
-            //        var response = new
-            //        {
-            //            status = report.Status,
-            //            checks = report.Entries.Select(e => new
-            //            {
-            //                name = e.Key,
-            //                status = e.Value.Status,
-            //                data = e.Value.Data
-            //            })
-            //        };
-            //        await publisher.Log("Diagnostics: Health check (v2)", new LogData(Content: response.Serialize()));
-            //        await context.Response.WriteAsJsonAsync(response);
-            //    }
-            //});
             app.CallAppConfigs(typeFinder, appSettings);
-            //publisher.Log($"{appSettings?.SystemInfo?.Name} started ");
+
             return app;
         }
 
@@ -142,14 +113,11 @@ namespace Navira.Shop.Core.Web
                 .Select(configService => (IAppConfigService)Activator.CreateInstance(configService))
                 .OrderBy(configService => configService.Order);
 
-            //register all provided dependencies
+
             foreach (var configService in instances)
             {
-                // Console.WriteLine($"--- {configService.GetType().FullName} Config");
                 configService.Config(app, typeFinder, appSettings);
-                // Console.WriteLine($"--- {configService.GetType().FullName} Configed");
             }
-            // Console.WriteLine($"-- Service app config done");
         }
     }
 }

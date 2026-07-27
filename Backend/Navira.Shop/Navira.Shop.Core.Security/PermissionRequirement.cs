@@ -11,5 +11,8 @@ namespace Navira.Shop.Core.Security
         }
 
         public string Permission { get; }
+
+        public override string ToString()
+            => Permission;
     }
 }
