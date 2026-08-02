@@ -1,7 +1,7 @@
 ﻿using Navira.Shop.Core.Domain;
 using Navira.Shop.Core.Entity;
 
-namespace Navira.Shop.Domain.Catalog.Entities
+namespace Navira.Shop.Domain.Catalog
 {
     public sealed class Categories : AggregateRoot<int>, IFullAuditableEntity<Guid>, ISoftDeletableEntity
     {

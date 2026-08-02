@@ -2,6 +2,7 @@
 {
     public class PermissionDto
     {
+        public int Id { get; set; }
         public int BaseSubSystemId { get; set; }
         public string Scope { get; set; }
         public string Title { get; set; }

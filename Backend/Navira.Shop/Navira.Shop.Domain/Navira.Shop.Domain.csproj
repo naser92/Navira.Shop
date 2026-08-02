@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Navira.Shop.Core.Domain\Navira.Shop.Core.Domain.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core.Persistence.EF\Navira.Shop.Core.Persistence.EF.csproj" />
     <ProjectReference Include="..\Navira.Shop.Core\Navira.Shop.Core.csproj" />
   </ItemGroup>
 

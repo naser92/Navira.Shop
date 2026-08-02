@@ -1,4 +1,5 @@
-﻿using Navira.Shop.Core.Bus;
+﻿using Navira.Shop.Application.Identity;
+using Navira.Shop.Core.Bus;
 using Navira.Shop.Core.Persistence;
 using Navira.Shop.Core.Results;
 

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Navira.Shop.Core.Bus;
 using Navira.Shop.Core.Infrastructure;
 using Navira.Shop.Core.Persistence.EF;
-using Navira.Shop.Infrastructure.Catalog.Mappers;
+using Navira.Shop.Infrastructure.Catalog.Mappers.Model;
 using NaviraShop.Core.Mq;
 
 namespace Navira.Shop.Infrastructure.Persistence

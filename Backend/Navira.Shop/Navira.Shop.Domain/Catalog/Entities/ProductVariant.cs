@@ -1,7 +1,7 @@
 ﻿using Navira.Shop.Core.Domain;
 using Navira.Shop.Domain.Catalog.ValueObjects;
 
-namespace Navira.Shop.Domain.Catalog.Entities
+namespace Navira.Shop.Domain.Catalog
 {
     /// <summary>
     /// A purchasable SKU, owned by a Product. This is a child Entity (has identity,

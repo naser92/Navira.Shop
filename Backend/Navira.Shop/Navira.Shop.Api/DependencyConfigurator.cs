@@ -32,17 +32,17 @@ namespace Navira.Shop.Api
                     });
                 options.EnableSensitiveDataLogging();
             });
-            //services.AddDbContext<QueryDbContext>((sp, options) =>
-            //{
-            //    options.AddInterceptors(sp.GetRequiredService<SlowQueryInterceptor>());
-            //    options.UseSqlServer(appSettings.GetConnectionStrings("ReadConnection"),
-            //        b =>
-            //        {
-            //            b.MigrationsAssembly("PDN.TPS.Taxpayer.Query.DataContext");
-            //            b.CommandTimeout(1800);
-            //            b.TranslateParameterizedCollectionsToConstants();
-            //        });
-            //});
+            services.AddDbContext<QueryDbContext>((sp, options) =>
+            {
+                options.AddInterceptors(sp.GetRequiredService<SlowQueryInterceptor>());
+                options.UseSqlServer(appSettings.GetConnectionStrings("ReadConnection"),
+                    b =>
+                    {
+                        b.MigrationsAssembly("Navira.Shop.Infrastructure.DataContext");
+                        b.CommandTimeout(1800);
+                        b.TranslateParameterizedCollectionsToConstants();
+                    });
+            });
             var serviceProvicder = services.BuildServiceProvider();
             services.AddScoped<WriteDbContext>();
             services.AddScoped(typeof(IUnitOfWork), p => p.GetService<WriteDbContext>());

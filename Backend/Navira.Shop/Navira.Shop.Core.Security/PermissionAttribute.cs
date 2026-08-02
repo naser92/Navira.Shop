@@ -17,11 +17,19 @@ namespace Navira.Shop.Core.Security
             Title = title;
         }
 
+        public PermissionAttribute(string scope, string title, string code)
+        {
+            Scope = scope;
+            Title = title;
+            Code = code;
+        }
 
 
-        public string? Scope { get; }
+        public string Code { get; }
 
-        public string? Title { get; set; }
+        public string Scope { get; }
+
+        public string Title { get; set; }
 
 
 

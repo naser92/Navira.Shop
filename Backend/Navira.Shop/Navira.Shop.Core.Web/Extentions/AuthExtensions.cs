@@ -59,6 +59,9 @@ namespace Navira.Shop.Core.Web
                         {
                             // TODO:
                             // ILogger.LogWarning(context.Exception,...)
+                            var ex = context.Exception;
+
+                            Console.WriteLine(ex.ToString());
 
                             return Task.CompletedTask;
                         },

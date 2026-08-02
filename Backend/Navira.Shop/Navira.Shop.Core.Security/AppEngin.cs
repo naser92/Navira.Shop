@@ -54,6 +54,25 @@ namespace Navira.Shop.Core.Security
                 user.Claims.Any(x => x.Type == ClaimTypes.Role && x.Value == "admin") ||
                 user.Claims.Any(x => x.Type == "role" && x.Value == "admin");
 
+
+
+
+            userInfo.Roles = user.Claims
+                .Where(x =>
+                    x.Type == ClaimTypes.Role ||
+                    x.Type.Equals("roles", StringComparison.OrdinalIgnoreCase))
+                .Select(x => x.Value)
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+
+
+
+
+
+
             return userInfo;
         }
 

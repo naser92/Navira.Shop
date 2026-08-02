@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Navira.Shop.Core.Persistence.EF;
-using Navira.Shop.Domain.Catalog.Entities;
+using Navira.Shop.Domain.Catalog;
 
-namespace Navira.Shop.Infrastructure.Catalog.Mappers
+namespace Navira.Shop.Infrastructure.Catalog.Mappers.Model
 {
     public class CategoriesMapper : EntityMapperBase<Categories, int>
     {

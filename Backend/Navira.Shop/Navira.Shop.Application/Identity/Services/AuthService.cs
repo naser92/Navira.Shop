@@ -1,4 +1,8 @@
-﻿namespace Navira.Shop.Application.Auth
+﻿
+
+using Navira.Shop.Application.Auth;
+
+namespace Navira.Shop.Application.Identity
 {
     public sealed class AuthService : IAuthService
     {

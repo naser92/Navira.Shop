@@ -1,0 +1,431 @@
+// Access management page (policies / roles / permissions)
+
+.navira-access-header {
+  margin-bottom: 20px;
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  p {
+    color: #6c757d;
+    margin-bottom: 0;
+  }
+}
+
+.navira-access-card {
+  border: none;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+}
+
+.navira-access-tabs {
+  gap: 8px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 12px;
+  flex-wrap: wrap;
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 8px;
+    color: #495057;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 16px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba(236, 137, 81, 0.1);
+      color: var(--theme-color);
+    }
+
+    &.active {
+      background-color: var(--theme-color);
+      color: #fff;
+    }
+  }
+}
+
+.navira-table {
+  .navira-table-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .navira-table-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0 12px;
+    color: #6c757d;
+    flex: 1;
+    min-width: 200px;
+    max-width: 340px;
+
+    input {
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      font-size: 14px;
+
+      &:focus {
+        background: transparent;
+        box-shadow: none;
+      }
+    }
+  }
+
+  .navira-table-count {
+    font-size: 13px;
+    color: #6c757d;
+    white-space: nowrap;
+  }
+
+  .navira-table-grid {
+    thead th {
+      font-size: 13px;
+      font-weight: 700;
+      color: #495057;
+      border-bottom-width: 2px;
+      white-space: nowrap;
+    }
+
+    tbody td {
+      vertical-align: middle;
+      font-size: 14px;
+    }
+  }
+
+  .navira-table-serial {
+    width: 48px;
+    color: #adb5bd;
+  }
+
+  .navira-table-state {
+    text-align: center;
+    padding: 32px 12px !important;
+    color: #6c757d;
+
+    span {
+      margin-inline-start: 8px;
+    }
+  }
+
+  .navira-table-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .navira-page-btn {
+    border: 1px solid #e9ecef;
+    background: #fff;
+    border-radius: 8px;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 10px;
+    font-size: 13px;
+    color: #495057;
+    transition: all 0.15s ease;
+
+    &:hover:not(:disabled) {
+      border-color: var(--theme-color);
+      color: var(--theme-color);
+    }
+
+    &.active {
+      background: var(--theme-color);
+      border-color: var(--theme-color);
+      color: #fff;
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.navira-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--theme-color);
+  color: var(--theme-color);
+  background: transparent;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--theme-color);
+    color: #fff;
+  }
+}
+
+.navira-chip-list {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.navira-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f1f3f5;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 12px;
+  color: #495057;
+  direction: ltr;
+}
+
+.navira-scope {
+  direction: ltr;
+  display: inline-block;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 13px;
+  color: #212529;
+}
+
+.navira-scope-part {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #495057;
+  font-size: 13px;
+}
+
+.navira-access-modal {
+  .navira-access-modal-desc {
+    color: #6c757d;
+    font-size: 14px;
+  }
+
+  .navira-access-options {
+    max-height: 320px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .navira-access-option {
+    padding: 8px 10px;
+    border-radius: 8px;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: #f8f9fa;
+    }
+
+    label {
+      font-size: 14px;
+      cursor: pointer;
+    }
+  }
+
+  .navira-access-empty {
+    color: #6c757d;
+    text-align: center;
+    margin-bottom: 0;
+  }
+}
+
+// Responsive: stacked card-style rows on small screens
+@media (max-width: 767px) {
+  .navira-access-header h2 {
+    font-size: 18px;
+  }
+
+  .navira-access-tabs .nav-link {
+    padding: 7px 12px;
+    font-size: 13px;
+  }
+
+  .navira-table {
+    .navira-table-grid {
+      thead {
+        display: none;
+      }
+
+      tbody tr {
+        display: block;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        padding: 10px 12px;
+      }
+
+      tbody td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border: none;
+        padding: 6px 0;
+
+        &::before {
+          content: attr(data-label);
+          font-size: 12px;
+          font-weight: 700;
+          color: #6c757d;
+        }
+
+        &.navira-table-serial {
+          display: none;
+        }
+
+        &.navira-table-state {
+          justify-content: center;
+
+          &::before {
+            content: none;
+          }
+        }
+      }
+    }
+
+    .navira-table-search {
+      max-width: none;
+    }
+  }
+}
+
+// Modal fixes: close button on the left (RTL) + checkbox clipping
+.navira-access-modal {
+  .modal-header {
+    .btn-close {
+      margin: 0;
+      margin-inline-start: auto;
+    }
+  }
+
+  .navira-access-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+
+    .form-check-input {
+      float: none;
+      margin: 0;
+      flex-shrink: 0;
+      position: static;
+    }
+
+    label {
+      margin: 0;
+      cursor: pointer;
+    }
+  }
+}
+
+// Stronger modal fixes: header layout + options padding
+.navira-access-modal .modal-header {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navira-access-modal .modal-header .modal-title {
+  margin: 0;
+}
+
+.navira-access-modal .modal-header .btn-close {
+  margin: 0 !important;
+  flex-shrink: 0;
+}
+
+.navira-access-modal .modal-body .navira-access-options {
+  padding: 4px 10px;
+}
+
+// Table toolbar actions (e.g. add button)
+.navira-table .navira-table-toolbar-end {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+// Modal header in modal-markup (non-dialog) context: title rightmost, close leftmost
+.navira-access-modal .modal-header {
+  flex-direction: row !important;
+}
+
+.navira-access-modal .modal-header .modal-title {
+  margin-inline-start: 0 !important;
+  margin-inline-end: auto !important;
+}
+
+.navira-access-modal .modal-header .btn-close {
+  margin: 0 !important;
+  margin-inline-end: 0 !important;
+  margin-inline-start: auto !important;
+  order: -1;
+}
+
+// Template forces .modal .btn-close { position:absolute; right:15px } — undo it for access modals
+.modal .navira-access-modal .btn-close,
+.navira-access-modal .btn-close {
+  position: static !important;
+  right: auto !important;
+  left: auto !important;
+  top: auto !important;
+  margin: 0 !important;
+  order: -1;
+  flex-shrink: 0;
+}
+
+.navira-access-modal .modal-header {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.navira-access-modal .modal-header .modal-title {
+  margin: 0 !important;
+  margin-inline-end: auto !important;
+}
+
+// Nuclear option: force close button to the left in access modals (beats template's .modal .btn-close)
+.modal .modal-dialog .modal-content .navira-access-modal .modal-header .btn-close,
+.navira-access-modal .modal-header .btn-close {
+  position: absolute !important;
+  left: 15px !important;
+  right: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  margin: 0 !important;
+}
+
+.navira-access-modal .modal-header .modal-title {
+  margin-inline-start: 0 !important;
+  padding-inline-start: 0 !important;
+}

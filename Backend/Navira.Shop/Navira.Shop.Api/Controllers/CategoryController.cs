@@ -11,8 +11,8 @@ namespace Navira.Shop.Api.Controllers
     [Route("api/[controller]")]
     [Display(Name = "دسته ها", Description = "مدیریت دسته ها")]
     [CustomAuthorize(AuthenticationSchemes = "Bearer")]
-    [Permission("دسته بندی")]
-    [Menu("Category.Controller", "دسته بندی")]
+    [Permission("Catalog", "کاتالوگ")]
+    [Menu("Catalog.Controller", "کاتالوگ")]
     public class CategoryController : ControllerBase
     {
         private readonly IBus _bus;

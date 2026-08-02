@@ -2,6 +2,7 @@
 {
     public sealed class MenuDto
     {
+        public int Id { get; set; }
         public string Title { get; init; } = default!;
         public string PermissionCode { get; init; } = default!;
         public MenuDto Parent { get; init; }

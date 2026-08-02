@@ -1,11 +1,10 @@
 ﻿using Navira.Shop.Application.Catalog.Commands;
-using Navira.Shop.Application.Catalog.Repository;
 using Navira.Shop.Core.Bus;
 using Navira.Shop.Core.Domain;
 using Navira.Shop.Core.Persistence;
 using Navira.Shop.Core.Results;
 using Navira.Shop.Core.Security;
-using Navira.Shop.Domain.Catalog.Entities;
+using Navira.Shop.Domain.Catalog;
 
 namespace Navira.Shop.Application.Handlers
 {

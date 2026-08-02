@@ -1,7 +1,7 @@
 ﻿using Navira.Shop.Core.Domain;
 using Navira.Shop.Domain.Catalog.ValueObjects;
 
-namespace Navira.Shop.Domain.Catalog.Entities
+namespace Navira.Shop.Domain.Catalog
 {
     /// <summary>
     /// Aggregate root for the catalog. Owns its ProductVariants and ProductAttributeValues

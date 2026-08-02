@@ -59,7 +59,7 @@ namespace Navira.Shop.Core.Services
                             BaseSubSystemId = _subsystemId,
                             ControllerName = controllerName,
                             Scope = "Controller",
-                            Code = $"{controllerName}.Controller",
+                            Code = permissionAttribute.Code.IsNullOrWhiteSpace() ? $"{controllerName}.Controller" : permissionAttribute.Code,
                             Title = permissionAttribute.Title,
                         });
                         controller.GetMethods().Where(w => w.HasAttribute<PermissionAttribute>()).ToList().ForEach(
@@ -99,7 +99,7 @@ namespace Navira.Shop.Core.Services
                                 PermissionCode = actionmenu.CodePermission,
                                 Title = actionmenu.Title,
                                 Icon = actionmenu.Icon,
-                                Route = $"/dashboard/{(string.IsNullOrWhiteSpace(actionmenu.Action) ? actionmenu.CodePermission.Split('.').Last() : actionmenu.Action)}",
+                                Route = $"/{(string.IsNullOrWhiteSpace(actionmenu.Action) ? actionmenu.CodePermission.Split('.').Last() : actionmenu.Action)}",
                                 SortOrder = menuAttribute.SortOrder
                             });
                         });

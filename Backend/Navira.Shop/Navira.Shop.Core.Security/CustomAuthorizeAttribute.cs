@@ -27,7 +27,7 @@ namespace Navira.Shop.Core.Security
             //DenyBlackListToken(context);
         }
 
-        //    private void DenyBlackListToken(AuthorizationFilterContext context)
+        //    private void DenyBlackListToken(AuthorizationFilterContext context)UnauthorizedUnauthorizedUnauthorized
         //    {
 
         //        var svc = context.HttpContext.RequestServices;

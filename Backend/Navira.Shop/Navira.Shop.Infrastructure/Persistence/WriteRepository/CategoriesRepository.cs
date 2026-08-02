@@ -1,6 +1,5 @@
-﻿using Navira.Shop.Application.Catalog.Repository;
-using Navira.Shop.Core.Caching;
-using Navira.Shop.Domain.Catalog.Entities;
+﻿using Navira.Shop.Core.Caching;
+using Navira.Shop.Domain.Catalog;
 
 namespace Navira.Shop.Infrastructure.Persistence
 {

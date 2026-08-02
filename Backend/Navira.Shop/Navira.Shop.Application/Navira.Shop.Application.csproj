@@ -7,10 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Catalog\Repository\ICategoriesRepository.cs" />
+    <Compile Remove="Identity\Repository\IMenuWriteRepository.cs" />
+    <Compile Remove="Identity\Repository\IPermissionWriteRepository.cs" />
+    <Compile Remove="Identity\Repository\IPolicyPermissionWriteRepository.cs" />
+    <Compile Remove="Identity\Repository\IPolicyWriteRepository.cs" />
+    <Compile Remove="Identity\Repository\IRolePolicyWriteRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Navira.Shop.Core.Bus\Navira.Shop.Core.Bus.csproj" />
     <ProjectReference Include="..\Navira.Shop.Core.Domain\Navira.Shop.Core.Domain.csproj" />
     <ProjectReference Include="..\Navira.Shop.Core.Persistence.EF\Navira.Shop.Core.Persistence.EF.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core.ViewModels\Navira.Shop.Core.ViewModels.csproj" />
     <ProjectReference Include="..\Navira.Shop.Domain\Navira.Shop.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Catalog\Repository\" />
   </ItemGroup>
 
 </Project>

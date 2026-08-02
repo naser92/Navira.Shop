@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Navira.Shop.Application.Identity;
+using Navira.Shop.Core.Bus;
 using Navira.Shop.Core.Extensions;
 using Navira.Shop.Core.Services;
 using Newtonsoft.Json;
@@ -12,9 +14,11 @@ namespace Navira.Shop.Api.Controllers
     public class ConfigController : ControllerBase
     {
         private readonly IPublishMenuAndPermissionService _permissionService;
-        public ConfigController(IPublishMenuAndPermissionService permissionService)
+        private readonly IBus _bus;
+        public ConfigController(IPublishMenuAndPermissionService permissionService, IBus bus)
         {
             _permissionService = permissionService;
+            _bus = bus;
         }
 
         [HttpGet("PublishPermissions/{name}")]
@@ -25,6 +29,7 @@ namespace Navira.Shop.Api.Controllers
                 return Ok("نام کنترولر را وارد کنید");
             }
             var data = await _permissionService.BuildPermissionAndMenu(name);
+            await _bus.Send(new RegisterPermissionAndMenuCommand { data = data });
             return Ok(JsonConvert.SerializeObject(data));
         }
     }

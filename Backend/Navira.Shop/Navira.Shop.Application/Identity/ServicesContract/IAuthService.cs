@@ -1,6 +1,7 @@
-﻿using Navira.Shop.Core.Service;
+﻿using Navira.Shop.Application.Auth;
+using Navira.Shop.Core.Service;
 
-namespace Navira.Shop.Application.Auth
+namespace Navira.Shop.Application.Identity
 {
     public interface IAuthService : IBaseService
     {

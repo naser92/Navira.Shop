@@ -10,4 +10,13 @@
     <Compile Remove="Permission\Resource.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="DevExtreme.AspNet.Data" Version="5.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Navira.Shop.Core.Extensions\Navira.Shop.Core.Extensions.csproj" />
+  </ItemGroup>
+
 </Project>
