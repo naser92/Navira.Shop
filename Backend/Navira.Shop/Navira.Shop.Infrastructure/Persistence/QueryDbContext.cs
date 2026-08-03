@@ -15,7 +15,7 @@ namespace Navira.Shop.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(MenuModelMapper).Assembly);
+            modelBuilder.ApplyReadConfigurations(typeof(MenuModelMapper).Assembly);
             base.OnModelCreating(modelBuilder);
         }
 

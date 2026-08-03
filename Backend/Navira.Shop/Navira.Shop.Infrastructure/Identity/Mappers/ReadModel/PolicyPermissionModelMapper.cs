@@ -5,7 +5,7 @@ using Navira.Shop.Core.Persistence.EF;
 
 namespace Navira.Shop.Infrastructure.Identity.Mappers.ReadModel
 {
-    public class PolicyPermissionModelMapper : EntityReadMapperBase<PolicyPermissionModel, int>
+    public class PolicyPermissionModelMapper : EntityReadMapperBase<PolicyPermissionModel, int>, IReadEntityConfiguration
     {
 
         public override void Configure(EntityTypeBuilder<PolicyPermissionModel> builder)

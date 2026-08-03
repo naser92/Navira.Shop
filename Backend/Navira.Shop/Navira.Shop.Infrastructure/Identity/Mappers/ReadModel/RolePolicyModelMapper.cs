@@ -5,7 +5,7 @@ using Navira.Shop.Core.Persistence.EF;
 
 namespace Navira.Shop.Infrastructure.Identity.Mappers.ReadModel
 {
-    public class RolePolicyModelMapper : EntityReadMapperBase<RolePolicyModel, int>
+    public class RolePolicyModelMapper : EntityReadMapperBase<RolePolicyModel, int>, IReadEntityConfiguration
     {
 
         public override void Configure(EntityTypeBuilder<RolePolicyModel> builder)

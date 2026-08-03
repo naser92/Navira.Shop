@@ -11,12 +11,14 @@ namespace Navira.Shop.Application.Identity
         private readonly IPermissionQueryService _permissionQueryService;
         private readonly IPermissionWriteRepository _permissionWriteRepository;
         private readonly IMenuWriteRepository _menuWriteRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterPermissionAndMenuCommandHandler(IUnitOfWork uow, IPermissionQueryService permissionQueryService, IPermissionWriteRepository permissionWriteRepository, IMenuWriteRepository menuWriteRepository) : base(uow)
+        public RegisterPermissionAndMenuCommandHandler(IUnitOfWork uow, IPermissionQueryService permissionQueryService, IPermissionWriteRepository permissionWriteRepository, IMenuWriteRepository menuWriteRepository, IUnitOfWork unitOfWork) : base(uow)
         {
             _permissionQueryService = permissionQueryService;
             _permissionWriteRepository = permissionWriteRepository;
             _menuWriteRepository = menuWriteRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IResult> Handle(RegisterPermissionAndMenuCommand command, CancellationToken cancellationToken = default)
@@ -43,7 +45,7 @@ namespace Navira.Shop.Application.Identity
                     await _permissionWriteRepository.Insert(permission);
                 }
             }
-
+            await _unitOfWork.Commit();
             var permissionMenuCode = await _permissionQueryService.GetByCode<PermissionDto>(command.data.Menus.Select(x => x.PermissionCode).ToList());
 
             foreach (var item in command.data.Menus)

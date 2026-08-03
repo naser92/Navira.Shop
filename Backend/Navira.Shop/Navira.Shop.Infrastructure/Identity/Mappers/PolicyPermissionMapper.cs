@@ -5,7 +5,7 @@ using Navira.Shop.Domain.Identity;
 
 namespace Navira.Shop.Infrastructure.Identity.Mappers.Model
 {
-    public class PolicyPermissionMapper : EntityMapperBase<PolicyPermission, int>
+    public class PolicyPermissionMapper : EntityMapperBase<PolicyPermission, int>, IWriteEntityConfiguration
     {
         public override void Configure(EntityTypeBuilder<PolicyPermission> builder)
         {

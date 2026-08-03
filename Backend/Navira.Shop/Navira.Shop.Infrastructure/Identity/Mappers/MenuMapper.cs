@@ -5,7 +5,7 @@ using Navira.Shop.Domain.Identity;
 
 namespace Navira.Shop.Infrastructure.Identity.Mappers.Model
 {
-    public class MenuMapper : EntityMapperBase<Menu, int>
+    public class MenuMapper : EntityMapperBase<Menu, int>, IWriteEntityConfiguration
     {
         public override void Configure(EntityTypeBuilder<Menu> builder)
         {

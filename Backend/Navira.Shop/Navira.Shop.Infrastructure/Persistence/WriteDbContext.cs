@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Navira.Shop.Core.Bus;
 using Navira.Shop.Core.Infrastructure;
 using Navira.Shop.Core.Persistence.EF;
-using Navira.Shop.Infrastructure.Catalog.Mappers.Model;
+using Navira.Shop.Infrastructure.Identity.Mappers.Model;
 using NaviraShop.Core.Mq;
 
 namespace Navira.Shop.Infrastructure.Persistence
@@ -22,8 +22,11 @@ namespace Navira.Shop.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CategoriesMapper).Assembly);
+            //modelBuilder.ApplyConfigurationsFromAssembly(typeof(CategoriesMapper).Assembly);
+            //base.OnModelCreating(modelBuilder);
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyWriteConfigurations(typeof(MenuMapper).Assembly);
+
         }
     }
 

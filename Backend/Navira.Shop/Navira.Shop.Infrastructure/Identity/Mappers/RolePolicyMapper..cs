@@ -5,7 +5,7 @@ using Navira.Shop.Domain.Identity;
 
 namespace Navira.Shop.Infrastructure.Identity.Mappers.Model
 {
-    public class RolePolicyMapper : EntityMapperBase<RolePolicy, int>
+    public class RolePolicyMapper : EntityMapperBase<RolePolicy, int>, IWriteEntityConfiguration
     {
         public override void Configure(EntityTypeBuilder<RolePolicy> builder)
         {

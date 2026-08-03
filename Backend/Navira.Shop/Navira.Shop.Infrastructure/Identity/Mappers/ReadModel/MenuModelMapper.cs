@@ -5,7 +5,7 @@ using Navira.Shop.Core.Persistence.EF;
 
 namespace Navira.Shop.Infrastructure.Identity.Mappers.ReadModel
 {
-    public class MenuModelMapper : EntityReadMapperBase<MenuModel, int>
+    public class MenuModelMapper : EntityReadMapperBase<MenuModel, int>, IReadEntityConfiguration
     {
 
         public override void Configure(EntityTypeBuilder<MenuModel> builder)
