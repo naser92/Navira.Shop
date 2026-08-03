@@ -1,310 +1,245 @@
 # Navira.Shop
 
-**A modular e-commerce platform built on ASP.NET Core 9**
+Backend services for a modular e-commerce platform built with ASP.NET Core 9, Entity Framework Core, CQRS-style command/query handling, Keycloak authentication, Redis caching, and RabbitMQ messaging.
 
-> ⚠️ **This project is currently in the framework/infrastructure stage.** The core architecture and cross-cutting concerns are implemented. Business feature modules (products, cart, orders, payments) are planned and will be added incrementally.
+> **Current state:** the foundation, category write operations, authentication flows, and permission/menu synchronization are implemented. Product aggregates are modeled, but product, cart, order, payment, and complete read APIs are not yet available.
 
----
+## Implemented Features
 
-## Project Overview
-
-Navira.Shop is a backend e-commerce platform designed with a modular, clean architecture approach. The solution separates concerns into distinct class libraries, each responsible for a specific infrastructure capability — from caching and persistence to security and messaging.
-
-The goal is to establish a robust, extensible foundation that business modules can plug into with minimal friction. All cross-cutting concerns (dependency injection, exception handling, caching, authentication, input validation, rate limiting, and message queuing) are already in place.
-
----
+- Category creation, update, and soft deletion
+- Keycloak login and refresh-token flows
+- JWT bearer authentication and role mapping
+- Attribute-based permissions and menu metadata
+- Permission/menu discovery and database synchronization
+- Separate EF Core write and query contexts
+- Command/query buses with automatic handler registration
+- Unit-of-work transaction handling
+- In-memory or Redis-backed caching and locking
+- MassTransit/RabbitMQ publishing infrastructure
+- Mapster mapping and FluentValidation discovery
+- Central exception handling, input normalization, CORS, and user activity middleware
+- OpenAPI generation and Scalar API documentation
 
 ## Architecture
 
-The solution follows a **Modular Clean Architecture** pattern. Rather than traditional layered folders, each infrastructure concern lives in its own class library project, promoting separation of responsibility and independent evolution.
+The solution uses a layered, DDD-inspired architecture supported by reusable Core libraries:
 
+```text
+Navira.Shop.Api
+       |
+       v
+Navira.Shop.Application
+       |
+       v
+Navira.Shop.Domain
+       ^
+       |
+Navira.Shop.Infrastructure
+
+Core libraries provide bus, persistence, caching, security,
+web middleware, mapping, configuration, and shared primitives.
 ```
-┌──────────────────────────────────────────────────────┐
-│                   Navira.Shop.Api                    │  ← Entry point (controllers, Program.cs)
-├──────────────────────────────────────────────────────┤
-│                Navira.Shop.Core.Web                  │  ← Middleware, service/app builder extensions
-├──────────┬──────────┬──────────┬─────────────────────┤
-│  .Bus    │ .Caching │ .Security│ .Mq                 │  ← Infrastructure modules
-├──────────┴──────────┴──────────┴─────────────────────┤
-│  .Configuration │ .Extensions │ .Mapper │ .Ioc       │  ← Support / utility modules
-├──────────────────────────────────────────────────────┤
-│  .Persistence │ .Persistence.EF │ .Infrastructure    │  ← Data access & type discovery
-├──────────────────────────────────────────────────────┤
-│                  Navira.Shop.Core                    │  ← Domain contracts (entities, results, caching)
-└──────────────────────────────────────────────────────┘
-```
 
-**Key architectural decisions:**
+Controllers contain minimal orchestration and dispatch requests through `IBus` or `IQueryBus`. Application handlers coordinate domain objects and repositories. Infrastructure implements database access, Keycloak integration, and persistence mappings.
 
-- **Convention-based auto-registration** — Services, repositories, dependency registrars, and mapping configurations are discovered at startup via `ITypeFinder` and registered automatically.
-- **CQRS-lite command/query bus** — Commands and queries flow through `IBus` / `IQueryBus` with dedicated handlers, keeping business logic decoupled from controllers.
-- **Pluggable app configuration** — Modules implement `IAppConfigService` or `IDependencyRegistrar` to hook into the startup pipeline without modifying the API project.
+Startup is convention-based. `WebAppTypeFinder` discovers and registers:
 
----
-
-## Implemented Framework Components
-
-| Component | Project(s) | Description |
-|---|---|---|
-| **Dependency Injection** | `Core.Ioc`, `Core.Web` | Auto-discovery of `IDependencyRegistrar` implementations; convention-based service registration via `ITypeFinder` |
-| **Command / Query Bus** | `Core.Bus` | `IBus` for commands, `IQueryBus` for queries, `ICommandHandler<T>` / `IQueryHandler<T, R>` contracts with `IUnitOfWork` integration |
-| **Exception Handling** | `Core.Web` | `ExceptionMiddleware` catches `ResultException`, `ApiException`, and unhandled exceptions; returns structured JSON responses with trace IDs |
-| **Input Sanitization** | `Core.Web` | `SafeInputMiddleware` validates and sanitizes incoming request bodies |
-| **Rate Limiting** | `Core.Web`, `Core` | `RateLimitMiddleware` with `[LimitRequests]` attribute for per-endpoint throttling backed by cache |
-| **User Activity Tracking** | `Core.Web` | `UserActivityMiddleware` tracks online users via cache |
-| **Caching** | `Core.Caching`, `Core` | Dual-mode caching — in-memory (`MemoryCacheManager`) or Redis (`RedisCacheManager`) with `IStaticCacheManager` abstraction, cache key generation, and distributed locking |
-| **Persistence** | `Core.Persistence`, `Core.Persistence.EF` | Generic `IRepository<T, TKey>` with separate `IWriteRepository` / `IQueryRepository` contracts; `IUnitOfWork` for transactional consistency |
-| **Entity Model** | `Core` | `IEntity<TKey>`, `IAggregateRoot`, `ISoftDeletableEntity`, `IHasRowVersion`, `IMemoryOptimize` base contracts |
-| **Object Mapping** | `Core.Mapper` | Mapster-based mapping with `IMapConfig` auto-discovery and `Map<T>()` extension methods |
-| **Configuration** | `Core.Configuration` | Strongly-typed `AppSettings` with sections for Redis, Cache, Keycloak, Scalar, REST clients, and system info |
-| **Authentication** | `Core.Web`, `Core.Security` | JWT Bearer authentication, cookie auth, `SecretKeyAuthFilter` for service-to-service auth, `IAppEngin` for current user context |
-| **Message Queue** | `Core.Mq` | MassTransit + RabbitMQ integration with `IPublisher` for event publishing and structured logging |
-| **API Documentation** | `Core.Web` | Scalar API reference with OpenAPI, configurable via `ScalarConfig` |
-| **Health Checks** | `Core`, `Core.Caching`, `Core.Bus` | `IHealthCheckRegistrar` interface; Redis and RabbitMQ health check packages included |
-| **Result Pattern** | `Core` | `IResult` / `IResult<T>` with `Result.Success()` / `Result.Fail()` factory methods and `ResultException` for flow control |
-| **Extensions & Helpers** | `Core.Extensions` | String, enum, object, collection, and `HttpContext` extensions; `CommonHelper`, `HashHelper`, Excel utilities (`ClosedXML`) |
-| **Validation** | `Core.Bus` | FluentValidation integrated into the command bus pipeline |
-| **Infrastructure** | `Core.Infrastructure` | `ITypeFinder` / `WebAppTypeFinder` for assembly scanning; `ICoreFileProvider` for file system abstraction |
-
----
-
-## Technology Stack
-
-| Category | Technology |
-|---|---|
-| **Runtime** | .NET 9 / ASP.NET Core 9 |
-| **ORM** | Entity Framework Core 9 |
-| **Micro ORM** | Dapper |
-| **Caching** | In-memory cache / Redis (StackExchange.Redis, RedLock.net) |
-| **Message Broker** | RabbitMQ via MassTransit |
-| **Authentication** | JWT Bearer, Cookie Auth, Keycloak (config ready) |
-| **Object Mapping** | Mapster |
-| **Validation** | FluentValidation |
-| **Serialization** | System.Text.Json, Newtonsoft.Json |
-| **API Documentation** | OpenAPI + Scalar |
-| **REST Client** | RestEase |
-| **Excel Processing** | ClosedXML, ExcelDataReader |
-| **Health Checks** | ASP.NET Core Health Checks (Redis, RabbitMQ) |
-
----
+- `IDependencyRegistrar` implementations
+- command and query handlers
+- validators
+- repositories and application services
+- Mapster configurations
+- application pipeline configuration hooks
 
 ## Project Structure
 
-```
-Navira.Shop/
-├── Navira.Shop.Api/                    # Web API entry point
-│   ├── Controllers/                    # API controllers
-│   ├── Program.cs                      # Application bootstrap
-│   ├── appsettings.json                # Base configuration
-│   └── appsettings.Development.json    # Development overrides
-│
-├── Navira.Shop.Core/                   # Domain contracts & abstractions
-│   ├── Bus/                            # IEvent, IMessage interfaces
-│   ├── Caching/                        # Cache key, IStaticCacheManager, ILocker
-│   ├── ComponentModel/                 # ReaderWriteLock utilities
-│   ├── Entity/                         # IEntity, IAggregateRoot, ISoftDeletableEntity
-│   ├── HealthCheck/                    # IHealthCheckRegistrar
-│   ├── JsonConverter/                  # Custom JSON converters
-│   ├── Persistence/                    # IRepository, IUnitOfWork
-│   ├── RateLimit/                      # LimitRequestsAttribute, ClientStatistics
-│   ├── Results/                        # IResult, Result, ResultException
-│   └── Service/                        # IBaseService marker interface
-│
-├── Navira.Shop.Core.Bus/              # Command/query bus (CQRS)
-│   ├── IBus.cs / IQueryBus            # Bus contracts
-│   ├── ICommand.cs / ICommandHandler  # Command pipeline
-│   └── BusControl.cs                  # Bus implementation with FluentValidation
-│
-├── Navira.Shop.Core.Caching/          # Caching implementations
-│   ├── MemoryCacheManager.cs          # In-memory cache
-│   ├── RedisCacheManager.cs           # Redis-backed cache
-│   └── Redis/                         # Redis connection wrapper
-│
-├── Navira.Shop.Core.Configuration/    # Strongly-typed settings
-│   ├── AppSettings.cs                 # Root configuration class
-│   ├── RedisConfig.cs                 # Redis settings
-│   ├── CacheConfig.cs                 # Cache behavior settings
-│   ├── KeycloakConfig.cs              # Keycloak integration settings
-│   └── ScalarConfig.cs                # API documentation settings
-│
-├── Navira.Shop.Core.Extensions/       # Utility extension methods
-│   ├── Helper/                        # CommonHelper, HashHelper
-│   └── *.cs                           # String, enum, object, collection extensions
-│
-├── Navira.Shop.Core.Infrastructure/   # Type discovery & file system
-│   ├── WebAppTypeFinder.cs            # Assembly scanning
-│   └── CoreFileProvider.cs            # File system abstraction
-│
-├── Navira.Shop.Core.Ioc/             # IoC contracts
-│   └── IDependencyRegistrar.cs        # Module DI registration interface
-│
-├── Navira.Shop.Core.Mapper/          # Object mapping
-│   ├── IMapConfig.cs                  # Mapping configuration interface
-│   └── MapperExtensionMethods.cs      # Map<T>() extensions (Mapster)
-│
-├── Navira.Shop.Core.Persistence/     # Persistence abstractions (standalone)
-│
-├── Navira.Shop.Core.Persistence.EF/  # EF Core repository contracts
-│   └── RepositoresContracts/          # IRepository, IWriteRepository, IQueryRepository
-│
-├── Navira.Shop.Core.Security/        # Authentication & authorization
-│   ├── AppEngin.cs                    # Current user context (IAppEngin)
-│   ├── SecretKeyAuthFilter.cs         # Service-to-service secret key auth
-│   ├── NaviraEncryption.cs            # Encryption utilities
-│   └── TokenSensitiveData.cs          # Token handling
-│
-├── Navira.Shop.Core.Web/             # Web layer orchestration
-│   ├── Config/                        # IAppConfigService
-│   ├── Extentions/                    # ServiceCollection & ApplicationBuilder extensions
-│   └── Middleware/                    # Exception, SafeInput, RateLimit, UserActivity
-│
-├── NaviraShop.Core.Mq/               # Message queue (MassTransit + RabbitMQ)
-│   ├── IPublisher.cs                  # Publishing contract
-│   ├── Publisher.cs                   # MassTransit publisher
-│   └── MessageFactory.cs              # Log message factory
-│
-└── Navira.Shop.slnx                  # Solution file
-```
+### Application Projects
 
----
+| Project | Responsibility |
+|---|---|
+| `Navira.Shop.Api` | ASP.NET Core entry point, controllers, runtime composition |
+| `Navira.Shop.Application` | Commands, queries, handlers, DTOs, and application services |
+| `Navira.Shop.Domain` | Catalog and identity aggregates, entities, and value objects |
+| `Navira.Shop.Infrastructure` | EF Core contexts, repositories, mappings, and Keycloak client |
 
-## Getting Started
+### Core Projects
 
-### Prerequisites
+| Project | Responsibility |
+|---|---|
+| `Navira.Shop.Core` | Entities, results, caching contracts, health-check contracts, shared abstractions |
+| `Navira.Shop.Core.Domain` | Aggregate roots, value objects, auditing, and domain exceptions |
+| `Navira.Shop.Core.Bus` | Command/query bus, handlers, domain events, and MassTransit setup |
+| `Navira.Shop.Core.Persistence.EF` | EF Core contexts, repository contracts, mappings, and interceptors |
+| `Navira.Shop.Core.Caching` | Memory and Redis cache implementations |
+| `Navira.Shop.Core.Security` | Current-user context, permission authorization, and security helpers |
+| `Navira.Shop.Core.Web` | Service registration, middleware, API results, OpenAPI, and Scalar |
+| `Navira.Shop.Core.Configuration` | Strongly typed application configuration |
+| `Navira.Shop.Core.Infrastructure` | Assembly scanning and file-provider abstractions |
+| `Navira.Shop.Core.Mapper` | Mapster configuration and mapping extensions |
+| `Navira.Shop.Core.Extensions` | General utilities, data helpers, and Excel support |
+| `Navira.Shop.Core.Ioc` | Dependency registration contracts |
+| `Navira.Shop.Core.Services` | Shared framework services |
+| `Navira.Shop.Core.ViewModels` | Shared grid and permission view models |
+| `NaviraShop.Core.Mq` | Message publishing and message factory abstractions |
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-- SQL Server (or another EF Core-compatible database)
-- Redis (optional — required only if `RedisConfig.Enabled` is `true`)
-- RabbitMQ (optional — required for message queue functionality)
+## Domain Status
 
-### Clone the Repository
+### Catalog
+
+- Category aggregate, EF mapping, repository, commands, handlers, and API write endpoints are implemented.
+- Categories support hierarchy, unique slugs, tax-category references, ordering, active state, auditing, and soft deletion.
+- Product, product variant, `Money`, and `Sku` domain models exist.
+- Product persistence mappings and product API/application workflows are not yet implemented.
+
+### Identity and Access
+
+- Login and token refresh are delegated to Keycloak.
+- JWT realm and client roles are mapped into ASP.NET Core role claims.
+- Permissions and menus can be declared on controllers and actions with attributes.
+- Permission, menu, policy, policy-permission, and role-policy models and repositories exist.
+- The permission API is currently a placeholder; full policy administration endpoints are still in progress.
+
+## Technology Stack
+
+| Area | Technology |
+|---|---|
+| Runtime | .NET 9 / ASP.NET Core 9 |
+| Database | SQL Server |
+| ORM | Entity Framework Core 9 |
+| Query utilities | Dapper, DevExtreme.AspNet.Data |
+| Authentication | Keycloak, JWT Bearer |
+| Caching | ASP.NET Core Memory Cache, Redis, RedLock.net |
+| Messaging | MassTransit, RabbitMQ |
+| Mapping | Mapster |
+| Validation | FluentValidation |
+| API documentation | OpenAPI, Scalar |
+| Serialization | System.Text.Json, Newtonsoft.Json |
+| Data utilities | ClosedXML, ExcelDataReader |
+
+## Prerequisites
+
+- .NET 9 SDK
+- SQL Server
+- A Keycloak realm and client
+- RabbitMQ when `RabbitMQ:AutoConfig` is enabled
+- Redis when `RedisConfig:Enabled` is enabled
+
+No Docker configuration is currently included.
+
+## Configuration
+
+Development settings are loaded from `Navira.Shop.Api/appsettings.Development.json`. Replace all repository-provided connection strings, tokens, client secrets, and passwords before running the application.
+
+Do not store production secrets in tracked JSON files. Use environment variables, a secret manager, or .NET user secrets:
 
 ```bash
-git clone https://github.com/your-org/Navira.Shop.git
-cd Navira.Shop/Backend/Navira.Shop
+cd Navira.Shop.Api
+dotnet user-secrets init
+dotnet user-secrets set "ConnectionStrings:WriteConnection" "<sql-server-connection>"
+dotnet user-secrets set "ConnectionStrings:ReadConnection" "<sql-server-connection>"
+dotnet user-secrets set "KeycloakConfig:BaseUrl" "http://localhost:8080"
+dotnet user-secrets set "KeycloakConfig:Realm" "Navira"
+dotnet user-secrets set "KeycloakConfig:ClientId" "navira-shop-api"
+dotnet user-secrets set "KeycloakConfig:ClientSecret" "<client-secret>"
 ```
 
----
-
-## Installation
-
-**Restore packages:**
-
-```bash
-dotnet restore Navira.Shop.slnx
-```
-
-**Build the solution:**
-
-```bash
-dotnet build Navira.Shop.slnx
-```
-
-**Run the API project:**
-
-```bash
-dotnet run --project Navira.Shop.Api
-```
-
-**Run database migrations** (when EF migrations are added):
-
-```bash
-dotnet ef database update --project Navira.Shop.Api
-```
-
-Once running, the Scalar API documentation is available at the configured endpoint (enabled by default in development).
-
----
-
-## Environment Configuration
-
-Configuration is managed through `appsettings.json` and environment-specific overrides (e.g., `appsettings.Development.json`). All settings bind to the strongly-typed `AppSettings` class.
-
-### Key Configuration Sections
+Key configuration sections:
 
 | Section | Purpose |
 |---|---|
-| `ConnectionStrings` | Database connection strings (keyed dictionary) |
-| `RedisConfig` | Redis connection, caching toggle, data protection key storage |
-| `CacheConfig` | Cache key prefix, default/short-term/bundled cache durations |
-| `Keycloak` | Keycloak identity provider settings (BaseUrl, Realm, ClientId, ClientSecret) |
-| `Scalar` | API documentation settings (Enabled, Version, UrlPrefix) |
-| `SystemInfo` | Application identity (Id, Name, Title, Description, AllowOrigins) |
-| `RestsConfig` | External REST service endpoints and tokens |
-| `Issuer` / `Audience` / `SigningKey` | JWT authentication parameters |
-| `Logging` | Standard ASP.NET Core log level configuration |
-| `Values` | Generic key-value store for application-specific settings |
+| `SystemInfo` | Application identity and allowed CORS origins |
+| `ConnectionStrings:WriteConnection` | SQL Server write database |
+| `ConnectionStrings:ReadConnection` | SQL Server query database |
+| `KeycloakConfig` | Keycloak base URL, realm, client ID, and client secret |
+| `CacheConfig` | Cache prefix and expiration durations |
+| `RedisConfig` | Redis connection, cache selection, and locking behavior |
+| `RabbitMQ` | Broker address, credentials, and automatic configuration switch |
+| `Scalar` | Enables or disables Scalar/OpenAPI mapping |
+| `RestsConfig` | External service definitions |
 
-### Environment Variables
-
-All configuration sections can be overridden using environment variables following the standard ASP.NET Core pattern:
+For a local run without Redis or RabbitMQ:
 
 ```bash
-export ConnectionStrings__DefaultConnection="Server=localhost;Database=NaviraShop;..."
-export RedisConfig__Enabled=true
-export RedisConfig__ConnectionString="localhost:6379"
-export ASPNETCORE_ENVIRONMENT=Development
+export RedisConfig__Enabled=false
+export RabbitMQ__AutoConfig=false
 ```
 
----
+`KeycloakConfig` must still be present because authentication is configured during startup.
 
-## Current Development Status
+## Build and Run
 
-| Area | Status |
-|---|---|
-| Core architecture & modular structure | ✅ Complete |
-| Dependency injection & auto-registration | ✅ Complete |
-| Command/query bus (CQRS) | ✅ Complete |
-| Exception handling middleware | ✅ Complete |
-| Input sanitization middleware | ✅ Complete |
-| Rate limiting middleware | ✅ Complete |
-| Caching (in-memory + Redis) | ✅ Complete |
-| Repository pattern (EF Core) | ✅ Complete |
-| JWT authentication infrastructure | ✅ Complete |
-| MassTransit / RabbitMQ messaging | ✅ Complete |
-| Object mapping (Mapster) | ✅ Complete |
-| API documentation (Scalar) | ✅ Complete |
-| Health checks infrastructure | ✅ Complete |
-| Result pattern | ✅ Complete |
-| Business domain models | 🔲 Planned |
-| Product management | 🔲 Planned |
-| Shopping cart | 🔲 Planned |
-| Order processing | 🔲 Planned |
-| Payment integration | 🔲 Planned |
-| Admin panel | 🔲 Planned |
+Run commands from the repository root:
 
----
+```bash
+dotnet restore Navira.Shop.Api/Navira.Shop.Api.csproj
+dotnet build Navira.Shop.Api/Navira.Shop.Api.csproj
+dotnet run --project Navira.Shop.Api/Navira.Shop.Api.csproj --launch-profile Navira.Shop.Api
+```
 
-## Roadmap
+The default launch profile uses:
 
-The following business features are planned for upcoming development phases:
+- API: `http://localhost:5979`
+- Scalar: `http://localhost:5979/scalar/v1`
+- OpenAPI JSON: `http://localhost:5979/openapi/v1.json`
 
-- [ ] **Product Management** — Categories, product catalog, inventory tracking, image management
-- [ ] **Shopping Cart** — Cart operations, session-based and authenticated carts, price calculations
-- [ ] **Order Processing** — Order creation, status management, order history
-- [ ] **Payment Integration** — Payment gateway integration, transaction management, refund handling
-- [ ] **User Management** — Customer profiles, address book, order history
-- [ ] **Admin Panel** — Dashboard, product/order/user management, analytics
-- [ ] **Search & Filtering** — Full-text search, faceted filtering, sorting
-- [ ] **Notifications** — Email and SMS notifications for order events
-- [ ] **Promotions & Discounts** — Coupon codes, promotional pricing, bulk discounts
+An HTTPS launch profile is also available at `https://localhost:7194`.
 
----
+### Solution File Note
+
+`Navira.Shop.slnx` currently contains machine-specific relative project paths. Use the API project commands above until the solution file is regenerated with portable paths.
+
+### Database Note
+
+The application configures separate `WriteDbContext` and `QueryDbContext` instances. No EF Core migrations are committed, and the current migrations assembly/design-time factory configuration needs correction before migration commands can be used reliably.
+
+## API Surface
+
+| Method | Route | Status |
+|---|---|---|
+| `POST` | `/api/auth/login` | Implemented |
+| `POST` | `/api/auth/refresh` | Implemented |
+| `GET` | `/api/auth/me` | Placeholder |
+| `POST` | `/api/category` | Implemented, authenticated |
+| `PUT` | `/api/category/{id}` | Implemented, authenticated |
+| `DELETE` | `/api/category/{id}` | Implemented, authenticated |
+| `GET` | `/api/config/PublishPermissions/{name}` | Implemented synchronization utility |
+| `POST` | `/api/permission` | Placeholder, authenticated |
+
+API results use the shared `IResult`/`IResult<T>` response pattern. Application-level failures may therefore be represented inside an HTTP 200 response body.
+
+## Current Limitations
+
+- No committed database migrations
+- No automated test projects
+- No Docker or Compose setup
+- No product, cart, order, payment, or inventory APIs
+- No category read/list endpoint
+- No mapped health-check endpoint despite available health-check abstractions/packages
+- Product domain models are not yet connected to persistence or application workflows
+- Development configuration contains environment-specific values that must be replaced
+
+## Development Roadmap
+
+- [x] Modular startup and convention-based dependency registration
+- [x] Command/query bus and unit-of-work pipeline
+- [x] Category write operations
+- [x] Keycloak login and refresh
+- [x] Permission and menu metadata synchronization
+- [x] Memory/Redis caching infrastructure
+- [x] RabbitMQ publishing infrastructure
+- [ ] Regenerate the portable solution file
+- [ ] Add and verify EF Core migrations
+- [ ] Add category and catalog query endpoints
+- [ ] Complete product persistence and APIs
+- [ ] Complete policy and permission administration
+- [ ] Add shopping cart, orders, payments, and inventory
+- [ ] Add automated tests
+- [ ] Add containerized local development
 
 ## Contributing
 
-Contributions are welcome! To get started:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m "Add your feature"`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request
-
-Please ensure your code follows the existing project conventions and includes appropriate documentation.
-
----
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
+1. Create a focused feature branch.
+2. Follow the existing Application/Domain/Infrastructure separation.
+3. Add handlers, repositories, mappings, and tests where applicable.
+4. Keep secrets and environment-specific configuration out of commits.
+5. Build the API project before opening a pull request.
