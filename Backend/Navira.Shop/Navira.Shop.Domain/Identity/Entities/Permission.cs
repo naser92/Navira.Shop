@@ -1,9 +1,8 @@
 ﻿using Navira.Shop.Core.Domain;
-using Navira.Shop.Core.Entity;
 
 namespace Navira.Shop.Domain.Identity
 {
-    public class Permission : AggregateRoot<int>, IFullAuditableEntity<Guid>, ISoftDeletableEntity
+    public class Permission : FullEntity<int>, IFullAuditableEntity<Guid>
     {
         public int BaseSubSystemId { get; set; }
 
@@ -22,7 +21,7 @@ namespace Navira.Shop.Domain.Identity
         public virtual ICollection<PolicyPermission> PolicyPermission { get; set; }
 
         public virtual ICollection<Menu> Menu { get; set; }
-        public bool IsDeleted { get; set; }
+
 
         public Permission() { }
 

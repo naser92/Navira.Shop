@@ -1,0 +1,111 @@
+// =============================================================================
+// Global Styles - NaviraShop
+// RTL-first reset, Vazirmatn font, and CSS variables derived from tokens.
+// Only reset, tokens, typography and approved utilities belong here
+// (docs/AI_RULES.md section 12.2).
+//
+// Font loading: the Vazirmatn font itself is loaded via `next/font/google`
+// in `src/app/layout.tsx`, which exposes it as the `--font-vazirmatn` CSS
+// variable on the <html> element. This file only wires that variable into
+// the shared `--font-family-base` token used across the app.
+// =============================================================================
+
+@use "tokens" as t;
+@use "glass";
+
+:root {
+  --color-bg-primary: #{t.$color-bg-primary};
+  --color-bg-secondary: #{t.$color-bg-secondary};
+  --color-surface-solid: #{t.$color-surface-solid};
+  --color-surface-glass: #{t.$color-surface-glass};
+  --color-surface-glass-strong: #{t.$color-surface-glass-strong};
+
+  --color-text-primary: #{t.$color-text-primary};
+  --color-text-secondary: #{t.$color-text-secondary};
+  --color-text-muted: #{t.$color-text-muted};
+  --color-text-on-dark: #{t.$color-text-on-dark};
+
+  --color-primary: #{t.$color-primary};
+  --color-primary-hover: #{t.$color-primary-hover};
+  --color-primary-soft: #{t.$color-primary-soft};
+
+  --color-border-default: #{t.$color-border-default};
+  --color-border-strong: #{t.$color-border-strong};
+
+  --color-success: #{t.$color-success};
+  --color-warning: #{t.$color-warning};
+  --color-error: #{t.$color-error};
+  --color-info: #{t.$color-info};
+
+  --font-family-base: var(--font-vazirmatn), #{t.$font-family-base};
+  --content-max-width: #{t.$content-max-width};
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  text-size-adjust: 100%;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  min-block-size: 100%;
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-base);
+  font-size: t.$font-body-medium;
+  line-height: t.$line-body-medium;
+  font-weight: t.$weight-body-medium;
+  direction: rtl;
+  text-align: start;
+}
+
+ul,
+ol {
+  padding-inline-start: 0;
+  margin-block: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-inline-size: 100%;
+}
+
+input,
+textarea,
+select,
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

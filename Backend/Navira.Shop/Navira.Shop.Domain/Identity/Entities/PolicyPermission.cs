@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Navira.Shop.Domain.Identity
 {
-    public class PolicyPermission : AggregateRoot<int>, IFullAuditableEntity<Guid>
+    public class PolicyPermission : FullEntity<int>, IFullAuditableEntity<Guid>
     {
         [ForeignKey("PermissionId")]
         public virtual Permission Permission { get; set; }

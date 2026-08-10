@@ -1,10 +1,9 @@
 ﻿using Navira.Shop.Core.Domain;
-using Navira.Shop.Core.Entity;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Navira.Shop.Domain.Identity
 {
-    public class Menu : AggregateRoot<int>, IFullAuditableEntity<Guid>, ISoftDeletableEntity
+    public class Menu : FullEntity<int>, IFullAuditableEntity<Guid>
     {
         [ForeignKey("ParentId")]
         public virtual Menu Parent { get; set; }
@@ -28,7 +27,6 @@ namespace Navira.Shop.Domain.Identity
         public bool IsActive { get; set; }
 
         public virtual ICollection<Menu> Childs { get; set; }
-        public bool IsDeleted { get; set; }
 
         public Menu() { }
         public Menu(int? parentId, int permissionId, int? sortOrder, bool isVisible, bool isActive)

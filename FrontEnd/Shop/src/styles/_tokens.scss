@@ -1,0 +1,161 @@
+// =============================================================================
+// Design Tokens - NaviraShop
+// Source of truth: docs/DESIGN_SYSTEM.md (sections 6-10)
+// Do not hardcode these values inside components. Import this file instead.
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// Color System (section 6)
+// -----------------------------------------------------------------------------
+$color-bg-primary: #f7f8fa;
+$color-bg-secondary: #eef2f6;
+$color-surface-solid: rgba(255, 255, 255, 0.82);
+$color-surface-glass: rgba(255, 255, 255, 0.56);
+$color-surface-glass-strong: rgba(255, 255, 255, 0.68);
+
+$color-text-primary: #172033;
+$color-text-secondary: #5b6475;
+$color-text-muted: #7b8494;
+$color-text-on-dark: #f8fafc;
+
+$color-primary: #2f6fed;
+$color-primary-hover: #215ed4;
+$color-primary-soft: #dce8ff;
+
+$color-accent-pink: #e78fb3;
+$color-accent-mint: #a7e8d8;
+$color-accent-peach: #f7c7a8;
+
+$color-border-soft: rgba(255, 255, 255, 0.42);
+$color-border-default: rgba(23, 32, 51, 0.08);
+$color-border-strong: rgba(23, 32, 51, 0.16);
+
+$color-success: #16a34a;
+$color-warning: #f59e0b;
+$color-error: #dc2626;
+$color-info: #0ea5e9;
+
+// -----------------------------------------------------------------------------
+// Typography (section 7)
+// -----------------------------------------------------------------------------
+$font-family-base: "Vazirmatn", "Peyda", "IRANSansX", "YekanBakh", sans-serif;
+
+// size / line-height / weight
+$font-display-large: 48px;
+$line-display-large: 56px;
+$weight-display-large: 700;
+
+$font-display-medium: 40px;
+$line-display-medium: 48px;
+$weight-display-medium: 700;
+
+$font-heading-1: 32px;
+$line-heading-1: 40px;
+$weight-heading-1: 700;
+
+$font-heading-2: 28px;
+$line-heading-2: 36px;
+$weight-heading-2: 700;
+
+$font-heading-3: 24px;
+$line-heading-3: 32px;
+$weight-heading-3: 600;
+
+$font-heading-4: 20px;
+$line-heading-4: 28px;
+$weight-heading-4: 600;
+
+$font-title-large: 18px;
+$line-title-large: 28px;
+$weight-title-large: 600;
+
+$font-title-medium: 16px;
+$line-title-medium: 24px;
+$weight-title-medium: 600;
+
+$font-body-large: 16px;
+$line-body-large: 30px;
+$weight-body-large: 400;
+
+$font-body-medium: 15px;
+$line-body-medium: 28px;
+$weight-body-medium: 400;
+
+$font-body-small: 14px;
+$line-body-small: 24px;
+$weight-body-small: 400;
+
+$font-caption: 12px;
+$line-caption: 20px;
+$weight-caption: 400;
+
+$font-label: 13px;
+$line-label: 20px;
+$weight-label: 500;
+
+$font-button: 14px;
+$line-button: 20px;
+$weight-button: 600;
+
+// -----------------------------------------------------------------------------
+// Spacing System (section 8) - base scale
+// -----------------------------------------------------------------------------
+$space-4: 4px;
+$space-8: 8px;
+$space-12: 12px;
+$space-16: 16px;
+$space-20: 20px;
+$space-24: 24px;
+$space-32: 32px;
+$space-40: 40px;
+$space-48: 48px;
+$space-56: 56px;
+$space-64: 64px;
+$space-80: 80px;
+
+// -----------------------------------------------------------------------------
+// Radius System (section 9)
+// -----------------------------------------------------------------------------
+$radius-xs: 8px;
+$radius-sm: 12px;
+$radius-md: 16px;
+$radius-lg: 20px;
+$radius-xl: 24px;
+$radius-pill: 999px;
+
+// -----------------------------------------------------------------------------
+// Shadow System (section 10)
+// -----------------------------------------------------------------------------
+$shadow-soft: 0 8px 24px rgba(15, 23, 42, 0.06);
+$shadow-medium: 0 12px 32px rgba(15, 23, 42, 0.1);
+$shadow-strong: 0 16px 48px rgba(15, 23, 42, 0.14);
+
+// -----------------------------------------------------------------------------
+// Z-Index Scale
+// -----------------------------------------------------------------------------
+$z-index-base: 0;
+$z-index-dropdown: 100;
+$z-index-sticky: 200;
+$z-index-header: 300;
+$z-index-drawer: 400;
+$z-index-modal: 500;
+$z-index-toast: 600;
+$z-index-tooltip: 700;
+
+// -----------------------------------------------------------------------------
+// Motion (Design System section 17)
+// -----------------------------------------------------------------------------
+$duration-fast: 120ms;
+$duration-normal: 180ms;
+$duration-slow: 240ms;
+
+$easing-out: ease-out;
+$easing-in-out: ease-in-out;
+
+// -----------------------------------------------------------------------------
+// Layout (Design System section 12)
+// -----------------------------------------------------------------------------
+$content-max-width: 1280px;
+$container-padding-mobile: $space-16;
+$container-padding-tablet: $space-24;
+$container-padding-desktop: $space-32;

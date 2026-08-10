@@ -1,0 +1,17 @@
+@use "@/styles/tokens" as t;
+@use "@/styles/mixins" as m;
+
+.container {
+  inline-size: 100%;
+  max-inline-size: t.$content-max-width;
+  margin-inline: auto;
+  padding-inline: t.$container-padding-mobile;
+
+  @include m.respond-up("md") {
+    padding-inline: t.$container-padding-tablet;
+  }
+
+  @include m.respond-up("lg") {
+    padding-inline: t.$container-padding-desktop;
+  }
+}

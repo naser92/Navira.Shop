@@ -1,9 +1,8 @@
 ﻿using Navira.Shop.Core.Domain;
-using Navira.Shop.Core.Entity;
 
 namespace Navira.Shop.Domain.Identity
 {
-    public class Policy : AggregateRoot<int>, IFullAuditableEntity<Guid>, ISoftDeletableEntity
+    public class Policy : FullEntity<int>, IFullAuditableEntity<Guid>
     {
         public string Name { get; set; }
 

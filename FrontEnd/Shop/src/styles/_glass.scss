@@ -1,0 +1,51 @@
+// =============================================================================
+// Glassmorphism - NaviraShop (docs/DESIGN_SYSTEM.md section 11)
+// Central place for glass surface mixins and utility classes.
+// Components must use these instead of hardcoding blur/opacity values.
+// =============================================================================
+
+@use "tokens" as t;
+
+// Base glass surface: header, product card, filters panel, floating areas.
+@mixin glass-base {
+  background: #{t.$color-surface-glass};
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid #{t.$color-border-soft};
+  box-shadow: #{t.$shadow-soft};
+}
+
+// Strong glass surface: cart drawer, modal, mobile bottom navigation.
+@mixin glass-strong {
+  background: #{t.$color-surface-glass-strong};
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  border: 1px solid #{t.$color-border-soft};
+  box-shadow: #{t.$shadow-medium};
+}
+
+// Dark glass surface: reserved for overlays or contrast panels on dark media.
+@mixin glass-dark {
+  background: rgba(23, 32, 51, 0.56);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: #{t.$shadow-medium};
+  color: #{t.$color-text-on-dark};
+}
+
+// Reusable utility classes, consumed globally (e.g. from RootLayout).
+.glass-panel {
+  @include glass-base;
+  border-radius: t.$radius-lg;
+}
+
+.glass-panel--strong {
+  @include glass-strong;
+  border-radius: t.$radius-lg;
+}
+
+.glass-panel--dark {
+  @include glass-dark;
+  border-radius: t.$radius-lg;
+}
