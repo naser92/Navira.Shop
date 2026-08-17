@@ -1,9 +1,8 @@
 ﻿using Navira.Shop.Application.Common;
-using Navira.Shop.Core.Domain;
 
 namespace Navira.Shop.Application.Identity
 {
-    public class PolicyModel : BaseReadModel<int>, IAuditableEntity
+    public class PolicyModel : BaseReadModel<int>
     {
 
         public string Name { get; set; }

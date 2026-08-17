@@ -12,7 +12,7 @@
     {
         public bool IsDeleted { get; set; }
     }
-    public interface IFullAuditableEntity<TKey> : ICreateAuditableEntity<TKey>, IModifyAuditableEntity<TKey>, IDeleteAuditableEntity<TKey>
+    public interface IFullAuditableEntity<TKey> : ICreateAuditableEntity<TKey>, IModifyAuditableEntity<TKey?>, IDeleteAuditableEntity<TKey?>
     {
     }
 

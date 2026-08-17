@@ -9,18 +9,28 @@ namespace Navira.Shop.Core.Persistence.EF
          this ModelBuilder modelBuilder,
          Assembly assembly)
         {
-            ApplyConfigurations<IReadEntityConfiguration>(
-                modelBuilder,
-                assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(
+            assembly,
+            type =>
+                type is { IsClass: true, IsAbstract: false } &&
+                typeof(IReadEntityConfiguration).IsAssignableFrom(type));
+            //ApplyConfigurations<IReadEntityConfiguration>(
+            //    modelBuilder,
+            //    assembly);
         }
 
         public static void ApplyWriteConfigurations(
             this ModelBuilder modelBuilder,
             Assembly assembly)
         {
-            ApplyConfigurations<IWriteEntityConfiguration>(
-                modelBuilder,
-                assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(
+            assembly,
+            type =>
+                type is { IsClass: true, IsAbstract: false } &&
+                typeof(IWriteEntityConfiguration).IsAssignableFrom(type));
+            //ApplyConfigurations<IWriteEntityConfiguration>(
+            //    modelBuilder,
+            //    assembly);
         }
 
         private static void ApplyConfigurations<TMarker>(
@@ -36,6 +46,7 @@ namespace Navira.Shop.Core.Persistence.EF
 
             foreach (var configurationType in configurationTypes)
             {
+
                 var configurationInterface =
                     configurationType
                         .GetInterfaces()
@@ -65,9 +76,24 @@ namespace Navira.Shop.Core.Persistence.EF
                     applyConfigurationMethod
                         .MakeGenericMethod(entityType);
 
+                Console.WriteLine(
+                    $"BEFORE INVOKE: {modelBuilder.Model.FindEntityType(entityType) != null}");
+
+                Console.WriteLine(
+                    $"METHOD: {genericMethod}");
+
+                Console.WriteLine(
+                    $"METHOD PARAMETER: {genericMethod.GetParameters()[0].ParameterType}");
+
+                Console.WriteLine(
+                    $"CONFIGURATION TYPE: {configuration.GetType()}");
+
                 genericMethod.Invoke(
                     modelBuilder,
                     new[] { configuration });
+
+                Console.WriteLine(
+                   $"AFTER INVOKE: {modelBuilder.Model.FindEntityType(entityType) != null}");
             }
         }
     }

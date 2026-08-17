@@ -2,7 +2,7 @@
 
 namespace Navira.Shop.Domain.Identity
 {
-    public class Permission : FullEntity<int>, IFullAuditableEntity<Guid>
+    public class Permission : AggregateRoot<int>, IFullAuditableEntity<Guid>
     {
         public int BaseSubSystemId { get; set; }
 
@@ -18,6 +18,7 @@ namespace Navira.Shop.Domain.Identity
 
         public bool IsActive { get; set; }
 
+        public bool IsDeleted { get; set; }
         public virtual ICollection<PolicyPermission> PolicyPermission { get; set; }
 
         public virtual ICollection<Menu> Menu { get; set; }

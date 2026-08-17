@@ -11,6 +11,5 @@ namespace Navira.Shop.Domain.Identity
         public string RoleId { get; set; }
 
         public int PolicyId { get; set; }
-        public bool IsDeleted { get; set; }
     }
 }

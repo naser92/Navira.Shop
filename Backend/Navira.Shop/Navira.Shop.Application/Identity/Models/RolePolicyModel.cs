@@ -1,10 +1,9 @@
 ﻿using Navira.Shop.Application.Common;
-using Navira.Shop.Core.Domain;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Navira.Shop.Application.Identity
 {
-    public class RolePolicyModel : BaseReadModel<int>, IAuditableEntity
+    public class RolePolicyModel : BaseReadModel<int>
     {
 
         public string RoleId { get; set; }

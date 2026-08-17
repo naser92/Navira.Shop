@@ -1,10 +1,9 @@
 ﻿using Navira.Shop.Application.Common;
-using Navira.Shop.Core.Domain;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Navira.Shop.Application.Identity
 {
-    public class MenuModel : BaseReadModel<int>, IAuditableEntity
+    public class MenuModel : BaseReadModel<int>
     {
 
         public int? ParentId { get; set; }

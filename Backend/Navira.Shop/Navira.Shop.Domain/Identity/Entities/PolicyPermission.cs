@@ -12,6 +12,6 @@ namespace Navira.Shop.Domain.Identity
         public virtual Policy Policy { get; set; }
         public int PolicyId { get; set; }
         public int PermissionId { get; set; }
-        public bool IsDeleted { get; set; }
+
     }
 }

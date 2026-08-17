@@ -1,9 +1,8 @@
 ﻿using Navira.Shop.Application.Common;
-using Navira.Shop.Core.Domain;
 
 namespace Navira.Shop.Application.Identity
 {
-    public class PermissionModel : BaseReadModel<int>, IAuditableEntity
+    public class PermissionModel : BaseReadModel<int>
     {
 
         public int BaseSubSystemId { get; set; }

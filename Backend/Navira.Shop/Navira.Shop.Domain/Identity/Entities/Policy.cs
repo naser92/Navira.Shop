@@ -17,6 +17,6 @@ namespace Navira.Shop.Domain.Identity
         public virtual ICollection<PolicyPermission> PolicyPermission { get; set; }
 
         public virtual ICollection<RolePolicy> RolePolicy { get; set; }
-        public bool IsDeleted { get; set; }
+
     }
 }

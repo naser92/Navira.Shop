@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Navira.Shop.Core.Bus;
+using Navira.Shop.Core.Domain;
 using Navira.Shop.Core.Infrastructure;
 using Navira.Shop.Core.Persistence.EF;
 using Navira.Shop.Infrastructure.Identity.Mappers.Model;
@@ -26,6 +27,15 @@ namespace Navira.Shop.Infrastructure.Persistence
             //base.OnModelCreating(modelBuilder);
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyWriteConfigurations(typeof(MenuMapper).Assembly);
+
+            modelBuilder.AddAuditableShadowProperties();
+
+            modelBuilder.AddPrioritisedShadowProperty();
+
+            modelBuilder.ApplyMemoryOptimizedTables();
+            modelBuilder.ApplySoftDeleteQueryFilters();
+
+
 
         }
     }

@@ -23,15 +23,16 @@ namespace Navira.Shop.Application.Identity
 
         public async Task<IResult> Handle(RegisterPermissionAndMenuCommand command, CancellationToken cancellationToken = default)
         {
-            var permissionExist = await _permissionQueryService.GetByCode<PermissionDto>(command.data.Permission.Select(x => x.Code).ToList());
+            //var permissionExist = await _permissionQueryService.GetByCode<PermissionDto>(command.data.Permission.Select(x => x.Code).ToList());
+            var permissionExist = await _permissionWriteRepository.GetAll(x => x.Where(i => (command.data.Permission.Select(x => x.Code)).Contains(i.Code)));
 
             foreach (var item in command.data.Permission)
             {
-                if (permissionExist.Contains(item))
+                if ((permissionExist.Select(x => x.Code)).Contains(item.Code))
                 {
-                    var permission = await _permissionWriteRepository.Get(x => x.Code == item.Code);
-                    if (permission.Title != item.Title)
-                        permission.ChangeTitle(item.Title);
+                    var permission = permissionExist.First(x => x.Code == item.Code);
+
+                    permission.ChangeTitle(item.Title);
                 }
                 else
                 {
@@ -43,6 +44,7 @@ namespace Navira.Shop.Application.Identity
                         );
 
                     await _permissionWriteRepository.Insert(permission);
+                    var a = 1;
                 }
             }
             await _unitOfWork.Commit();
