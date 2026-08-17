@@ -21,7 +21,7 @@ namespace Navira.Shop.Api.Controllers
             _queryBus = queryBus;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Permission("List", "دسترسی ها")]
         [Menu("Permission.List", "دسترسی ها", Action = "access")]
         public virtual async Task<IActionResult> List()

@@ -16,7 +16,7 @@ namespace Navira.Shop.Core.Security
                 // not logged in
                 context.Result = new JsonResult(new
                 {
-                    message = "Unauthorized",
+                    message = "Unauthorized  aaa",
                     error = true,
 
                 })

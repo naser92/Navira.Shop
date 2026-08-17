@@ -77,7 +77,7 @@ namespace Navira.Shop.Core.Web
                              await context.Response.WriteAsJsonAsync(new
                              {
                                  status = 401,
-                                 error = "Unauthorized"
+                                 error = "Unauthorized bbb"
                              });
                          },
 
