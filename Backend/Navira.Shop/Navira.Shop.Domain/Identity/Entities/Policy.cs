@@ -18,5 +18,30 @@ namespace Navira.Shop.Domain.Identity
 
         public virtual ICollection<RolePolicy> RolePolicy { get; set; }
 
+        public Policy() { }
+
+        public Policy(string name, string title, string description, bool isSystem, bool isActive)
+        {
+            Name = name;
+            Title = title;
+            Description = description;
+            IsSystem = isSystem;
+            IsActive = isActive;
+        }
+
+        public static Policy Create(string name, string title, string description = null, bool isSystem = false, bool isActive = true)
+        {
+            return new Policy(
+                name,
+                title,
+                description,
+                isSystem,
+                isActive
+                    );
+        }
+
+        public void ChaneName(string name) => Name = name;
+        public void ChaneTitle(string title) => Title = title;
+        public void ChaneDescription(string description) => Description = description;
     }
 }
