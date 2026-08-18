@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Navira.Shop.Application.Auth;
+using Navira.Shop.Application.Identity;
 using Navira.Shop.Core.Bus;
+using Navira.Shop.Core.Security;
 using Navira.Shop.Core.Web;
 using System.ComponentModel.DataAnnotations;
 
@@ -25,18 +27,16 @@ namespace Navira.Shop.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginCommand command, CancellationToken cancellationToken)
-        {
-            return await _queryBus.Send<LoginCommand, AuthTokenDto>(command, cancellationToken).ApiResultAsync();
-        }
+        public async Task<IActionResult> Login([FromBody] LoginCommand command, CancellationToken cancellationToken) =>
+                await _queryBus.Send<LoginCommand, AuthTokenDto>(command, cancellationToken).ApiResultAsync();
+
 
 
         [AllowAnonymous]
         [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh([FromBody] RefreshTokenCommand command, CancellationToken cancellationToken)
-        {
-            return await _queryBus.Send<RefreshTokenCommand, AuthTokenDto>(command, cancellationToken).ApiResultAsync();
-        }
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenCommand command, CancellationToken cancellationToken) =>
+                 await _queryBus.Send<RefreshTokenCommand, AuthTokenDto>(command, cancellationToken).ApiResultAsync();
+
 
         [AllowAnonymous]
         [HttpGet("me")]
@@ -44,6 +44,16 @@ namespace Navira.Shop.Api.Controllers
         {
             Ok("me");
         }
+
+        [Route("UserAccessInfo")]
+        [CustomAuthorize(AuthenticationSchemes = "Bearer")]
+        [HttpGet]
+        public async Task<IActionResult> UserAccessInfo() =>
+             await _queryBus.Send<UserAccessInfoCommand, UserAccessInfoDto>(new UserAccessInfoCommand()).ApiResultAsync();
+
+
+
+
 
     }
 }

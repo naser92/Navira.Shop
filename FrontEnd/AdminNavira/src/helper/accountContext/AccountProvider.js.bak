@@ -10,7 +10,6 @@ export default function AccountProvider({ children }) {
 
   const [userInfo, setUserInfo] = useState(null);
   const [userAccess, setUserAccess] = useState([]);
-  const [dynamicMenus, setDynamicMenus] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -32,28 +31,10 @@ export default function AccountProvider({ children }) {
     } catch (error) {
       setUserInfo(null);
       setUserAccess([]);
-      setDynamicMenus(null);
       setIsAuthenticated(false);
       return null;
     } finally {
       setIsLoading(false);
-    }
-  }, []);
-
-  const refreshUserAccessInfo = useCallback(async () => {
-    try {
-      const result = await apiFetch("/api/auth/UserAccessInfo", {
-        method: "GET",
-      });
-
-      const menuData = result?.data?.menus || [];
-      setDynamicMenus(menuData);
-
-      return menuData;
-    } catch (error) {
-      console.error("Failed to fetch user access info:", error);
-      setDynamicMenus(null);
-      return null;
     }
   }, []);
 
@@ -65,7 +46,6 @@ export default function AccountProvider({ children }) {
     } finally {
       setUserInfo(null);
       setUserAccess([]);
-      setDynamicMenus(null);
       setIsAuthenticated(false);
       router.replace("/auth/login");
       router.refresh();
@@ -80,14 +60,12 @@ export default function AccountProvider({ children }) {
     () => ({
       userInfo,
       userAccess,
-      dynamicMenus,
-      refreshUserAccessInfo,
       isAuthenticated,
       isLoading,
       refreshProfile,
       logout,
     }),
-    [userInfo, userAccess, isAuthenticated, isLoading, refreshProfile, logout, dynamicMenus, refreshUserAccessInfo]
+    [userInfo, userAccess, isAuthenticated, isLoading, refreshProfile, logout]
   );
 
   return <AccountContext.Provider value={value}>{children}</AccountContext.Provider>;

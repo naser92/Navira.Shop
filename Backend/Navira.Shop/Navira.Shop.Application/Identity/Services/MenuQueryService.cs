@@ -53,12 +53,35 @@ namespace Navira.Shop.Application.Identity
 
             return result;
         }
-
+        #endregion
 
         public async Task<T> GetByPermissionId<T>(int permissionId) => await _repository.Get<T>(i => i.PermissionId == permissionId);
 
+        public async Task<List<MenuDto>> GetMenu()
+        {
+            var result = new List<MenuDto>();
+            var menus = await _repository.GetAll();
 
-        #endregion
+            foreach (var item in menus)
+            {
+                if (item.ParentId == null)
+                {
+                    var menuItem = item.Map<MenuDto>();
+                    menuItem.Childs = GetChildMenuByParent(menus, item.Id);
+                    result.Add(menuItem);
+                }
+            }
+
+            return result;
+        }
+
+        private List<MenuDto> GetChildMenuByParent(IList<MenuModel> menus, int parentId) =>
+            menus.Where(x => x.ParentId == parentId).Map<List<MenuDto>>();
+
+
+
+
+
 
     }
 

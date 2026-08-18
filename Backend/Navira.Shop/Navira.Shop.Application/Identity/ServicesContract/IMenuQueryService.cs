@@ -12,5 +12,7 @@ namespace Navira.Shop.Application.Identity
         Task<IResult<IList<T>>> Get<T>();
         Task<T> GetByPermissionId<T>(int permissionId);
         #endregion
+
+        Task<List<MenuDto>> GetMenu();
     }
 }
