@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Badge } from "reactstrap";
-import { RiKey2Line, RiLink } from "react-icons/ri";
+import { RiErrorWarningLine, RiKey2Line, RiLink } from "react-icons/ri";
 import NaviraDataTable from "@/components/common/NaviraDataTable";
 import { useAccessAssign, useAccessList } from "@/utils/hooks/access/useAccessCrud";
 import ConnectionsModal from "./ConnectionsModal";
@@ -18,12 +18,13 @@ const policyTexts = {
   ConnectPermissions: "اتصال مجوزها",
   ConnectTitle: "اتصال مجوزها به سیاست",
   Empty: "سیاستی یافت نشد",
+  Error: "خطا در دریافت سیاست‌ها",
   NoDescription: "—",
   NoPermission: "—",
 };
 
 const PolicyList = () => {
-  const { items: policies, isLoading } = useAccessList("policies");
+  const { items: policies, isLoading, error } = useAccessList("policies");
   const { items: roles } = useAccessList("roles");
   const { items: permissions } = useAccessList("permissions");
   const assign = useAccessAssign("policies");
@@ -89,6 +90,17 @@ const PolicyList = () => {
       ),
     },
   ];
+
+  if (error) {
+    return (
+      <div className="navira-table" dir="rtl">
+        <div className="navira-table-state text-danger">
+          <RiErrorWarningLine size={22} />
+          <span>{error.message || policyTexts.Error}</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

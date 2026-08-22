@@ -44,7 +44,7 @@ namespace Navira.Shop.Application.Identity
                         );
 
                     await _permissionWriteRepository.Insert(permission);
-                    var a = 1;
+
                 }
             }
             await _unitOfWork.Commit();

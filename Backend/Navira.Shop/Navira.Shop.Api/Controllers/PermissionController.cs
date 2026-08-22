@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Navira.Shop.Application.Identity;
 using Navira.Shop.Core.Bus;
 using Navira.Shop.Core.Security;
+using Navira.Shop.Core.Web;
 using System.ComponentModel.DataAnnotations;
 
 namespace Navira.Shop.Api.Controllers
@@ -22,12 +24,9 @@ namespace Navira.Shop.Api.Controllers
         }
 
         [HttpGet]
-        [Permission("List", "دسترسی ها")]
+        //[Permission("List", "دسترسی ها")]
         [Menu("Permission.List", "دسترسی ها", Action = "access")]
-        public virtual async Task<IActionResult> List()
-        {
-            return Ok();
-
-        }
+        public virtual async Task<IActionResult> List() =>
+            await _queryBus.Send<PermissionListCommand, IList<PermissionModelDto>>(new PermissionListCommand()).ApiResultAsync();
     }
 }

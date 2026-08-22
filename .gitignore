@@ -371,3 +371,6 @@ PDN.TPS.Taxpayer.Api/appsettings.Akbari.json
 /FrontEnd/AdminNavira/.next
 /FrontEnd/AdminNavira/.next
 *.sst
+/FrontEnd/AdminNavira/bot
+/FrontEnd/AdminNavira/.next
+/FrontEnd/AdminNavira/.next

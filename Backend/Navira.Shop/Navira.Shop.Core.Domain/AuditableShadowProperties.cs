@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Navira.Shop.Core.Extensions;
-using Navira.Shop.Core.Security;
 using System.Security.Claims;
 
 namespace Navira.Shop.Core.Domain
@@ -180,22 +179,22 @@ namespace Navira.Shop.Core.Domain
             };
         }
 
-        public static Guid GetUserId(HttpContext httpContext)
+        public static Guid GetUserId(HttpContext? httpContext)
         {
-            var userId = Guid.Empty;
-            var claimsIdentity = ((ClaimsIdentity)httpContext?.User?.Identity);
-            if (claimsIdentity is null)
-                return userId;
-            if (!claimsIdentity.Claims.Any())
-                return userId;
+            if (httpContext?.User?.Identity is not ClaimsIdentity identity)
+                return Guid.Empty;
 
-            var value = claimsIdentity.Claims.SingleOrDefault(c => c.Type == "sd")?.Value;
-            var sensitiveData = TokenSensitiveData.Decrypt(value);
-            if (!sensitiveData.UserId.IsNull())
-            {
-                userId = sensitiveData.UserId;
-            }
-            return userId;
+            if (!identity.IsAuthenticated)
+                return Guid.Empty;
+
+            var value = identity.FindFirst("sub")?.Value;
+
+            if (string.IsNullOrWhiteSpace(value))
+                return Guid.Empty;
+
+            return Guid.TryParse(value, out var userId)
+                ? userId
+                : Guid.Empty;
         }
     }
 }

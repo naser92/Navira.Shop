@@ -1,33 +1,50 @@
 import { NextResponse } from "next/server";
-// import { callBackendWithAuth } from "@/lib/api/serverAuth";
+import { callBackendWithAuth } from "@/lib/api/serverAuth";
 
-// TODO: replace demo data with the real backend call once the endpoint is ready.
-// export async function GET(request) {
-//   const { search } = new URL(request.url);
-//   const backendResponse = await callBackendWithAuth(`/api/access/permissions${search}`, {
-//     method: "GET",
-//     headers: { "Content-Type": "application/json" },
-//   });
-//   const result = await backendResponse.json();
-//   return NextResponse.json({ success: true, data: result?.data ?? result });
-// }
+/**
+ * Permission DTO matching backend response (GET /api/Permission).
+ * @typedef {Object} Permission
+ * @property {number} id
+ * @property {number} baseSubSystemId
+ * @property {string} controllerName
+ * @property {string} scope
+ * @property {string} code
+ * @property {string} title
+ * @property {boolean} isActive
+ */
 
-const DEMO_PERMISSIONS = [
-  { id: 1, name: "Get.Dashboard.Admin" },
-  { id: 2, name: "Get.Product.Admin" },
-  { id: 3, name: "Create.Product.Admin" },
-  { id: 4, name: "Update.Product.Admin" },
-  { id: 5, name: "Delete.Product.Admin" },
-  { id: 6, name: "Get.User.Admin" },
-  { id: 7, name: "Create.User.Admin" },
-  { id: 8, name: "Update.User.Admin" },
-  { id: 9, name: "Delete.User.Admin" },
-  { id: 10, name: "Get.Order.Admin" },
-  { id: 11, name: "Update.Order.Admin" },
-  { id: 12, name: "Get.Role.Admin" },
-  { id: 13, name: "Update.Role.Admin" },
-];
+const normalizePermissions = (result) => {
+  const payload = result?.data ?? result;
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.items)) return payload.items;
+  if (Array.isArray(payload?.data)) return payload.data;
+  return [];
+};
 
-export async function GET() {
-  return NextResponse.json({ success: true, data: DEMO_PERMISSIONS });
+export async function GET(request) {
+  try {
+    const { search } = new URL(request.url);
+    const backendResponse = await callBackendWithAuth(`/api/Permission${search}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const result = await backendResponse.json().catch(() => null);
+
+    // The backend wraps every response in { error, message, data } and returns
+    // HTTP 200 even for business failures, so `error: true` must be treated as a failure.
+    if (!backendResponse.ok || result?.error === true) {
+      return NextResponse.json(
+        { success: false, message: result?.message || "Failed to fetch permissions" },
+        { status: backendResponse.ok ? 400 : backendResponse.status }
+      );
+    }
+
+    return NextResponse.json({ success: true, data: normalizePermissions(result) });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, message: error.message || "Failed to fetch permissions" },
+      { status: 500 }
+    );
+  }
 }

@@ -6,52 +6,79 @@ import { Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHead
 import Btn from "@/elements/buttons/Btn";
 import { useAccessCreate } from "@/utils/hooks/access/useAccessCrud";
 
+/**
+ * Create policy request matching backend PolicyRegisterCommand (POST /api/Policy).
+ * @typedef {Object} CreatePolicyRequest
+ * @property {string|null} name
+ * @property {string|null} title
+ * @property {string|null} description
+ * @property {boolean} isSystem
+ * @property {boolean} isActive
+ */
+
 const formTexts = {
   Add: "افزودن سیاست",
   Title: "ایجاد سیاست جدید",
   Name: "نام سیاست",
-  NamePlaceholder: "مثلاً: دسترسی عملیاتی",
+  NamePlaceholder: "مثلاً: OperationalAccess",
+  PolicyTitle: "عنوان",
+  TitlePlaceholder: "مثلاً: دسترسی عملیاتی",
   Description: "توضیحات",
   DescriptionPlaceholder: "توضیح کوتاه درباره این سیاست...",
+  IsSystem: "سیستمی",
+  IsActive: "فعال",
   Cancel: "انصراف",
   Submit: "ایجاد سیاست",
-  NameRequired: "نام سیاست الزامی است",
 };
+
+const INITIAL_FORM = {
+  name: "",
+  title: "",
+  description: "",
+  isSystem: true,
+  isActive: true,
+};
+
+const toNullable = (value) => (value.trim() === "" ? null : value.trim());
 
 const PolicyFormModal = ({ onCreated }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [error, setError] = useState("");
+  const [form, setForm] = useState(INITIAL_FORM);
   const create = useAccessCreate("policies");
 
   const toggle = () => {
+    if (create.isPending) return;
     setIsOpen((prev) => !prev);
-    setError("");
   };
 
   const reset = () => {
-    setName("");
-    setDescription("");
-    setError("");
+    setForm(INITIAL_FORM);
+  };
+
+  const setField = (field) => (event) => {
+    const value = event.target.type === "checkbox" ? event.target.checked : event.target.value;
+    setForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!name.trim()) {
-      setError(formTexts.NameRequired);
-      return;
-    }
-    create.mutate(
-      { name: name.trim(), description: description.trim(), permissions: [] },
-      {
-        onSuccess: () => {
-          toggle();
-          reset();
-          onCreated?.();
-        },
-      }
-    );
+
+    /** @type {CreatePolicyRequest} */
+    const body = {
+      name: toNullable(form.name),
+      title: toNullable(form.title),
+      description: toNullable(form.description),
+      isSystem: form.isSystem,
+      isActive: form.isActive,
+    };
+
+    create.mutate(body, {
+      onSuccess: () => {
+        toggle();
+        reset();
+        onCreated?.();
+      },
+    });
   };
 
   return (
@@ -69,36 +96,68 @@ const PolicyFormModal = ({ onCreated }) => {
               <Label for="policy-name">{formTexts.Name}</Label>
               <Input
                 id="policy-name"
-                value={name}
-                onChange={(event) => {
-                  setName(event.target.value);
-                  if (error) setError("");
-                }}
+                value={form.name}
+                onChange={setField("name")}
                 placeholder={formTexts.NamePlaceholder}
-                invalid={Boolean(error)}
                 autoFocus
               />
-              {error && <div className="invalid-feedback d-block">{error}</div>}
             </FormGroup>
-            <FormGroup className="mb-0">
+            <FormGroup>
+              <Label for="policy-title">{formTexts.PolicyTitle}</Label>
+              <Input
+                id="policy-title"
+                value={form.title}
+                onChange={setField("title")}
+                placeholder={formTexts.TitlePlaceholder}
+              />
+            </FormGroup>
+            <FormGroup>
               <Label for="policy-description">{formTexts.Description}</Label>
               <Input
                 id="policy-description"
                 type="textarea"
                 rows={3}
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
+                value={form.description}
+                onChange={setField("description")}
                 placeholder={formTexts.DescriptionPlaceholder}
               />
             </FormGroup>
+            <FormGroup check className="mb-2">
+              <Input
+                id="policy-is-system"
+                type="checkbox"
+                checked={form.isSystem}
+                onChange={setField("isSystem")}
+              />
+              <Label for="policy-is-system" check>
+                {formTexts.IsSystem}
+              </Label>
+            </FormGroup>
+            <FormGroup check className="mb-0">
+              <Input
+                id="policy-is-active"
+                type="checkbox"
+                checked={form.isActive}
+                onChange={setField("isActive")}
+              />
+              <Label for="policy-is-active" check>
+                {formTexts.IsActive}
+              </Label>
+            </FormGroup>
           </ModalBody>
           <ModalFooter>
-            <Btn className="btn-outline-secondary" title={formTexts.Cancel} onClick={toggle} />
+            <Btn
+              className="btn-outline-secondary"
+              title={formTexts.Cancel}
+              onClick={toggle}
+              disabled={create.isPending}
+            />
             <Btn
               className="btn-primary"
               type="submit"
               title={formTexts.Submit}
               loading={create.isPending}
+              disabled={create.isPending}
             >
               <RiCheckLine size={16} />
             </Btn>

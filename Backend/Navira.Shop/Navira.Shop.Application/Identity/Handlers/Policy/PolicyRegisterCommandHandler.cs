@@ -2,6 +2,7 @@
 using Navira.Shop.Core.Persistence;
 using Navira.Shop.Core.Results;
 using Navira.Shop.Domain.Identity;
+using System.Diagnostics;
 
 
 namespace Navira.Shop.Application.Identity.Handlers.Policy
@@ -16,15 +17,36 @@ namespace Navira.Shop.Application.Identity.Handlers.Policy
 
         public async Task<IResult> Handle(PolicyRegisterCommand command, CancellationToken cancellationToken = default)
         {
-            var policy = Domain.Identity.Policy.Create(
-                command.Name,
-                command.Title,
-                command.Description
-                );
+            try
+            {
+                var p = await _policyWriteRepository.Get(X => X.Name == command.Name);
 
-            await _policyWriteRepository.Insert(policy);
+                if (p != null)
+                    return await Result.FailAsync("نام تکراری است");
 
-            return await Result.SuccessAsync("اطلاعات با موفقیت ثبت شد");
+                var policy = Domain.Identity.Policy.Create(
+                    command.Name,
+                    command.Title,
+                    command.Description
+                    );
+
+
+                Debug.Assert(policy != null);
+                Debug.Assert(!string.IsNullOrWhiteSpace(policy.Name));
+                Debug.Assert(!string.IsNullOrWhiteSpace(policy.Title));
+
+                Debug.WriteLine($"Policy.Name = {policy.Name}");
+                Debug.WriteLine($"Policy.Title = {policy.Title}");
+
+
+                await _policyWriteRepository.Insert(policy);
+
+                return await Result.SuccessAsync("اطلاعات با موفقیت ثبت شد");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
