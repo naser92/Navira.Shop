@@ -361,3 +361,11 @@ Files changed or created:
 - Permission DTO fields: `id, baseSubSystemId, controllerName, scope, code, title, isActive` (JSDoc typedef in the BFF route).
 - `src/components/access/PermissionList.js` rebuilt: NaviraDataTable columns شناسه/شناسه زیرسیستم پایه/کنترلر/محدوده دسترسی/کد دسترسی/عنوان/وضعیت; isActive → Badge success(فعال)/danger(غیرفعال); loading/empty/error states; error state mirrors RoleList/PolicyList pattern (`navira-table-state text-danger` + RiErrorWarningLine).
 - Fetching: existing `useAccessList("permissions")` TanStack Query pattern; fetch on tab activation, cached (no duplicate requests).
+
+## Centralized 401/403 Handling (2026-08-22)
+- 401 Handling: `apiFetch` in `src/lib/api/clientApi.js` intercepts HTTP 401 responses (except for auth endpoints), triggers token refresh via `/api/auth/refresh`, uses shared refresh lock (`isRefreshing`) to prevent multiple refresh requests, queues pending requests with `refreshSubscribers`, retries original requests with new tokens after successful refresh.
+- 401 Failure: When refresh fails, clears auth credentials via "auth:logout" event dispatched to `AccountProvider`, redirects to `/auth/login`.
+- 403 Handling: `apiFetch` intercepts HTTP 403 responses, redirects to `/403` page without clearing auth credentials or triggering refresh.
+- 403 Page: Created `src/app/403/page.js` - Persian 403 forbidden page with countdown timer that redirects to home after 10 seconds.
+- Route Guard: `src/app/(mainLayout)/layout.js` continues to protect routes; `AccountProvider` listens for "auth:logout" events to update auth state.
+- Refresh Lock: Shared state prevents parallel refresh requests; subsequent 401s during refresh wait for the same refresh operation.

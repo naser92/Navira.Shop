@@ -9,5 +9,6 @@
   "/api/auth/UserAccessInfo/route": "app/api/auth/UserAccessInfo/route.js",
   "/api/auth/login/route": "app/api/auth/login/route.js",
   "/api/auth/logout/route": "app/api/auth/logout/route.js",
-  "/api/auth/me/route": "app/api/auth/me/route.js"
+  "/api/auth/me/route": "app/api/auth/me/route.js",
+  "/api/auth/refresh/route": "app/api/auth/refresh/route.js"
 }

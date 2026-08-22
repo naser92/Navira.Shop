@@ -74,6 +74,20 @@ export default function AccountProvider({ children }) {
 
   useEffect(() => {
     refreshProfile();
+    
+    // Listen for logout events from the API client
+    const handleLogoutEvent = () => {
+      setUserInfo(null);
+      setUserAccess([]);
+      setDynamicMenus(null);
+      setIsAuthenticated(false);
+    };
+    
+    window.addEventListener("auth:logout", handleLogoutEvent);
+    
+    return () => {
+      window.removeEventListener("auth:logout", handleLogoutEvent);
+    };
   }, [refreshProfile]);
 
   const value = useMemo(
