@@ -70,3 +70,43 @@ export function useAccessCreate(resource) {
     }
   );
 }
+
+/**
+ * Fetch policy IDs currently assigned to a role (GET /api/RolePolicy/{roleId}).
+ * Returns { ..., items: Array<string|number> } with the assigned policy IDs.
+ */
+export function useRolePolicies(roleId) {
+  const query = useCustomQuery(
+    ["access", "role-policies", String(roleId)],
+    () => apiFetch(`/api/access/role-policies?roleId=${encodeURIComponent(roleId)}`),
+    { refetchOnWindowFocus: false, enabled: roleId !== null && roleId !== undefined && roleId !== "" }
+  );
+
+  return { ...query, items: Array.isArray(query.data?.data) ? query.data.data : [] };
+}
+
+/**
+ * Save role-policy differences (POST /api/RolePolicy).
+ * Expects { roleId, policyAsinge, policyUnAsinge } and invalidates
+ * the role-policies and roles queries on success.
+ */
+export function useSaveRolePolicies() {
+  const queryClient = useQueryClient();
+  return useCustomMutation(
+    (body) =>
+      apiFetch("/api/access/role-policies", {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    {
+      onSuccess: () => {
+        Toast.success("با موفقیت ذخیره شد");
+        queryClient.invalidateQueries({ queryKey: ["access", "role-policies"] });
+        queryClient.invalidateQueries({ queryKey: ["access", "roles"] });
+      },
+      onError: (error) => {
+        Toast.error(error.message || "ذخیره تغییرات ناموفق بود");
+      },
+    }
+  );
+}

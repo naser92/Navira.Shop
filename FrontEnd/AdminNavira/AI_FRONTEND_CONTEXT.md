@@ -369,3 +369,9 @@ Files changed or created:
 - 403 Page: Created `src/app/403/page.js` - Persian 403 forbidden page with countdown timer that redirects to home after 10 seconds.
 - Route Guard: `src/app/(mainLayout)/layout.js` continues to protect routes; `AccountProvider` listens for "auth:logout" events to update auth state.
 - Refresh Lock: Shared state prevents parallel refresh requests; subsequent 401s during refresh wait for the same refresh operation.
+
+## Role-Policy Assignment (2026-08-23)
+- BFF route `src/app/api/access/role-policies/route.js`: GET proxies `GET /api/RolePolicy/{roleId}` (extracts assigned policy IDs from `{data}` envelope, supports ID or object items), POST proxies `POST /api/RolePolicy` with `Content-Type: application/json-patch+json` and exact backend payload `{ roleId, policyAsinge, policyUnAsinge }` (backend spelling preserved). Auth: Bearer from httpOnly cookie via `callBackendWithAuth`.
+- Hooks in `src/utils/hooks/access/useAccessCrud.js`: `useRolePolicies(roleId)` (TanStack Query, cached per role, no duplicate fetches) and `useSaveRolePolicies()` (success toast + invalidates `["access","role-policies"]` and `["access","roles"]`).
+- `RoleList`: opens ConnectionsModal per role; baseline = assigned IDs from `useRolePolicies`; on save computes Set difference (policyAsinge = selected − assigned, policyUnAsinge = assigned − selected); no-op when unchanged (closes without POST); failure keeps modal open via existing toast error handling.
+- `ConnectionsModal`: added client-side search (name/title/code/description, case-insensitive, Persian-safe, selection preserved while filtering); save/cancel disabled while saving.

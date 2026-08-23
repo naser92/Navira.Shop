@@ -6,7 +6,7 @@ namespace Navira.Shop.Application.Identity
     public class RolePolicyModel : BaseReadModel<int>
     {
 
-        public string RoleId { get; set; }
+        public Guid RoleId { get; set; }
 
         public int PolicyId { get; set; }
 

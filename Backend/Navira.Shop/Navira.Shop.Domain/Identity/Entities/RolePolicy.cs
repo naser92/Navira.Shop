@@ -8,8 +8,34 @@ namespace Navira.Shop.Domain.Identity
         [ForeignKey("PolicyId")]
         public virtual Policy Policy { get; set; }
 
-        public string RoleId { get; set; }
+        public Guid RoleId { get; set; }
 
         public int PolicyId { get; set; }
+
+        public RolePolicy() { }
+
+        public RolePolicy(Guid roleId, int policyId)
+        {
+            RoleId = roleId;
+            PolicyId = policyId;
+        }
+
+        public static RolePolicy AssingePolicy(Guid roleId, int policyId) =>
+                            new RolePolicy(roleId, policyId);
+
+
+        public static IList<RolePolicy> AssingePolicy(Guid roleId, int[] policyIds)
+        {
+            var rolePolicy = new List<RolePolicy>();
+
+            foreach (var policyId in policyIds)
+            {
+                rolePolicy.Add(AssingePolicy(roleId, policyId));
+            }
+
+            return rolePolicy;
+        }
+
+
     }
 }

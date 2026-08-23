@@ -59,5 +59,13 @@ namespace Navira.Shop.Application.Identity
 
         #endregion
 
+        public async Task<IEnumerable<RolePolicyGetByRoleIdDto>> GetByRoleId(Guid roleId)
+        {
+            var query = _repository.Table.Where(x => x.RoleId == roleId);
+
+            return await query.ProjectTo<RolePolicyGetByRoleIdDto>().ToListAsync();
+
+        }
+
     }
 }

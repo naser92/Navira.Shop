@@ -13,6 +13,7 @@ export default function RootLayout({ children }) {
   return (
     <html dir="rtl" lang="fa" data-scroll-behavior="smooth" suppressHydrationWarning={true}>
       <head>
+        <meta name="darkreader-lock" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"

@@ -13,7 +13,7 @@ namespace Navira.Shop.Infrastructure.Identity.Mappers.ReadModel
             base.Configure(builder);
 
 
-            builder.Property(t => t.RoleId).HasColumnType("nvarchar").HasMaxLength(100).IsRequired().HasComment("RoleId");
+            builder.Property(t => t.RoleId).IsRequired().HasComment("RoleId");
 
             builder.Property(t => t.PolicyId).IsRequired().HasComment("PolicyId");
 

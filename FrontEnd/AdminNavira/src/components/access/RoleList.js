@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Badge } from "reactstrap";
 import { RiErrorWarningLine, RiLink, RiShieldUserLine } from "react-icons/ri";
 import NaviraDataTable from "@/components/common/NaviraDataTable";
-import { useAccessAssign, useAccessList } from "@/utils/hooks/access/useAccessCrud";
+import { useAccessList, useRolePolicies, useSaveRolePolicies } from "@/utils/hooks/access/useAccessCrud";
 import ConnectionsModal from "./ConnectionsModal";
 import { getItemId, getItemName, getItemPermissions, getPolicyIdsOfItem } from "./accessUtils";
 
@@ -23,8 +23,10 @@ const roleTexts = {
 const RoleList = () => {
   const { items: roles, isLoading, error } = useAccessList("roles");
   const { items: policies } = useAccessList("policies");
-  const assign = useAccessAssign("roles");
+  const saveRolePolicies = useSaveRolePolicies();
   const [editing, setEditing] = useState(null);
+  const editingRoleId = editing ? getItemId(editing) : null;
+  const rolePolicies = useRolePolicies(editingRoleId);
   const policyIdsOf = (role) => getPolicyIdsOfItem(role);
 
   const policiesOf = (role) =>
@@ -36,8 +38,20 @@ const RoleList = () => {
     [...new Set(policiesOf(role).flatMap((policy) => getItemPermissions(policy)))];
 
   const handleSave = (policyIds) => {
-    assign.mutate(
-      { id: getItemId(editing), body: { policies: policyIds } },
+    const roleId = getItemId(editing);
+    const baseline = new Set(rolePolicies.items.map(String));
+    const current = new Set(policyIds.map(String));
+
+    const policyAsinge = [...current].filter((id) => !baseline.has(id));
+    const policyUnAsinge = [...baseline].filter((id) => !current.has(id));
+
+    if (policyAsinge.length === 0 && policyUnAsinge.length === 0) {
+      setEditing(null);
+      return;
+    }
+
+    saveRolePolicies.mutate(
+      { roleId, policyAsinge, policyUnAsinge },
       { onSuccess: () => setEditing(null) }
     );
   };
@@ -109,8 +123,8 @@ const RoleList = () => {
         toggle={() => setEditing(null)}
         title={`${roleTexts.ConnectTitle} «${editing ? getItemName(editing) : ""}»`}
         options={policies}
-        selectedIds={editing ? policyIdsOf(editing) : []}
-        isSaving={assign.isPending}
+        selectedIds={editing ? rolePolicies.items : []}
+        isSaving={saveRolePolicies.isPending || rolePolicies.isLoading}
         onSave={handleSave}
       />
     </>
