@@ -13,5 +13,32 @@ namespace Navira.Shop.Domain.Identity
         public int PolicyId { get; set; }
         public int PermissionId { get; set; }
 
+        public PolicyPermission() { }
+
+        public PolicyPermission(int policyId, int permissionId)
+        {
+            PolicyId = policyId;
+            PermissionId = permissionId;
+        }
+
+        public static PolicyPermission Create(int policyId, int permissionId) =>
+             new PolicyPermission(policyId, permissionId);
+
+
+
+        public static List<PolicyPermission> AssingePermission(int policyId, int[] permissionIds)
+        {
+            var result = new List<PolicyPermission>();
+            foreach (var permissionId in permissionIds)
+            {
+                result.Add(Create(policyId, permissionId));
+            }
+
+            return result;
+        }
+
+
+
+
     }
 }

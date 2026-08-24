@@ -11,5 +11,6 @@ namespace Navira.Shop.Application.Identity.ServicesContract
         Task<IResult<object>> Get<T>(GridParameters parameters);
         Task<IResult<IList<T>>> Get<T>();
         #endregion
+        Task<IEnumerable<PolicyPermissionGetByPolicyIdDto>> GetByPolicyId(int policyId);
     }
 }

@@ -58,5 +58,9 @@ namespace Navira.Shop.Application.Identity
 
         #endregion
 
+        public async Task<IEnumerable<PolicyPermissionGetByPolicyIdDto>> GetByPolicyId(int policyId) =>
+           await _repository.Table.Where(x => x.PolicyId == policyId).ProjectTo<PolicyPermissionGetByPolicyIdDto>().ToListAsync();
+
+
     }
 }

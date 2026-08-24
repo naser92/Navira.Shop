@@ -1,20 +1,29 @@
 ﻿using Navira.Shop.Core.Domain;
 using Navira.Shop.Core.Entity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Navira.Shop.Domain.Catalog
 {
-    public sealed class Categories : AggregateRoot<int>, IFullAuditableEntity<Guid>, ISoftDeletableEntity
+    public  class Categories : FullEntity<int>, IFullAuditableEntity<Guid>
     {
-        public string Name { get; private set; } = default!;
-        public string Slug { get; private set; } = default!;
-        public string? Description { get; private set; }
-        public int? ParentCategoryId { get; private set; }
-        public int TaxCategoryId { get; private set; }
-        public int DisplayOrder { get; private set; }
-        public bool IsActive { get; private set; } = true;
+        [ForeignKey("ParentCategoryId")]
+        public virtual Categories Parent { get; set; }
 
-        public bool IsDeleted { get; set; }
+        public string Name { get; set; }
 
+        public string Description { get; set; }
+
+        public int? ParentCategoryId { get; set; }
+
+        public string Slug { get; set; }
+
+        public int? TaxCategoryId { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public int DisplayOrder { get; set; }
+
+        public virtual ICollection<Categories> Childs { get; set; }
         private Categories() { }
 
         private Categories(string name, string slug, int taxCategoryId, int? parentCategoryId)

@@ -37,7 +37,7 @@ const PermissionList = () => {
     {
       title: permissionTexts.Scope,
       apiKey: "scope",
-      render: (row) => <Badge color="secondary" pill>{row.scope}</Badge>,
+      render: (row) => <Badge color="primary" pill>{row.scope}</Badge>,
     },
     {
       title: permissionTexts.Code,

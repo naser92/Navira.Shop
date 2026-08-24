@@ -110,3 +110,43 @@ export function useSaveRolePolicies() {
     }
   );
 }
+
+/**
+ * Fetch permission IDs currently assigned to a policy (GET /api/PlicyPermission/{policyId}).
+ * Returns { ..., items: Array<string|number> } with the assigned permission IDs.
+ */
+export function usePolicyPermissions(policyId) {
+  const query = useCustomQuery(
+    ["access", "policy-permissions", String(policyId)],
+    () => apiFetch(`/api/access/policy-permissions?policyId=${encodeURIComponent(policyId)}`),
+    { refetchOnWindowFocus: false, enabled: policyId !== null && policyId !== undefined && policyId !== "" }
+  );
+
+  return { ...query, items: Array.isArray(query.data?.data) ? query.data.data : [] };
+}
+
+/**
+ * Save policy-permission differences (POST /api/PlicyPermission).
+ * Expects { policyId, permissionAsinge, permissionUnAsinge } and invalidates
+ * the policy-permissions and policies queries on success.
+ */
+export function useSavePolicyPermissions() {
+  const queryClient = useQueryClient();
+  return useCustomMutation(
+    (body) =>
+      apiFetch("/api/access/policy-permissions", {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    {
+      onSuccess: () => {
+        Toast.success("با موفقیت ذخیره شد");
+        queryClient.invalidateQueries({ queryKey: ["access", "policy-permissions"] });
+        queryClient.invalidateQueries({ queryKey: ["access", "policies"] });
+      },
+      onError: (error) => {
+        Toast.error(error.message || "ذخیره تغییرات ناموفق بود");
+      },
+    }
+  );
+}

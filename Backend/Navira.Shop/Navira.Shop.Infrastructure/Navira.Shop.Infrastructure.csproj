@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Catalog\Mappers\CategoriesMapper.cs" />
     <Compile Remove="Catalog\Repositories\CategoryRepositorydel.cs" />
     <Compile Remove="Class1.cs" />
     <Compile Remove="Persistence\EfUnitOfWork.cs" />
+    <Compile Remove="Persistence\WriteRepository\CategoriesRepository.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Catalog\Mappers\" />
     <Folder Include="Catalog\Repositories\" />
   </ItemGroup>
 

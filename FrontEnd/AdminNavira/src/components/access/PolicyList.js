@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Badge } from "reactstrap";
-import { RiErrorWarningLine, RiKey2Line, RiLink } from "react-icons/ri";
+import { Badge, Button } from "reactstrap";
+import { RiErrorWarningLine, RiKey2Line, RiLink, RiSettings3Line } from "react-icons/ri";
 import NaviraDataTable from "@/components/common/NaviraDataTable";
-import { useAccessAssign, useAccessList } from "@/utils/hooks/access/useAccessCrud";
+import { useAccessAssign, useAccessList, usePolicyPermissions, useSavePolicyPermissions } from "@/utils/hooks/access/useAccessCrud";
 import ConnectionsModal from "./ConnectionsModal";
 import PolicyFormModal from "./PolicyFormModal";
 import { getItemId, getItemName, getItemPermissions, getPolicyIdsOfItem } from "./accessUtils";
+import Btn from "@/elements/buttons/Btn";
 
 const policyTexts = {
   Name: "نام سیاست",
@@ -21,6 +22,8 @@ const policyTexts = {
   Error: "خطا در دریافت سیاست‌ها",
   NoDescription: "—",
   NoPermission: "—",
+  ManagePermissions: "مدیریت مجوزها",
+  ManagePermissionsTitle: "مدیریت مجوزهای سیاست",
 };
 
 const PolicyList = () => {
@@ -29,6 +32,7 @@ const PolicyList = () => {
   const { items: permissions } = useAccessList("permissions");
   const assign = useAccessAssign("policies");
   const [editing, setEditing] = useState(null);
+  const [editingPolicy, setEditingPolicy] = useState(null);
   const permissionNamesOf = (policy) => getItemPermissions(policy);
 
   const roleCountOf = (policy) =>
@@ -40,6 +44,28 @@ const PolicyList = () => {
     assign.mutate(
       { id: getItemId(editing), body: { permissions: permissionNames } },
       { onSuccess: () => setEditing(null) }
+    );
+  };
+
+  const policyPermissions = usePolicyPermissions(editingPolicy ? getItemId(editingPolicy) : null);
+  const savePolicyPermissions = useSavePolicyPermissions();
+
+  const handlePolicyPermissionsSave = (permissionIds) => {
+    const policyId = getItemId(editingPolicy);
+    const baseline = new Set(policyPermissions.items.map(String));
+    const current = new Set(permissionIds.map(String));
+
+    const permissionAsinge = [...current].filter((id) => !baseline.has(id));
+    const permissionUnAsinge = [...baseline].filter((id) => !current.has(id));
+
+    if (permissionAsinge.length === 0 && permissionUnAsinge.length === 0) {
+      setEditingPolicy(null);
+      return;
+    }
+
+    savePolicyPermissions.mutate(
+      { policyId, permissionAsinge, permissionUnAsinge },
+      { onSuccess: () => setEditingPolicy(null) }
     );
   };
 
@@ -78,15 +104,18 @@ const PolicyList = () => {
       title: policyTexts.Actions,
       apiKey: "actions",
       render: (row) => (
-        <button
-          type="button"
-          className="navira-action-btn"
-          onClick={() => setEditing(row)}
-          title={policyTexts.ConnectPermissions}
-        >
-          <RiLink size={16} />
-          <span>{policyTexts.ConnectPermissions}</span>
-        </button>
+        <div className="d-flex gap-2">
+          <button
+            type="button"
+            className="navira-action-btn"
+            onClick={() => setEditingPolicy(row)}
+            title={policyTexts.ConnectPermissions}
+          >
+            <RiLink size={16} />
+            <span>{policyTexts.ConnectPermissions}</span>
+          </button>
+      
+        </div>
       ),
     },
   ];
@@ -120,6 +149,16 @@ const PolicyList = () => {
         selectedIds={editing ? permissionNamesOf(editing) : []}
         isSaving={assign.isPending}
         onSave={handleSave}
+      />
+      <ConnectionsModal
+        isOpen={Boolean(editingPolicy)}
+        toggle={() => setEditingPolicy(null)}
+        title={`${policyTexts.ManagePermissionsTitle} «${editingPolicy ? getItemName(editingPolicy) : ""}»`}
+        description="مجوزهای مرتبط را انتخاب کنید"
+        options={permissions}
+        selectedIds={editingPolicy ? policyPermissions.items : []}
+        isSaving={savePolicyPermissions.isPending || policyPermissions.isLoading}
+        onSave={handlePolicyPermissionsSave}
       />
     </>
   );

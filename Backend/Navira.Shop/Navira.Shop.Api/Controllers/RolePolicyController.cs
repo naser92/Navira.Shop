@@ -10,7 +10,7 @@ namespace Navira.Shop.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Display(Name = "پالیسی", Description = "مدیریت پالیسی ها")]
+    [Display(Name = "پالیسی", Description = "مدیریت ارتباط نقش و سیاست ها")]
     [CustomAuthorize(AuthenticationSchemes = "Bearer")]
     //[Permission("Controller", "دسترسی", "Identity.Access")]
     //[Menu("Identity.Access", "مدیریت دسترسی")]
