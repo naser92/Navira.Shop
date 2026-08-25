@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Navira.Shop.Application.Catalog.Commands;
 using Navira.Shop.Core.Bus;
 using Navira.Shop.Core.Security;
-using Navira.Shop.Core.Web;
 using System.ComponentModel.DataAnnotations;
 
 namespace Navira.Shop.Api.Controllers
@@ -24,30 +22,30 @@ namespace Navira.Shop.Api.Controllers
             _queryBus = queryBus;
         }
 
-        [HttpPost]
-        [Permission("Register", "ثبت دسته بندی")]
-        [Menu("Category.Register", "ثبت دسته بندی جدید")]
-        public virtual async Task<IActionResult> Create(CreateCategoryCommand command)
-        {
-            return await _bus.Send(command).ApiResultAsync();
+        //[HttpPost]
+        //[Permission("Register", "ثبت دسته بندی")]
+        //[Menu("Category.Register", "ثبت دسته بندی جدید")]
+        //public virtual async Task<IActionResult> Create(CreateCategoryCommand command)
+        //{
+        //    return await _bus.Send(command).ApiResultAsync();
 
-        }
+        //}
 
-        [HttpPut("{id:int}")]
-        [Permission("Update", "بروز رسانی دسته بندی")]
-        public async Task<IActionResult> Update(int id, UpdateCategoryCommand command)
-        {
-            command.Id = id;
-            return await _bus.Send(command).ApiResultAsync();
+        //[HttpPut("{id:int}")]
+        //[Permission("Update", "بروز رسانی دسته بندی")]
+        //public async Task<IActionResult> Update(int id, UpdateCategoryCommand command)
+        //{
+        //    command.Id = id;
+        //    return await _bus.Send(command).ApiResultAsync();
 
-        }
+        //}
 
 
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            return await _bus.Send(new DeleteCategoryCommand { Id = id }).ApiResultAsync();
-        }
+        //[HttpDelete("{id:int}")]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    return await _bus.Send(new DeleteCategoryCommand { Id = id }).ApiResultAsync();
+        //}
 
 
 

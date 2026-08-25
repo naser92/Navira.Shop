@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Navira.Shop.Core.Persistence.EF;
-using Navira.Shop.Domain.Warehouse;
 
 namespace Navira.Shop.Infrastructure.Persistence.Mappers
 {
-    public class WarehouseMapping : EntityMapperBase<Warehouse, int>, IWriteEntityConfiguration
+    public class WarehouseMapping : EntityMapperBase<Domain.Warehouse.Warehouse, int>, IWriteEntityConfiguration
     {
-        public override void Configure(EntityTypeBuilder<Warehouse> builder)
+        public override void Configure(EntityTypeBuilder<Domain.Warehouse.Warehouse> builder)
         {
 
             base.Configure(builder);
