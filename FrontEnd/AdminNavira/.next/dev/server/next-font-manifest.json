@@ -3,6 +3,7 @@
     "[project]/src/app/(authLayout)/auth/login/page": [],
     "[project]/src/app/(mainLayout)/access/page": [],
     "[project]/src/app/(mainLayout)/dashboard/page": [],
+    "[project]/src/app/(mainLayout)/products/new/page": [],
     "[project]/src/app/_not-found/page": []
   },
   "appUsingSizeAdjust": false,

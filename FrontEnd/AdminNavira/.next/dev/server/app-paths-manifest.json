@@ -2,6 +2,7 @@
   "/(authLayout)/auth/login/page": "app/(authLayout)/auth/login/page.js",
   "/(mainLayout)/access/page": "app/(mainLayout)/access/page.js",
   "/(mainLayout)/dashboard/page": "app/(mainLayout)/dashboard/page.js",
+  "/(mainLayout)/products/new/page": "app/(mainLayout)/products/new/page.js",
   "/_not-found/page": "app/_not-found/page.js",
   "/api/access/permissions/route": "app/api/access/permissions/route.js",
   "/api/access/policies/route": "app/api/access/policies/route.js",

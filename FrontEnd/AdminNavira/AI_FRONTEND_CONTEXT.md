@@ -136,3 +136,28 @@ src/utils/hooks/access/useAccessCrud.js
 - **Path alias**: `@/*` → `./src/*`
 - **RTL**: همه کامپوننت‌ها `dir="rtl"` دارند
 - **Persian**: تمام UI text به فارسی است
+
+## Product Creation Page Implementation (2026-08-24)
+- Route: `src/app/(mainLayout)/products/new/page.js` - 5-step wizard for creating new e-commerce products
+- Steps: Basic Info → Attributes → Variants → Images → Inventory → Review
+- Components: Created reusable components in `src/components/products/`:
+  - ProductStepper: Horizontal stepper for navigation
+  - ProductBasicInfoStep: Product details, descriptions, status
+  - ProductAttributesStep: Attribute/value management with add/remove
+  - ProductVariantsStep: Variant table with CRUD operations, modals
+  - ProductImagesStep: Drag-and-drop image upload for product/variants
+  - ProductInventoryStep: Warehouse inventory management with calculations
+  - ProductReviewStep: Final product summary before submission
+- Features: RTL Persian UI, form validation, state persistence between steps, image previews, 
+  inventory calculations (Available = Initial - Reserved), cartesion product generation,
+  variant combinations, and complete product object creation
+- Validation: Required field checks, duplicate SKU prevention, price validation,
+  required variant count, attribute combination uniqueness
+- Dependencies: Used existing project stack (React, Reactstrap, ReactFeather, Next.js)
+- State management: Local component state with React hooks
+- Mock data: Pre-populated sample product (Stanley Mug) with variants
+- Output: Complete product object logged to console on submission
+- Design: Clean, minimal SaaS dashboard UI with Persian typography
+- Navigation: Wizard with step validation, sticky footer, progress tracking
+- Accessibility: Keyboard navigable, proper labeling, screen reader friendly
+- Responsive: Desktop-first with mobile adaptations for modals and tables
