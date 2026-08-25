@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Catalog\DTOs\Category\CreateCategoryDto.cs" />
+    <Compile Remove="Catalog\DTOs\Category\UpdateCategoryDto.cs" />
     <Compile Remove="Catalog\Repository\ICategoriesRepository.cs" />
     <Compile Remove="Identity\Repository\IMenuWriteRepository.cs" />
     <Compile Remove="Identity\Repository\IPermissionWriteRepository.cs" />
@@ -24,9 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Catalog\ServicesContract\" />
     <Folder Include="Catalog\Repository\" />
-    <Folder Include="Ecommerce\" />
-    <Folder Include="Warehouse\" />
   </ItemGroup>
 
 </Project>

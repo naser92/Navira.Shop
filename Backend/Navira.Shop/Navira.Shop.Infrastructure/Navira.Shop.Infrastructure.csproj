@@ -7,8 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Catalog\Mappers\CategoriesMapper.cs" />
     <Compile Remove="Catalog\Repositories\CategoryRepositorydel.cs" />
+    <Compile Remove="Catalog\Repositories\ReadRepository\BrandQueryRepository.cs" />
+    <Compile Remove="Catalog\Repositories\ReadRepository\CategoryQueryRepository.cs" />
+    <Compile Remove="Catalog\Repositories\ReadRepository\ProductAttributeOptionQueryRepository.cs" />
+    <Compile Remove="Catalog\Repositories\ReadRepository\ProductAttributeQueryRepository.cs" />
+    <Compile Remove="Catalog\Repositories\ReadRepository\ProductImageQueryRepository.cs" />
+    <Compile Remove="Catalog\Repositories\ReadRepository\ProductQueryRepository.cs" />
+    <Compile Remove="Catalog\Repositories\ReadRepository\ProductVariantAttributeValueQueryRepository.cs" />
+    <Compile Remove="Catalog\Repositories\ReadRepository\ProductVariantQueryRepository.cs" />
     <Compile Remove="Class1.cs" />
     <Compile Remove="Persistence\EfUnitOfWork.cs" />
     <Compile Remove="Persistence\WriteRepository\CategoriesRepository.cs" />
@@ -39,7 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Catalog\Mappers\ReadModel\" />
+    <Folder Include="Catalog\Repositories\ReadRepository\" />
     <Folder Include="Persistence\WriteRepository\NewFolder\" />
   </ItemGroup>
 

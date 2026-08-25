@@ -4,16 +4,12 @@ namespace Navira.Shop.Application.Catalog
 {
 
 
-    public class CategoryDto : BaseDto<int>
+    public class BrandDto : BaseDto<int>
     {
 
         public string Name { get; set; }
 
         public string Slug { get; set; }
-
-        public int? ParentCategoryId { get; set; }
-
-        public int? TaxCategoryId { get; set; }
 
         public bool IsActive { get; set; }
 

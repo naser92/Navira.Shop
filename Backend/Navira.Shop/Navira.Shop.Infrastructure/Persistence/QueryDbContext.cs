@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Navira.Shop.Core.Persistence.EF;
-using Navira.Shop.Infrastructure.Identity.Mappers.ReadModel;
+using Navira.Shop.Infrastructure.Mappers.ReadModel;
 using NaviraShop.Core.Mq;
 
 namespace Navira.Shop.Infrastructure.Persistence
