@@ -1,11 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Navira.Shop.Core.ViewModels;
+﻿using Navira.Shop.Core.ViewModels;
 
-namespace Navira.Shop.ApplicationService.Dto
+namespace Navira.Shop.Application.Warehouse
 {
 
- 
+
     public class StockMovementDto : BaseDto<long>
     {
 

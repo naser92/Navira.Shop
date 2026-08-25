@@ -1,12 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
-using Navira.Shop.Core.ViewModels;
+﻿using Navira.Shop.Core.ViewModels;
 
-namespace Navira.Shop.ApplicationService.Dto
+namespace Navira.Shop.Application.Warehouse
 {
 
- 
+
     public class WarehouseDto : BaseDto<int>
     {
 
