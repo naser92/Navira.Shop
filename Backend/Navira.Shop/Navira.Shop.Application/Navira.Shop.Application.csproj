@@ -25,6 +25,8 @@
 
   <ItemGroup>
     <Folder Include="Catalog\Repository\" />
+    <Folder Include="Ecommerce\" />
+    <Folder Include="Warehouse\" />
   </ItemGroup>
 
 </Project>
