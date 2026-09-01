@@ -1,0 +1,48 @@
+@use "@/styles/tokens" as t;
+@use "@/styles/mixins" as m;
+
+.section { min-inline-size: 0; margin-block-start: t.$space-32; }
+.title { margin: 0 0 t.$space-16; font-size: t.$font-heading-3; line-height: t.$line-heading-3; }
+.scrollFrame { position: relative; min-inline-size: 0; }
+.scrollFrame::after { position: absolute; inset-block: 0; inset-inline-end: 0; inline-size: 28px; content: ""; background: linear-gradient(to left, transparent, var(--color-bg-primary)); pointer-events: none; }
+.list { display: flex; gap: t.$space-12; padding: t.$space-8 t.$space-4 t.$space-12; margin: 0; overflow-x: auto; overscroll-behavior-inline: contain; scroll-padding-inline: t.$space-4; scroll-snap-type: inline proximity; scrollbar-width: none; list-style: none; }
+.list::-webkit-scrollbar { display: none; }
+.item { flex: 0 0 86px; scroll-snap-align: start; }
+.link { --category-accent: #2f6fed; --category-soft: #dce8ff; position: relative; display: flex; flex-direction: column; align-items: center; gap: t.$space-8; min-block-size: 116px; color: var(--color-text-primary); text-align: center; text-decoration: none; border-radius: t.$radius-md; }
+.circle { display: grid; place-items: center; inline-size: 64px; block-size: 64px; color: var(--category-accent); background: linear-gradient(145deg, rgba(255,255,255,.82), var(--category-soft)); border: 1px solid rgba(255,255,255,.74); border-radius: 50%; box-shadow: inset 0 1px 1px rgba(255,255,255,.9), t.$shadow-soft; transition: transform t.$duration-normal t.$easing-out, box-shadow t.$duration-normal t.$easing-out; }
+.circle img { inline-size: 78%; block-size: 78%; object-fit: contain; }
+.circle svg { transition: transform t.$duration-normal t.$easing-out; }
+.label { display: -webkit-box; max-inline-size: 88px; overflow: hidden; color: var(--color-text-secondary); font-size: t.$font-body-small; font-weight: 600; line-height: 20px; -webkit-box-orient: vertical; -webkit-line-clamp: 2; transition: color t.$duration-normal t.$easing-out; }
+.badge { position: absolute; inset-block-start: -5px; inset-inline-end: 2px; padding: 1px t.$space-8; color: #fff; background: var(--category-accent); border: 2px solid var(--color-bg-primary); border-radius: t.$radius-pill; font-size: 10px; line-height: 17px; }
+.link:hover .circle { transform: translateY(-4px) scale(1.04); box-shadow: inset 0 1px 1px rgba(255,255,255,.9), t.$shadow-medium; }
+.link:hover .circle svg { transform: scale(1.05) rotate(-2deg); }
+.link:hover .label { color: var(--category-accent); }
+.link:focus-visible { outline: 2px solid var(--category-accent); outline-offset: 3px; }
+.link[data-featured="true"] .circle { box-shadow: inset 0 0 0 2px var(--category-accent), t.$shadow-soft; }
+.link[data-featured="true"]::after { position: absolute; inset-block-end: -2px; inline-size: 6px; block-size: 6px; content: ""; background: var(--category-accent); border-radius: 50%; }
+.showAll { --category-accent: #5b6475; --category-soft: #eef2f6; }
+.themeBlue { --category-accent: #2f6fed; --category-soft: #dce8ff; }
+.themePurple { --category-accent: #7554b8; --category-soft: #e9e0fa; }
+.themeOrange { --category-accent: #bc672d; --category-soft: #fbe3cf; }
+.themeGreen { --category-accent: #27816b; --category-soft: #d7f1e9; }
+.themeTeal { --category-accent: #1b8390; --category-soft: #d7f1f3; }
+.themePink { --category-accent: #b84f7d; --category-soft: #f8deea; }
+.themeYellow { --category-accent: #9a7410; --category-soft: #faecc2; }
+.themeIndigo { --category-accent: #505eb0; --category-soft: #e0e4fa; }
+
+@include m.respond-up("md") {
+  .section { margin-block-start: t.$space-40; }
+  .list { gap: t.$space-20; }
+  .item { flex-basis: 96px; }
+  .circle { inline-size: 76px; block-size: 76px; }
+  .label { max-inline-size: 100px; }
+}
+
+@include m.respond-up("xl") {
+  .scrollFrame::after { display: none; }
+  .list { justify-content: space-between; overflow: visible; }
+  .item { flex: 0 1 104px; }
+  .circle { inline-size: 84px; block-size: 84px; }
+}
+
+@media (prefers-reduced-motion: reduce) { .circle, .circle svg, .label { transition: none; } .link:hover .circle, .link:hover .circle svg { transform: none; } }

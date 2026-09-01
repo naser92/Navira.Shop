@@ -164,3 +164,57 @@
 - `npm run typecheck`: موفق.
 - `npm run build:next`: موفق و route خانه به‌صورت static prerender شد.
 - پس از آماده‌شدن API، mock data source با adapter واقعی، mapper قیمت و allow-list مربوط به `themeKey` جایگزین شود.
+
+## 2026-09-01 — نوار دسته‌بندی‌های سریع Home
+
+### معماری و رفتار
+
+- `HomeCategoryStrip` بلافاصله پس از Hero و مستقل از state و منبع داده اسلایدر قرار گرفت.
+- کامپوننت Server Component است؛ داده را فقط از props می‌گیرد و mock از طریق `HomeCategoryDataSource` در صفحه Server دریافت می‌شود.
+- ده دسته‌بندی فعال با `sortOrder` مرتب می‌شوند؛ empty state کاملاً `null` است و فضای اضافه ایجاد نمی‌کند.
+- icon registry فقط کلیدهای کنترل‌شده lucide را می‌پذیرد و fallback امن دارد. theme registry نیز `themeKey` را به palette محدود SCSS نگاشت می‌کند.
+- موبایل و تبلت از یک ردیف scrollable با touch، scroll snap، آیتم نیمه‌قابل‌مشاهده و scrollbar مخفی استفاده می‌کنند؛ در نمایشگر عریض آیتم‌ها در یک ردیف متعادل پخش می‌شوند.
+- هر آیتم یک Link کامل و شامل دایره، آیکن تزئینی، متن واقعی، badge اختیاری، focus ring و Featured marker غیررنگی است.
+
+### قرارداد Backend پیشنهادی
+
+#### `GET /api/v1/storefront/home/categories`
+
+- حداکثر ۱۵ آیتم Featured برای Home بازگردانده شود؛ ترتیب قطعی براساس `sortOrder` صعودی است.
+- دسته‌بندی اصلی با موجودیت category مشخص می‌شود و `isFeatured` فقط واجد شرایط بودن برای Home را نشان می‌دهد؛ آیتم غیرفعال یا Featured=false در پاسخ Home حذف شود.
+- کلیدهای مجاز `iconKey`: `laptop`, `shirt`, `cooking-pot`, `dumbbell`, `pen`, `sparkles`, `baby`, `gamepad`, `book`, `gift`, `grid`.
+- `themeKey` فقط یکی از `blue`, `purple`, `orange`, `green`, `teal`, `pink`, `yellow`, `indigo` باشد.
+- `iconType=icon` به `iconKey` معتبر نیاز دارد. برای `iconType=image` فقط URL رسانه معتبر، alt و ابعاد ارسال شود؛ SVG/HTML/JS اجرایی پذیرفته نمی‌شود. کلید یا تصویر نامعتبر در frontend با آیکن fallback جایگزین می‌شود.
+- `url` به‌صورت پیش‌فرض مسیر داخلی allow-listed است؛ URL خارجی فقط با پرچم و allow-list دامنه در نسخه آینده پذیرفته شود.
+- cache پیشنهادی: `public, max-age=300, stale-while-revalidate=3600` همراه `ETag`. فیلد `version` برای invalidation و سازگاری mapper استفاده شود.
+- پاسخ خالی بخش را مخفی می‌کند؛ خطا از fallback/cache لایه data source استفاده می‌کند و خطای خام در Home نمایش داده نمی‌شود.
+
+```json
+{
+  "version": "2026-09-01",
+  "items": [{
+    "id": "digital",
+    "slug": "digital-products",
+    "title": "کالای دیجیتال",
+    "url": "/categories/digital-products",
+    "iconType": "icon",
+    "iconKey": "laptop",
+    "iconUrl": null,
+    "iconAlt": null,
+    "themeKey": "blue",
+    "badgeText": null,
+    "sortOrder": 1,
+    "isFeatured": true
+  }]
+}
+```
+
+### فایل‌ها و آزمون‌ها
+
+- کامپوننت: `src/features/home/components/home-category-strip/`
+- mock: `src/mocks/home-categories.mock.ts`
+- data source: `src/features/home/data/home-category.data-source.ts`
+- `npm run typecheck`: موفق.
+- `npm run lint`: موفق، بدون warning یا error کد؛ فقط پیام deprecation مربوط به command خود Next.js 15 نمایش داده شد.
+- `npm run build:next`: موفق؛ صفحه Home همچنان static prerender است.
+- سناریوهای ساختاری شامل ۱، ۳، ۱۰، بیش از ۱۵ و empty با همان props/filter/sort پوشش‌پذیرند. بررسی مرورگری خودکار چند viewport در repository فعلی runner ندارد و باید در تست E2E آینده اضافه شود.

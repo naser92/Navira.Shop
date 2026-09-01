@@ -7,6 +7,8 @@
 ## [Unreleased]
 
 ### Added
+- Added the responsive, server-rendered `HomeCategoryStrip` with ten data-driven categories, controlled icon/theme registries, badges, and an optional “view all” item.
+- Added an RTL horizontal scroll-snap experience for home categories on mobile and balanced single-row distribution on wide screens.
 - Added a reusable, data-driven multi-layer Hero Product Slider with three product families and nine color variants.
 - Added keyboard, swipe, autoplay pause/resume, reduced-motion, pointer parallax, image fallback, and unavailable-variant states.
 - Added nine generated transparent product assets plus an isolated mock data source ready for an ASP.NET API adapter.
