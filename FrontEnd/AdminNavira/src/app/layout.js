@@ -5,6 +5,7 @@ import AccountProvider from "@/helper/accountContext/AccountProvider";
 import SettingProvider from "@/helper/settingContext/SettingProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ToastProvider from "@/lib/toast/ToastProvider";
+import StoreProvider from "@/store/StoreProvider";
 import "../../public/assets/scss/app.scss";
 
 export default function RootLayout({ children }) {
@@ -26,12 +27,14 @@ export default function RootLayout({ children }) {
         ></link>
       </head>
       <body>
-        <QueryClientProvider client={queryClient}>
+        <StoreProvider>
+          <QueryClientProvider client={queryClient}>
           <SettingProvider>
             <AccountProvider>{children}</AccountProvider>
             <ToastProvider />
           </SettingProvider>
         </QueryClientProvider>
+        </StoreProvider>
       </body>
     </html>
   );

@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
+const path = require("path");
+
 const nextConfig = {
   reactStrictMode: false,
+  outputFileTracingRoot: path.join(__dirname),
   env: {
     // Replace below URL with your current Domain
     API_PROD_URL: "http://localhost:3000/api/",
