@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Vazirmatn } from "next/font/google";
 
 import { AppProviders } from "@/framework/providers";
-import { Header } from "@/framework/ui/layout";
+import { Footer, Header } from "@/framework/ui/layout";
 import "@/styles/globals.scss";
 
 const vazirmatn = Vazirmatn({
@@ -27,6 +27,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <AppProviders>
           <Header />
           {children}
+          <Footer />
         </AppProviders>
       </body>
     </html>

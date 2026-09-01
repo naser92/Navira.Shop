@@ -7,6 +7,9 @@
 ## [Unreleased]
 
 ### Added
+- Completed the responsive storefront Header with dynamic navigation, accessible submenu, search, account, favorites, cart badge, and mobile drawer interactions.
+- Added a data-driven Footer with newsletter UI, grouped navigation, contact/social details, trust badges, and legal links.
+- Added typed layout view models and isolated mock storefront layout data for future ASP.NET API replacement.
 - Created initial project documentation structure.
 - Added `docs/PRD.md` for product requirements.
 - Added `docs/ARCHITECTURE.md` for project architecture and folder structure.

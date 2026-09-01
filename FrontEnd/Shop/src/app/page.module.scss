@@ -1,0 +1,18 @@
+@use "@/styles/tokens" as t;
+
+.heroPlaceholder {
+  min-block-size: 42vh;
+  padding-block: t.$space-64;
+
+  h1 {
+    margin-block: 0 t.$space-12;
+    font-size: t.$font-heading-1;
+    line-height: t.$line-heading-1;
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: t.$font-body-large;
+  }
+}
