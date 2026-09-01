@@ -7,6 +7,8 @@
 ## [Unreleased]
 
 ### Added
+- Added a reusable four-card `HomePromoBannerGrid` for mug campaigns with controlled layouts/themes, optimized product imagery, and resilient image fallbacks.
+- Added responsive promo behavior: swipeable scroll-snap cards on mobile, a 2×2 tablet grid, and four equal columns on wide screens.
 - Added the responsive, server-rendered `HomeCategoryStrip` with ten data-driven categories, controlled icon/theme registries, badges, and an optional “view all” item.
 - Added an RTL horizontal scroll-snap experience for home categories on mobile and balanced single-row distribution on wide screens.
 - Added a reusable, data-driven multi-layer Hero Product Slider with three product families and nine color variants.

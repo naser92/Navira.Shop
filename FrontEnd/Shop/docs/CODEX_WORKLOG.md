@@ -218,3 +218,62 @@
 - `npm run lint`: موفق، بدون warning یا error کد؛ فقط پیام deprecation مربوط به command خود Next.js 15 نمایش داده شد.
 - `npm run build:next`: موفق؛ صفحه Home همچنان static prerender است.
 - سناریوهای ساختاری شامل ۱، ۳، ۱۰، بیش از ۱۵ و empty با همان props/filter/sort پوشش‌پذیرند. بررسی مرورگری خودکار چند viewport در repository فعلی runner ندارد و باید در تست E2E آینده اضافه شود.
+
+## 2026-09-01 — چهار بنر تبلیغاتی Home
+
+### معماری و UI
+
+- `HomePromoBannerGrid` بعد از دسته‌بندی‌ها و مستقل از Hero و Category Strip قرار گرفت.
+- Grid، Card و data source سروری هستند؛ فقط `PromoBannerImage` برای مدیریت `onError` و fallback واقعی یک Client Component کوچک است.
+- چهار layout و پنج theme از registry کنترل‌شده انتخاب می‌شوند و Backend امکان ارسال CSS، HTML یا JSX ندارد.
+- داده mock چهار کمپین ماگ، تراول ماگ، لیوان و قمقمه را پوشش می‌دهد و از تصاویر PNG شفاف تولیدشده و موجود پروژه استفاده می‌کند؛ متن تبلیغاتی کاملاً HTML است.
+- موبایل یک ردیف swipeable با scroll snap، تبلت grid دو در دو و Desktop عریض چهار ستون برابر دارد. Empty state بخش را کاملاً حذف می‌کند.
+- کل کارت Link است؛ focus ring، لینک خارجی امن، alt تصویر، fallback، reduced motion و hover بدون layout shift پشتیبانی می‌شوند.
+
+### قرارداد Backend پیشنهادی
+
+#### `GET /api/v1/storefront/home/promo-banners`
+
+- حداکثر چهار بنر فعال و معتبر، مرتب‌شده با `sortOrder` صعودی، برای Home بازگردانده شود.
+- زمان شروع و پایان کمپین در Backend ارزیابی شود و بنر خارج از بازه در `items` قرار نگیرد.
+- `themeKey`: یکی از `rose`, `ocean`, `violet`, `orange`, `sage`.
+- `layoutKey`: یکی از `content-start-image-end`, `image-start-content-end`, `content-top-image-bottom`, `centered-overlay`.
+- فیلدهای ضروری: `id`, `title`, `imageUrl`, `imageAlt`, `url`, `ctaLabel`, `themeKey`, `layoutKey`, `sortOrder`؛ توضیح، eyebrow، badge، discount، mobile image و logo nullable هستند.
+- URL داخلی باید مسیر allow-listed باشد. لینک خارجی فقط با HTTPS، دامنه مجاز و `openInNewTab=true` پذیرفته شود.
+- تصویر باید media URL معتبر با alt و ابعاد باشد؛ تصویر خراب در Frontend fallback غیرشکننده نمایش می‌دهد. متن یا watermark داخل asset استفاده نشود.
+- cache پیشنهادی: `public, max-age=300, stale-while-revalidate=3600` همراه `ETag` و version برای invalidation.
+- Empty state بخش را پنهان می‌کند؛ در خطا data source از cache آخرین پاسخ یا fallback محلی استفاده کرده و خطای خام نمایش داده نمی‌شود.
+
+```json
+{
+  "version": "2026-09-01",
+  "items": [{
+    "id": "handled-mugs",
+    "eyebrow": "برای لحظه‌های گرم",
+    "title": "ماگ‌های دسته‌دار",
+    "description": "رنگی متناسب با حال‌وهوای تو",
+    "badgeText": "پرفروش",
+    "discountText": null,
+    "imageUrl": "/media/banners/handled-mugs.webp",
+    "mobileImageUrl": null,
+    "imageAlt": "مجموعه‌ای از ماگ‌های دسته‌دار رنگی",
+    "url": "/categories/mugs",
+    "ctaLabel": "مشاهده ماگ‌ها",
+    "themeKey": "rose",
+    "layoutKey": "content-start-image-end",
+    "sortOrder": 1,
+    "openInNewTab": false
+  }]
+}
+```
+
+### فایل‌ها و Verification
+
+- کامپوننت: `src/features/home/components/home-promo-banner-grid/`
+- mock: `src/mocks/home-promo-banners.mock.ts`
+- data source: `src/features/home/data/home-promo-banner.data-source.ts`
+- افزودن بنر با افزودن یک object معتبر به منبع داده انجام می‌شود؛ تصویر نهایی با تغییر `image.src`, `alt`, `width`, `height` جایگزین می‌شود.
+- `npm run typecheck`: موفق.
+- `npm run lint`: موفق و بدون warning/error کد؛ پیام deprecation خود `next lint` باقی است.
+- `npm run build:next`: موفق؛ Home به‌صورت static prerender شد.
+- تست visual خودکار viewport در پروژه runner ندارد؛ افزودن Playwright و screenshot regression بدهی مرحله بعد است.
