@@ -1,4 +1,5 @@
-﻿using Navira.Shop.Core.Bus;
+﻿using MassTransit.Initializers;
+using Navira.Shop.Core.Bus;
 using Navira.Shop.Core.Persistence;
 using Navira.Shop.Core.Results;
 using Navira.Shop.Core.ViewModels;
@@ -55,7 +56,8 @@ namespace Navira.Shop.Application.Identity
                 if (permissionMenuCode.Any(x => x.Code == item.PermissionCode))
                 {
                     var permissionId = permissionMenuCode.FirstOrDefault(x => x.Code == item.PermissionCode).Id;
-                    int? parentId = item.Parent is null ? null : permissionMenuCode.FirstOrDefault(x => x.Code == item.Parent.PermissionCode).Id;
+                    int? PermissionparentId = item.Parent is null ? null : permissionMenuCode.FirstOrDefault(x => x.Code == item.Parent.PermissionCode).Id;
+                    int? parentId = PermissionparentId is null ? null : await _menuWriteRepository.Get(x => x.PermissionId == PermissionparentId).Select(x => x.Id);
                     var menu = await _menuWriteRepository.Get(x => x.PermissionId == permissionId);
 
                     if (menu != null)
@@ -71,6 +73,7 @@ namespace Navira.Shop.Application.Identity
                         menu.SetRoute(item.Route);
                         menu.SetIcon(item.Icon);
                         await _menuWriteRepository.Insert(menu);
+                        await _unitOfWork.Commit();
                     }
                 }
                 else
