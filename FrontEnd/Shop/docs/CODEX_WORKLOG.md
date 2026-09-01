@@ -80,3 +80,10 @@
 - active route پس از تکمیل routeها از pathname واقعی استخراج شود.
 - فرم newsletter و جست‌وجو به endpointهای واقعی متصل شوند.
 - داده mock با mapper و service قرارداد فوق جایگزین شود.
+
+### سازگاری با Sites
+
+- build اولیه Next.js در محیط میزبانی موفق بود اما runtime فایل `dist/server/index.js` را نیاز داشت.
+- برای تولید artifact سازگار، `vinext` و plugin رسمی RSC اضافه و React/ReactDOM به نسخه 19 سازگار با Next.js 15 ارتقا یافتند.
+- script ساخت، خروجی ESM تولیدشده توسط vinext را با نام ورودی مورد انتظار Sites نیز نگه می‌دارد.
+- خروجی‌های generated مربوط به Next و vinext از typecheck مستقل پروژه و Git خارج نگه داشته شدند تا typeهای تولیدی دو bundler با هم تداخل نداشته باشند.

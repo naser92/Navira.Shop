@@ -7,6 +7,7 @@
 ## [Unreleased]
 
 ### Added
+- Added the vinext/RSC build adapter required to emit a Sites-compatible deployment artifact.
 - Completed the responsive storefront Header with dynamic navigation, accessible submenu, search, account, favorites, cart badge, and mobile drawer interactions.
 - Added a data-driven Footer with newsletter UI, grouped navigation, contact/social details, trust badges, and legal links.
 - Added typed layout view models and isolated mock storefront layout data for future ASP.NET API replacement.
