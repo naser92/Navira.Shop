@@ -85,5 +85,5 @@
 
 - build اولیه Next.js در محیط میزبانی موفق بود اما runtime فایل `dist/server/index.js` را نیاز داشت.
 - برای تولید artifact سازگار، `vinext` و plugin رسمی RSC اضافه و React/ReactDOM به نسخه 19 سازگار با Next.js 15 ارتقا یافتند.
-- script ساخت، خروجی ESM تولیدشده توسط vinext را با نام ورودی مورد انتظار Sites نیز نگه می‌دارد.
+- script ساخت، handler تولیدشده توسط vinext را در Worker object دارای متد `fetch` قرار می‌دهد که قرارداد runtime میزبانی است.
 - خروجی‌های generated مربوط به Next و vinext از typecheck مستقل پروژه و Git خارج نگه داشته شدند تا typeهای تولیدی دو bundler با هم تداخل نداشته باشند.
