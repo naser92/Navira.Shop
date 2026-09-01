@@ -14,7 +14,7 @@ namespace Navira.Shop.Api.Controllers
     [CustomAuthorize(AuthenticationSchemes = "Bearer")]
     //[Permission("Controller", "دسترسی", "Identity.Access")]
     //[Menu("Identity.Access", "مدیریت دسترسی")]
-    public class RolePolicyController : ControllerBase
+    public class RolePolicyController
     {
 
 

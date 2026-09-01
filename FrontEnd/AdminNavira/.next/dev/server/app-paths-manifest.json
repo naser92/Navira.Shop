@@ -3,15 +3,14 @@
   "/(mainLayout)/access/page": "app/(mainLayout)/access/page.js",
   "/(mainLayout)/dashboard/page": "app/(mainLayout)/dashboard/page.js",
   "/(mainLayout)/products/new/page": "app/(mainLayout)/products/new/page.js",
-  "/(mainLayout)/profile/page": "app/(mainLayout)/profile/page.js",
   "/_not-found/page": "app/_not-found/page.js",
   "/api/access/permissions/route": "app/api/access/permissions/route.js",
   "/api/access/policies/route": "app/api/access/policies/route.js",
   "/api/access/policy-permissions/route": "app/api/access/policy-permissions/route.js",
+  "/api/access/role-policies/route": "app/api/access/role-policies/route.js",
   "/api/access/roles/route": "app/api/access/roles/route.js",
   "/api/auth/UserAccessInfo/route": "app/api/auth/UserAccessInfo/route.js",
   "/api/auth/login/route": "app/api/auth/login/route.js",
-  "/api/auth/logout/route": "app/api/auth/logout/route.js",
   "/api/auth/me/route": "app/api/auth/me/route.js",
   "/api/auth/refresh/route": "app/api/auth/refresh/route.js"
 }
