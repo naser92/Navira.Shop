@@ -1,18 +1,7 @@
 @use "@/styles/tokens" as t;
 
-.heroPlaceholder {
-  min-block-size: 42vh;
-  padding-block: t.$space-64;
+@use "@/styles/mixins" as m;
 
-  h1 {
-    margin-block: 0 t.$space-12;
-    font-size: t.$font-heading-1;
-    line-height: t.$line-heading-1;
-  }
-
-  p {
-    margin: 0;
-    color: var(--color-text-secondary);
-    font-size: t.$font-body-large;
-  }
-}
+.main { inline-size: min(100% - (t.$container-padding-mobile * 2), t.$content-max-width); margin-inline: auto; padding-block: t.$space-24 t.$space-64; }
+@include m.respond-up("md") { .main { inline-size: min(100% - (t.$container-padding-tablet * 2), t.$content-max-width); padding-block-start: t.$space-32; } }
+@include m.respond-up("lg") { .main { inline-size: min(100% - (t.$container-padding-desktop * 2), t.$content-max-width); } }

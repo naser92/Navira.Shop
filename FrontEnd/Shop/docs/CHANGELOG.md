@@ -7,6 +7,9 @@
 ## [Unreleased]
 
 ### Added
+- Added a reusable, data-driven multi-layer Hero Product Slider with three product families and nine color variants.
+- Added keyboard, swipe, autoplay pause/resume, reduced-motion, pointer parallax, image fallback, and unavailable-variant states.
+- Added nine generated transparent product assets plus an isolated mock data source ready for an ASP.NET API adapter.
 - Added the vinext/RSC build adapter required to emit a Sites-compatible deployment artifact.
 - Completed the responsive storefront Header with dynamic navigation, accessible submenu, search, account, favorites, cart badge, and mobile drawer interactions.
 - Added a data-driven Footer with newsletter UI, grouped navigation, contact/social details, trust badges, and legal links.

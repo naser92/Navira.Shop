@@ -1,13 +1,12 @@
-import { PageContainer } from "@/framework/ui/layout";
+import { HeroProductSlider, heroSliderDataSource } from "@/features/home";
 import styles from "./page.module.scss";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const slides = await heroSliderDataSource.getActiveSlides();
+
   return (
-    <PageContainer as="main">
-      <div className={styles.heroPlaceholder}>
-        <h1>لحظه‌های گرم، انتخاب‌های ماندگار</h1>
-        <p>فروشگاه تخصصی ماگ و هدیه‌های دوست‌داشتنی نویرا</p>
-      </div>
-    </PageContainer>
+    <main className={styles.main}>
+      <HeroProductSlider slides={slides} config={{ autoplayMs: 6500, loop: true }} />
+    </main>
   );
 }

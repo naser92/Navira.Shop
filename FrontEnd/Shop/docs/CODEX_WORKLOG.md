@@ -87,3 +87,80 @@
 - برای تولید artifact سازگار، `vinext` و plugin رسمی RSC اضافه و React/ReactDOM به نسخه 19 سازگار با Next.js 15 ارتقا یافتند.
 - script ساخت، handler تولیدشده توسط vinext را در Worker object دارای متد `fetch` قرار می‌دهد که قرارداد runtime میزبانی است.
 - خروجی‌های generated مربوط به Next و vinext از typecheck مستقل پروژه و Git خارج نگه داشته شدند تا typeهای تولیدی دو bundler با هم تداخل نداشته باشند.
+
+## 2026-09-01 — Hero Product Slider چندلایه
+
+### تحلیل و تصمیم معماری
+
+- صفحه خانه Server Component باقی ماند و فقط اسلایدر تعاملی با مرز `use client` پیاده‌سازی شد.
+- مدل view، داده mock و `HeroSliderDataSource` از JSX مستقل‌اند؛ بنابراین جایگزینی mock با adapter مربوط به ASP.NET بدون تغییر خود کامپوننت انجام می‌شود.
+- برای جلوگیری از افزایش bundle و وابستگی غیرضروری، موتور اسلایدر با React و CSS Modules پیاده‌سازی شد و کتابخانه slider جدیدی اضافه نشد.
+- هر اسلاید state رنگ مستقل دارد؛ تغییر رنگ تصویر، قیمت، badge، لینک و تم را یک‌جا تغییر می‌دهد.
+
+### قابلیت‌های تحویل‌شده
+
+- سه اسلاید محصول و مجموعاً نه variant رنگی با تصاویر PNG شفاف اختصاصی.
+- autoplay حلقوی، توقف روی hover/focus/interaction و تب غیرفعال، و شروع دوباره پس از تعامل.
+- کنترل قبلی/بعدی، pagination، کلیدهای جهت‌دار و Home/End، swipe و ناحیه `aria-live`.
+- palette رادیویی معنایی با focus-visible و حالت disabled برای variant ناموجود.
+- parallax سبک تصویر و glow و scatter حروف مدل با Pointer Events و `requestAnimationFrame`، بدون setState در حرکت pointer.
+- پشتیبانی RTL، mobile-first، `prefers-reduced-motion`، preload تصاویر variant و fallback خطای تصویر.
+
+### قرارداد پیشنهادی Backend
+
+#### `GET /api/v1/storefront/hero-slides`
+
+- Response: `ApiResponse<HeroSlideDto[]>`
+- فیلدهای ضروری اسلاید: `id`, `eyebrow`, `title`, `model`, `sortOrder`, `isActive`, `themeKey`, `variants[]`.
+- فیلد nullable: `description`.
+- فیلدهای ضروری variant: `id`, `name`, `colorHex`, `price.amount`, `price.currency`, `image.url`, `image.alt`, `productUrl`, `isAvailable`؛ فیلد `badge` nullable است.
+- backend فقط `themeKey` تأییدشده برمی‌گرداند و frontend آن را به tokenهای امن theme map می‌کند؛ رنگ‌های خام background از API وارد CSS نمی‌شوند.
+- ترتیب با `sortOrder` مشخص می‌شود؛ اسلاید غیرفعال، بدون variant یا variant ناموجود به‌ترتیب حذف/غیرفعال می‌شوند.
+- Empty state: پاسخ خالی UI جایگزین کوتاه نمایش می‌دهد. Error state: استفاده از cache آخرین پاسخ و سپس داده fallback محلی؛ خطای فنی مستقیم به کاربر نمایش داده نمی‌شود.
+- Cache پیشنهادی: cache عمومی کوتاه‌مدت با `ETag` و `stale-while-revalidate`؛ موجودی و قیمت در صورت حساسیت تجاری باید TTL کوتاه‌تری داشته باشند.
+
+نمونه خلاصه پاسخ:
+
+```json
+{
+  "data": [{
+    "id": "adventure-tumbler",
+    "title": "ماگ سفری Adventure",
+    "model": "ADVENTURE",
+    "themeKey": "rose",
+    "sortOrder": 10,
+    "isActive": true,
+    "variants": [{
+      "id": "rose",
+      "name": "رز",
+      "colorHex": "#c9697e",
+      "price": { "amount": 1890000, "currency": "IRR" },
+      "image": { "url": "/media/adventure-rose.png", "alt": "ماگ سفری Adventure به رنگ رز" },
+      "productUrl": "/products/adventure-rose",
+      "badge": "پرفروش",
+      "isAvailable": true
+    }]
+  }],
+  "succeeded": true,
+  "statusCode": 200
+}
+```
+
+### فایل‌های اصلی
+
+- `src/features/home/components/hero-product-slider/*`
+- `src/features/home/data/hero-slider.data-source.ts`
+- `src/mocks/home-hero-slides.mock.ts`
+- `public/images/hero/*`
+- `src/app/page.tsx` و `src/app/page.module.scss`
+
+### دارایی‌های تولیدشده
+
+- تصاویر با قابلیت داخلی ImageGen و با سبک یکپارچه studio product photography، نمای سه‌ربع، نور نرم، سایه طبیعی و پس‌زمینه شفاف تولید شدند.
+- سه خانواده prompt شامل tall travel tumbler، compact ceramic mug و athletic water bottle بود؛ برای هر خانواده سه رنگ مستقل ساخته و مستقیماً به‌عنوان asset پروژه استفاده شد.
+
+### آزمون و بدهی فنی
+
+- `npm run typecheck`: موفق.
+- `npm run build:next`: موفق و route خانه به‌صورت static prerender شد.
+- پس از آماده‌شدن API، mock data source با adapter واقعی، mapper قیمت و allow-list مربوط به `themeKey` جایگزین شود.
