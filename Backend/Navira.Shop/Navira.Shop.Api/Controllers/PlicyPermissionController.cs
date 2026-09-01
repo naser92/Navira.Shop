@@ -13,7 +13,7 @@ namespace Navira.Shop.Api.Controllers
     [CustomAuthorize(AuthenticationSchemes = "Bearer")]
     //[Permission("Controller", "دسترسی", "Identity.Access")]
     //[Menu("Identity.Access", "مدیریت دسترسی")]
-    public class PlicyPermissionController : ControllerBase
+    public class PlicyPermissionController
     {
         #region variables 
 
