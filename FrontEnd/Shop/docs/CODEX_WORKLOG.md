@@ -277,3 +277,76 @@
 - `npm run lint`: موفق و بدون warning/error کد؛ پیام deprecation خود `next lint` باقی است.
 - `npm run build:next`: موفق؛ Home به‌صورت static prerender شد.
 - تست visual خودکار viewport در پروژه runner ندارد؛ افزودن Playwright و screenshot regression بدهی مرحله بعد است.
+
+## 2026-09-02 — بخش جدیدترین محصولات
+
+### معماری و رفتار
+
+- `LatestProductsSection` بعد از Promo Banner Grid قرار گرفت و heading، empty/error state و shell شیشه‌ای را به‌صورت Server Component رندر می‌کند.
+- `LatestProductsRail` فقط navigation افقی را مدیریت می‌کند و با `scrollIntoView` به رفتار متفاوت `scrollLeft` در مرورگرهای RTL وابسته نیست.
+- هر `ProductCard` state variant مستقل دارد؛ انتخاب رنگ فقط تصویر، قیمت، موجودی، alt و لینک همان کارت را تغییر می‌دهد.
+- شش محصول mock شامل ماگ، تراول ماگ، لیوان، فلاسک، قمقمه و ست هدیه ساخته شدند؛ محصولات تک‌رنگ، چندرنگ، تخفیف‌دار، بدون امتیاز و variant ناموجود پوشش داده شده‌اند.
+- علاقه‌مندی تا زمان ایجاد زیرساخت واقعی غیرفعال و توضیح‌دار است؛ CTA خرید به صفحه variant می‌رود و هیچ cart state، toast یا persistence جعلی ایجاد نشده است.
+- تصاویر variant بعدی با تأخیر preload می‌شوند. کارت‌ها از `next/image`، ابعاد ثابت، fallback، scroll snap و reduced motion استفاده می‌کنند.
+- برای loading، `LatestProductsSkeleton` با سه کارت هم‌اندازه export شده است؛ empty و error پیام عمومی و لینک همه محصولات دارند.
+
+### رفتار Responsive
+
+- Mobile: تقریباً یک کارت و بخشی از کارت بعدی، swipe و scroll snap.
+- Tablet: دو کارت قابل مشاهده.
+- Desktop: سه کارت؛ برای دقیقاً سه محصول ردیف در مرکز قرار می‌گیرد.
+- Desktop عریض: چهار کارت قابل مشاهده؛ تعداد بیشتر در rail می‌ماند و دکمه‌های قبلی/بعدی فعال‌اند.
+
+### قرارداد Backend پیشنهادی
+
+#### `GET /api/v1/storefront/products/latest?limit=8`
+
+- `limit` باید عددی بین ۳ و ۱۲ باشد؛ Backend فقط محصولات فعال، قابل نمایش و مرتب‌شده براساس `createdAt` نزولی را برمی‌گرداند.
+- `createdAt` با UTC و ISO 8601، قیمت‌ها عدد صحیح و currency صریح (پیشنهاد `IRR`) باشند. Frontend مسئول format فارسی است.
+- `defaultVariantId` باید به variant موجود در همان محصول اشاره کند؛ در غیر این صورت Frontend اولین variant موجود و سپس اولین variant را fallback می‌کند.
+- فیلدهای ضروری محصول: `id`, `slug`, `title`, `defaultVariantId`, `createdAt`, `variants[]`; برند، badge، rating و reviewCount nullable هستند.
+- فیلدهای ضروری variant: `id`, `colorName`, `swatchColor`, `imageUrl`, `imageAlt`, `price`, `isAvailable`, `url`; sku و oldPrice nullable هستند.
+- Backend فقط URLهای داخلی/media مجاز، رنگ معتبر و متن ساده ارسال کند؛ HTML، CSS و JSX آزاد پذیرفته نمی‌شود.
+- cache پیشنهادی: `public, max-age=120, stale-while-revalidate=600` با `ETag`. تغییر قیمت/موجودی باید TTL کوتاه و invalidation مستقل داشته باشد.
+- پاسخ خطا در data source ثبت و به state عمومی تبدیل شود؛ خطای خام در UI نمایش داده نشود.
+
+```json
+{
+  "items": [{
+    "id": "product-105",
+    "slug": "adventure-travel-mug",
+    "brandName": "Navira",
+    "title": "تراول ماگ Adventure",
+    "defaultVariantId": "rose",
+    "badgeText": "جدید",
+    "rating": 4.8,
+    "reviewCount": 42,
+    "createdAt": "2026-08-29T10:30:00Z",
+    "variants": [{
+      "id": "rose",
+      "sku": "ADV-ROS",
+      "colorName": "رز",
+      "swatchColor": "#c9697e",
+      "imageUrl": "/media/products/adventure-rose.webp",
+      "imageAlt": "تراول ماگ Adventure رز",
+      "price": 1890000,
+      "oldPrice": 2190000,
+      "currency": "IRR",
+      "isAvailable": true,
+      "url": "/products/adventure-travel-mug?variant=rose"
+    }]
+  }],
+  "totalCount": 24
+}
+```
+
+### فایل‌ها و Verification
+
+- کامپوننت: `src/features/home/components/latest-products-section/`
+- mock: `src/mocks/latest-products.mock.ts`
+- data source: `src/features/home/data/latest-products.data-source.ts`
+- محصول جدید با افزودن یک object و variant جدید با افزودن عضو `variants` ایجاد می‌شود؛ هیچ تغییر JSX لازم نیست.
+- `npm run typecheck`: موفق.
+- `npm run lint`: موفق، بدون warning/error کد؛ پیام deprecation دستور `next lint` متعلق به Next.js 15 است.
+- `npm run build:next`: موفق و Home همچنان static prerender است.
+- تست viewport و hydration مرورگری خودکار به‌دلیل نبود runner E2E در repository باقی مانده و پیشنهاد مرحله بعد افزودن Playwright است.

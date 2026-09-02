@@ -4,3 +4,5 @@ export { HomeCategoryStrip } from "./components/home-category-strip";
 export { homeCategoryDataSource } from "./data/home-category.data-source";
 export { HomePromoBannerGrid } from "./components/home-promo-banner-grid";
 export { homePromoBannerDataSource } from "./data/home-promo-banner.data-source";
+export { LatestProductsSection } from "./components/latest-products-section";
+export { latestProductsDataSource } from "./data/latest-products.data-source";

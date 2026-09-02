@@ -7,6 +7,8 @@
 ## [Unreleased]
 
 ### Added
+- Added a glass `LatestProductsSection` with six mock products, independent per-card color variants, pricing, discounts, ratings, inventory states, and responsive navigation.
+- Added product loading skeleton, friendly empty/error states, RTL-safe scroll-snap navigation, image fallbacks, and accessible variant controls.
 - Added a reusable four-card `HomePromoBannerGrid` for mug campaigns with controlled layouts/themes, optimized product imagery, and resilient image fallbacks.
 - Added responsive promo behavior: swipeable scroll-snap cards on mobile, a 2×2 tablet grid, and four equal columns on wide screens.
 - Added the responsive, server-rendered `HomeCategoryStrip` with ten data-driven categories, controlled icon/theme registries, badges, and an optional “view all” item.
