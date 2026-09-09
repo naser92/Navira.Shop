@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Class1.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Navira.Shop.Core.Infrastructure\Navira.Shop.Core.Infrastructure.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core.Ioc\Navira.Shop.Core.Ioc.csproj" />
+    <ProjectReference Include="..\Navira.Shop.Core.Services\Navira.Shop.Core.Services.csproj" />
+  </ItemGroup>
+
+</Project>

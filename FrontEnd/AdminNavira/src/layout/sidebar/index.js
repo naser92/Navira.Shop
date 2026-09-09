@@ -4,34 +4,33 @@ import SettingContext from "@/helper/settingContext";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useContext, useEffect, useState, useCallback } from "react";
+import { useContext, useEffect, useState } from "react";
 import { RiAddLine, RiCloseLine, RiSubtractLine } from "react-icons/ri";
 import MENUITEMS from "./MenuData";
-import useAccount from "@/helper/accountContext/useAccount";
+import { useSelector } from "react-redux";
+import { selectMenu, selectUserAccessLoading, selectUserAccessError } from "@/store";
 
-// Helper function to convert API menu structure to sidebar menu structure
 const convertMenuStructure = (apiMenus) => {
   if (!Array.isArray(apiMenus)) return [];
-  
-  // Sort by sortOrder
+
   const sortedMenus = [...apiMenus].sort((a, b) => a.sortOrder - b.sortOrder);
-  
-  return sortedMenus.map(item => {
+
+  return sortedMenus.map((item) => {
     const convertedItem = {
       title: item.title,
       type: item.route === "#" ? "sub" : undefined,
       path: item.route !== "#" ? item.route : undefined,
+      icon: item.icon,
     };
-    
-    // If the menu item has children, convert them recursively
+
     if (Array.isArray(item.childs) && item.childs.length > 0) {
       const sortedChildren = [...item.childs].sort((a, b) => a.sortOrder - b.sortOrder);
-      convertedItem.children = sortedChildren.map(child => ({
+      convertedItem.children = sortedChildren.map((child) => ({
         title: child.title,
         path: child.route,
       }));
     }
-    
+
     return convertedItem;
   });
 };
@@ -91,7 +90,11 @@ const SidebarMenuList = ({ menu, level, onNavigate }) => {
                 </a>
                 {item.children && (
                   <ul className={`sidebar-submenu ${isOpen ? "menu-open" : ""}`}>
-                    <SidebarMenuList menu={item.children} level={level + 1} onNavigate={onNavigate} />
+                    <SidebarMenuList
+                      menu={item.children}
+                      level={level + 1}
+                      onNavigate={onNavigate}
+                    />
                   </ul>
                 )}
               </>
@@ -105,21 +108,15 @@ const SidebarMenuList = ({ menu, level, onNavigate }) => {
 
 const Sidebar = () => {
   const { state, sidebarOpen, setSidebarOpen } = useContext(SettingContext);
-  const { dynamicMenus, refreshUserAccessInfo, isLoading } = useAccount();
+  const reduxMenu = useSelector(selectMenu);
+  const menuLoading = useSelector(selectUserAccessLoading);
+  const menuError = useSelector(selectUserAccessError);
   const logoSrc = state?.setDarkLogo?.original_url || "/assets/images/logo.png";
+
   const closeSidebar = () => setSidebarOpen(false);
 
-  // Fetch dynamic menus if not already loaded
-  useEffect(() => {
-    if (!dynamicMenus && !isLoading) {
-      refreshUserAccessInfo();
-    }
-  }, [dynamicMenus, isLoading, refreshUserAccessInfo]);
-
-  // Determine which menu data to use - dynamic menus if available, otherwise static
-  const currentMenuData = dynamicMenus && dynamicMenus.length > 0 
-    ? convertMenuStructure(dynamicMenus) 
-    : MENUITEMS;
+  const currentMenuSource = reduxMenu.length > 0 ? reduxMenu : [];
+  const currentMenuData = currentMenuSource.length > 0 ? convertMenuStructure(currentMenuSource) : MENUITEMS;
 
   return (
     <div className={`sidebar-wrapper ${sidebarOpen ? "sidebar-open" : ""}`} dir="rtl">
@@ -140,6 +137,11 @@ const Sidebar = () => {
         <div id="sidebar-menu">
           <ul className="sidebar-links" id="simple-bar">
             <SidebarMenuList menu={currentMenuData} level={0} onNavigate={closeSidebar} />
+            {menuLoading && <li className="text-center py-2">در حال دریافت منو...</li>}
+            {menuError && <li className="text-center text-danger py-2">خطا در دریافت منو</li>}
+            {!menuLoading && !menuError && !currentMenuSource.length && (
+              <li className="text-center text-muted py-2">منویی برای نمایش وجود ندارد.</li>
+            )}
           </ul>
         </div>
       </nav>

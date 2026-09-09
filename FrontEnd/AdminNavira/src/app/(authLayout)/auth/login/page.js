@@ -34,9 +34,13 @@ const Login = () => {
   const { settingObj, state } = useContext(SettingContext);
   const reCaptchaRef = useRef();
   const router = useRouter();
-  const { refreshProfile } = useContext(AccountContext);
+  const { refreshProfile, isLoading } = useContext(AccountContext);
 
   const handleLogin = async (values) => {
+    if (isSubmitting || isLoading) {
+      return;
+    }
+
     try {
       setIsSubmitting(true);
 
@@ -49,8 +53,7 @@ const Login = () => {
       });
 
       Toast.success(loginTexts.LoginSuccessful);
-
-      await refreshProfile();
+      await refreshProfile({ force: true });
       router.replace("/dashboard");
       router.refresh();
     } catch (error) {

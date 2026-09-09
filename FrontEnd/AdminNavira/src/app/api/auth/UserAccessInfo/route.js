@@ -1,13 +1,21 @@
 import { NextResponse } from "next/server";
 import { callBackendWithAuth } from "@/lib/api/serverAuth";
 
-export async function GET() {
+export async function GET(request) {
   try {
+    const incomingAuthHeader = request?.headers?.get?.("authorization");
+
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    if (incomingAuthHeader) {
+      headers.Authorization = incomingAuthHeader;
+    }
+
     const backendResponse = await callBackendWithAuth("/api/auth/UserAccessInfo", {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
     });
 
     if (!backendResponse.ok) {

@@ -3,13 +3,17 @@
 import { useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Layout from "@/layout";
-import AccountProvider from "@/helper/accountContext/AccountProvider";
 import AccountContext from "@/helper/accountContext/accountContext";
-
 
 function ProtectedContent({ children }) {
   const router = useRouter();
-  const { isAuthenticated, isLoading } = useContext(AccountContext);
+  const {
+    isAuthenticated,
+    isLoading,
+    userAccessReady,
+    dynamicMenuLoading,
+    dynamicMenuError,
+  } = useContext(AccountContext);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -25,13 +29,13 @@ function ProtectedContent({ children }) {
     return null;
   }
 
+  if ((dynamicMenuLoading || !userAccessReady) && !dynamicMenuError) {
+    return <div className="p-4">در حال آماده‌سازی پنل...</div>;
+  }
+
   return <Layout>{children}</Layout>;
 }
 
 export default function RootLayout({ children }) {
-  return (
-    <AccountProvider>
-      <ProtectedContent>{children}</ProtectedContent>
-    </AccountProvider>
-  );
+  return <ProtectedContent>{children}</ProtectedContent>;
 }

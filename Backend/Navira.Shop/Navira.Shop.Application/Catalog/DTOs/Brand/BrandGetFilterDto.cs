@@ -1,18 +1,14 @@
-﻿using Navira.Shop.Core.ViewModels;
+﻿using Navira.Shop.Application.Common;
 
 namespace Navira.Shop.Application.Catalog
 {
-
-
-    public class BrandDto : BaseDto<int>
+    public class BrandGetFilterDto : PaginationModel
     {
 
         public string Name { get; set; }
 
         public string Slug { get; set; }
 
-        public bool IsActive { get; set; }
-
-
+        public bool? IsActive { get; set; }
     }
 }

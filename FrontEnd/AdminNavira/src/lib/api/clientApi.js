@@ -11,6 +11,17 @@ const notifyRefreshSubscribers = (error = null, token = null) => {
   refreshSubscribers = [];
 };
 
+const isAuthErrorEndpoint = (url) =>
+  Boolean(
+    url?.includes("/api/auth/login") ||
+      url?.includes("/api/auth/refresh") ||
+      url?.includes("/api/auth/logout") ||
+      url?.includes("/api/auth/register") ||
+      url?.includes("/api/auth/forgot") ||
+      url?.includes("/api/auth/me") ||
+      url?.includes("/api/auth/UserAccessInfo")
+  );
+
 export async function apiFetch(url, options = {}) {
   const response = await fetch(url, {
     ...options,
@@ -21,10 +32,8 @@ export async function apiFetch(url, options = {}) {
     },
   });
 
-  // Handle 401 Unauthorized - try to refresh token
   if (response.status === 401) {
-    // Don't refresh for auth endpoints (login, refresh, etc.)
-    if (url.includes("/api/auth/")) {
+    if (isAuthErrorEndpoint(url)) {
       const errorData = await parseResponse(response);
       const error = new Error(errorData?.message || "Authentication failed");
       error.status = response.status;
@@ -45,16 +54,14 @@ export async function apiFetch(url, options = {}) {
     throw error;
   }
 
-  // Parse the response
   const data = await parseResponse(response);
 
-  // Treat HTTP errors AND business-logic errors (error: true / success: false)
-  // as failures so callers always land in their catch block with the backend message.
   const isError = !response.ok || data?.error === true || data?.success === false;
 
   if (isError) {
     const error = new Error(data?.message || "Request failed");
     error.status = response.status;
+    error.error = data?.error;
     error.data = data;
     throw error;
   }
@@ -63,14 +70,12 @@ export async function apiFetch(url, options = {}) {
 }
 
 async function handle401Response(originalUrl, originalOptions) {
-  // If already refreshing, wait for the refresh to complete
   if (isRefreshing) {
     return new Promise((resolve, reject) => {
       subscribeToRefresh((error, token) => {
         if (error) {
           reject(error);
         } else {
-          // Retry the original request with the new token
           retryOriginalRequest(originalUrl, originalOptions)
             .then(resolve)
             .catch(reject);
@@ -79,25 +84,24 @@ async function handle401Response(originalUrl, originalOptions) {
     });
   }
 
-  // Start refresh process
   isRefreshing = true;
-  const refreshResult = await refreshTokenRequest();
 
   try {
+    const refreshResult = await refreshTokenRequest();
+
     if (!refreshResult.success) {
       throw new Error(refreshResult.message || "Refresh failed");
     }
-    
-    // Retry the original request
+
     const result = await retryOriginalRequest(originalUrl, originalOptions);
+    notifyRefreshSubscribers(null, refreshResult?.data?.accessToken || null);
     return result;
   } catch (refreshError) {
-    // Refresh failed, clear auth and redirect to login
+    notifyRefreshSubscribers(refreshError);
     clearAuthAndRedirect();
     throw refreshError;
   } finally {
     isRefreshing = false;
-    notifyRefreshSubscribers();
   }
 }
 
@@ -111,15 +115,16 @@ async function retryOriginalRequest(url, options) {
     },
   });
 
+  const data = await parseResponse(response);
+
   if (!response.ok) {
-    const errorData = await parseResponse(response);
-    const error = new Error(errorData?.message || "Request failed");
+    const error = new Error(data?.message || "Request failed");
     error.status = response.status;
-    error.data = errorData;
+    error.data = data;
     throw error;
   }
 
-  return parseResponse(response);
+  return data;
 }
 
 async function refreshTokenRequest() {
@@ -153,17 +158,14 @@ async function parseResponse(response) {
 }
 
 function clearAuthAndRedirect() {
-  // Clear any stored auth data
-  // This will trigger the auth context to update
   const event = new CustomEvent("auth:logout");
   window.dispatchEvent(event);
-  
-  // Redirect to login using location
-  window.location.href = "/auth/login";
+  if (window.location.pathname !== "/auth/login") {
+    window.location.href = "/auth/login";
+  }
 }
 
 function redirectTo403() {
-  // Prevent redirect loops
   if (window.location.pathname !== "/403") {
     window.location.href = "/403";
   }
