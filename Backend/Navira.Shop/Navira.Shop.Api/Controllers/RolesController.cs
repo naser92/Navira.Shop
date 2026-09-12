@@ -26,7 +26,7 @@ namespace Navira.Shop.Api.Controllers
         //[Permission("List", "دسترسی ها")]
         //[Menu("Permission.List", "دسترسی ها", Action = "access")]
         public virtual async Task<IActionResult> List() =>
-            await _queryBus.Send<GetListRolesCommand, IReadOnlyList<KeycloakRoleDto>>(new GetListRolesCommand()).ApiResultAsync();
+            await _queryBus.Send<GetListRolesCommand, RoleListDto>(new GetListRolesCommand()).ApiResultAsync();
 
     }
 }

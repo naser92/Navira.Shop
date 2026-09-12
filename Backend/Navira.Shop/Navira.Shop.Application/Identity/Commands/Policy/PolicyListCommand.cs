@@ -2,7 +2,7 @@
 
 namespace Navira.Shop.Application.Identity
 {
-    public class PolicyListCommand : ICommand
+    public class PolicyListCommand : PolicyGetFilterDto, ICommand
     {
     }
 }

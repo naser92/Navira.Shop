@@ -26,7 +26,7 @@ namespace Navira.Shop.Api.Controllers
         [HttpGet]
         //[Permission("List", "دسترسی ها")]
         [Menu("Permission.List", "دسترسی ها", Action = "access")]
-        public virtual async Task<IActionResult> List() =>
-            await _queryBus.Send<PermissionListCommand, IList<PermissionModelDto>>(new PermissionListCommand()).ApiResultAsync();
+        public virtual async Task<IActionResult> List([FromQuery] PermissionListCommand query) =>
+            await _queryBus.Send<PermissionListCommand, object>(query).ApiResultAsync();
     }
 }

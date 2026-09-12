@@ -6,11 +6,7 @@ namespace Navira.Shop.Application.Identity
     public class PermissionModelDto : BaseDto<int>
     {
 
-        /// <summary>
-        ///  BaseSubSystemId
-        /// </summary>
-        [Display(Name = "BaseSubSystemId")]
-        public int BaseSubSystemId { get; set; }
+
 
         /// <summary>
         ///  ControllerName
@@ -36,11 +32,6 @@ namespace Navira.Shop.Application.Identity
         [Display(Name = "Title")]
         public string Title { get; set; }
 
-        /// <summary>
-        ///  Description
-        /// </summary>
-        [Display(Name = "Description")]
-        public string Description { get; set; }
 
         /// <summary>
         ///  وضعیت اعتبار

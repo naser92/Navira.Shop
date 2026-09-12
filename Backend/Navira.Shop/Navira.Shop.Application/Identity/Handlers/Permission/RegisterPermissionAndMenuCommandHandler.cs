@@ -51,27 +51,27 @@ namespace Navira.Shop.Application.Identity
             await _unitOfWork.Commit();
             var permissionMenuCode = await _permissionQueryService.GetByCode<PermissionDto>(command.data.Menus.Select(x => x.PermissionCode).ToList());
 
-            foreach (var item in command.data.Menus)
+            foreach (var menuItem in command.data.Menus)
             {
-                if (permissionMenuCode.Any(x => x.Code == item.PermissionCode))
+                if (permissionMenuCode.Any(x => x.Code == menuItem.PermissionCode))
                 {
-                    var permissionId = permissionMenuCode.FirstOrDefault(x => x.Code == item.PermissionCode).Id;
-                    int? PermissionparentId = item.Parent is null ? null : permissionMenuCode.FirstOrDefault(x => x.Code == item.Parent.PermissionCode).Id;
+                    var permissionId = permissionMenuCode.FirstOrDefault(x => x.Code == menuItem.PermissionCode).Id;
+                    int? PermissionparentId = menuItem.Parent is null ? null : permissionMenuCode.FirstOrDefault(x => x.Code == menuItem.Parent.PermissionCode).Id;
                     int? parentId = PermissionparentId is null ? null : await _menuWriteRepository.Get(x => x.PermissionId == PermissionparentId).Select(x => x.Id);
                     var menu = await _menuWriteRepository.Get(x => x.PermissionId == permissionId);
 
                     if (menu != null)
                     {
-                        menu.SetTitle(item.Title);
-                        menu.SetRoute(item.Route);
-                        menu.SetIcon(item.Icon);
+                        menu.SetTitle(menuItem.Title);
+                        menu.SetRoute(menuItem.Route);
+                        menu.SetIcon(menuItem.Icon);
                     }
                     else
                     {
-                        menu = Menu.Create(parentId, permissionId, item.SortOrder);
-                        menu.SetTitle(item.Title);
-                        menu.SetRoute(item.Route);
-                        menu.SetIcon(item.Icon);
+                        menu = Menu.Create(parentId, permissionId, menuItem.SortOrder);
+                        menu.SetTitle(menuItem.Title);
+                        menu.SetRoute(menuItem.Route);
+                        menu.SetIcon(menuItem.Icon);
                         await _menuWriteRepository.Insert(menu);
                         await _unitOfWork.Commit();
                     }

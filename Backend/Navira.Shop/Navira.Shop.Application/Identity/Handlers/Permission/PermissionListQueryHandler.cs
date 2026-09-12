@@ -4,17 +4,18 @@ using Navira.Shop.Core.Results;
 
 namespace Navira.Shop.Application.Identity
 {
-    public class PermissionListQueryHandler : CommandHandler, IQueryHandler<PermissionListCommand, IList<PermissionModelDto>>
+    public class PermissionListQueryHandler : CommandHandler, IQueryHandler<PermissionListCommand, object>
     {
-        private IPermissionQueryService _permissionQueryService;
-        public PermissionListQueryHandler(IUnitOfWork uow, IPermissionQueryService permissionQueryService) : base(uow)
+        private IPermissionDapperService _permissionDapperService;
+        public PermissionListQueryHandler(IUnitOfWork uow, IPermissionDapperService permissionDapperService) : base(uow)
         {
-            _permissionQueryService = permissionQueryService;
+
+            _permissionDapperService = permissionDapperService;
         }
 
-        public async Task<IResult<IList<PermissionModelDto>>> Handle(PermissionListCommand query, CancellationToken cancellationToken = default)
+        public async Task<IResult<object>> Handle(PermissionListCommand query, CancellationToken cancellationToken = default)
         {
-            return await _permissionQueryService.Get<PermissionModelDto>();
+            return await _permissionDapperService.GetList(query).ResultAsync();
         }
     }
 }

@@ -11,8 +11,8 @@ namespace Navira.Shop.Api.Controllers
     [ApiController]
     [Display(Name = "", Description = "")]
     [CustomAuthorize(AuthenticationSchemes = "Bearer")]
-    //[Permission("{ControllerName}", AppConsts.SystemBaseInformationName, "{ControllerTitle}")]
-    //[Menu(AppConsts.SystemBaseInformationName, AppConsts.SystemBaseInformationTitle)]
+    [Permission("Controller", "برندها", "catalog.Brand")]
+    [Menu("catalog.product", "مدیریت محصول")]
     public class BrandAdminController : ControllerBase
     {
         #region variables 
@@ -41,8 +41,8 @@ namespace Navira.Shop.Api.Controllers
         /// پارامتر های سفارشی سازی لیست
         /// </param>
         [HttpGet]
-        //[Permission("List", "{ControllerName}", "{ ControllerTitle}")]
-        //[Menu("{ControllerName}", "{ControllerTitle}", "List")]
+        [Permission("List", "لیست برندها")]
+        [Menu("BrandAdmin.List", "برندها", Action = "brand")]
         public virtual async Task<IActionResult> Get([FromQuery] BrandListCommand parameters) =>
             await _queryBus.Send<BrandListCommand, object>(parameters).ApiResultAsync();
 
@@ -57,7 +57,7 @@ namespace Navira.Shop.Api.Controllers
         /// مشخصات  
         /// </param>
         [HttpPost]
-        //[Permission("Create", "ایجاد")]
+        [Permission("Create", "ایجاد")]
         public virtual async Task<IActionResult> Post([FromBody] BrandRegisterCommand command) =>
              await _bus.Send(command).ApiResultAsync();
 

@@ -36,8 +36,8 @@ namespace Navira.Shop.Api.Controllers
         #region Get main list 
 
         [HttpGet]
-        public virtual async Task<IActionResult> Get() =>
-            await _queryBus.Send<PolicyListCommand, object>(new PolicyListCommand()).ApiResultAsync();
+        public virtual async Task<IActionResult> Get([FromQuery] PolicyListCommand query) =>
+            await _queryBus.Send<PolicyListCommand, object>(query).ApiResultAsync();
 
         #endregion
 

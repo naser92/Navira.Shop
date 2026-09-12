@@ -2,7 +2,7 @@
 
 namespace Navira.Shop.Application.Identity
 {
-    public class PermissionListCommand : ICommand
+    public class PermissionListCommand : PermissionGetFilterDto, ICommand
     {
     }
 }
