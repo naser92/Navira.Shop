@@ -46,5 +46,21 @@ namespace Navira.Shop.Api.Controllers
              await _bus.Send(command).ApiResultAsync();
 
         #endregion
+
+        #region Get main list 
+
+        /// <summary>
+        /// لیست  
+        /// </summary>
+        /// <param name="parameters">
+        /// پارامتر های سفارشی سازی لیست
+        /// </param>
+        [HttpGet]
+        //[Permission("List", "{ControllerName}", "{ ControllerTitle}")]
+        //[Menu("{ControllerName}", "{ControllerTitle}", "List")]
+        public virtual async Task<IActionResult> Get([FromQuery] ProductAttributeListCommand parameters) =>
+                 await _queryBus.Send<ProductAttributeListCommand, object>(parameters).ApiResultAsync();
+
+        #endregion
     }
 }
