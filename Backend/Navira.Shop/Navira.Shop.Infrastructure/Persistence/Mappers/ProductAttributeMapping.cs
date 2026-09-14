@@ -14,9 +14,12 @@ namespace Navira.Shop.Infrastructure.Persistence.Mappers
 
             builder.HasComment(";");
             builder.Property(t => t.Name).HasColumnType("nvarchar").HasMaxLength(150).IsRequired().HasComment("Name");
-            builder.Property(t => t.ValueType).HasColumnType("varchar").HasMaxLength(30).IsRequired().HasComment("ValueType");
-            builder.Property(t => t.Usage).HasColumnType("varchar").HasMaxLength(30).IsRequired().HasComment("Usage");
+            builder.Property(x => x.ValueType).HasConversion<byte>().HasColumnType("tinyint").IsRequired();
             builder.Property(t => t.IsActive).IsRequired().HasDefaultValue(true).HasComment("وضعیت اعتبار");
+            builder.Property(t => t.IsVariantAttribute).IsRequired().HasDefaultValue(false).HasComment("IsVariantAttribute ");
+            builder.Property(t => t.IsFilterable).IsRequired().HasDefaultValue(false).HasComment("IsFilterable");
+            builder.Property(t => t.IsVisible).IsRequired().HasDefaultValue(true).HasComment("IsVisible");
+            builder.Property(t => t.IsSearchable).IsRequired().HasDefaultValue(true).HasComment("IsSearchable");
 
 
         }

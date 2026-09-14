@@ -4,6 +4,7 @@
   "/(mainLayout)/dashboard/page": "app/(mainLayout)/dashboard/page.js",
   "/(mainLayout)/products/new/page": "app/(mainLayout)/products/new/page.js",
   "/_not-found/page": "app/_not-found/page.js",
+  "/api/access/permissions/route": "app/api/access/permissions/route.js",
   "/api/access/policies/route": "app/api/access/policies/route.js",
   "/api/access/roles/route": "app/api/access/roles/route.js",
   "/api/auth/UserAccessInfo/route": "app/api/auth/UserAccessInfo/route.js",
