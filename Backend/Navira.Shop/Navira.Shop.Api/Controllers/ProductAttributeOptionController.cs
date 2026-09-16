@@ -11,9 +11,9 @@ namespace Navira.Shop.Api.Controllers
     [ApiController]
     [Display(Name = "", Description = "")]
     [CustomAuthorize(AuthenticationSchemes = "Bearer")]
-    [Permission("Controller", "ویژگی های محصول", "catalog.ProductAttribute")]
-    [Menu("catalog.product", "مدیریت محصول")]
-    public class ProductAttributeController : ControllerBase
+    [Permission("Controller", "موارد ویژگی", "catalog.ProductAttribute")]
+    [Menu("catalog.product", "مدیریت موارد ویژگی")]
+    public class ProductAttributeOptionController : ControllerBase
     {
         #region variables 
 
@@ -24,26 +24,11 @@ namespace Navira.Shop.Api.Controllers
 
         #region Constructor 
 
-        public ProductAttributeController(IBus bus, IQueryBus queryBus)
+        public ProductAttributeOptionController(IBus bus, IQueryBus queryBus)
         {
             _bus = bus;
             _queryBus = queryBus;
         }
-
-        #endregion
-
-        #region Register
-
-        /// <summary>
-        /// ثبت اطلاعات  
-        /// </summary>
-        /// <param name="command">
-        /// مشخصات  
-        /// </param>
-        [HttpPost]
-        [Permission("Create", "ایجاد")]
-        public virtual async Task<IActionResult> Post(ProductAttributeRegisterCommand command) =>
-             await _bus.Send(command).ApiResultAsync();
 
         #endregion
 
@@ -56,10 +41,25 @@ namespace Navira.Shop.Api.Controllers
         /// پارامتر های سفارشی سازی لیست
         /// </param>
         [HttpGet]
-        [Permission("List", "لیست ویژگی ها")]
-        [Menu("ProductAttribute.List", "ویژگی ها", Action = "ProductAttribute")]
-        public virtual async Task<IActionResult> Get([FromQuery] ProductAttributeListCommand parameters) =>
-                 await _queryBus.Send<ProductAttributeListCommand, object>(parameters).ApiResultAsync();
+        [Permission("List", "لیست موارد ویژگی ها")]
+        public virtual async Task<IActionResult> Get([FromQuery] ProductAttributeOptionListCommand command) =>
+             await _queryBus.Send<ProductAttributeOptionListCommand, object>(command).ApiResultAsync();
+
+        #endregion
+
+
+        #region Register
+
+        /// <summary>
+        /// ثبت اطلاعات  
+        /// </summary>
+        /// <param name="command">
+        /// مشخصات  
+        /// </param>
+        [HttpPost]
+        [Permission("Create", "ایجاد")]
+        public virtual async Task<IActionResult> Post(ProductAttributeOptionRegisterCommand command) =>
+             await _bus.Send(command).ApiResultAsync();
 
         #endregion
 
@@ -74,7 +74,7 @@ namespace Navira.Shop.Api.Controllers
         /// </param>
         [HttpPut]
         [Permission("Update", "ویرایش")]
-        public virtual async Task<IActionResult> Put(ProductAttributeUpdateCommand command) =>
+        public virtual async Task<IActionResult> Put(ProductAttributeOptionUpdateCommand command) =>
              await _bus.Send(command).ApiResultAsync();
 
         #endregion
@@ -91,11 +91,8 @@ namespace Navira.Shop.Api.Controllers
         [Route("{id}")]
         [Permission("Delete", "حذف")]
         public virtual async Task<IActionResult> Delete(int id) =>
-             await _bus.Send(new ProductAttributeDeleteCommand(id)).ApiResultAsync();
-
+             await _bus.Send(new ProductAttributeOptionDeleteCommand(id)).ApiResultAsync();
 
         #endregion
-
-
     }
 }

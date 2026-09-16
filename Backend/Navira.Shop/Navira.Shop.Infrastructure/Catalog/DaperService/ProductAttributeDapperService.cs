@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using Navira.Shop.Application.Catalog;
-using Navira.Shop.Application.Catalog.DTOs.ProductAttribute;
 using Navira.Shop.Core.Dapper;
 using NaviraShop.Core.Mq;
 using System.Data;

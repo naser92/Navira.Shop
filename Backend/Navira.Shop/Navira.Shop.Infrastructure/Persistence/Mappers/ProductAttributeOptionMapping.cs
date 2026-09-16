@@ -15,6 +15,7 @@ namespace Navira.Shop.Infrastructure.Persistence.Mappers
             builder.HasComment(";");
             builder.Property(t => t.ProductAttributeId).IsRequired().HasComment("ProductAttributeId");
             builder.Property(t => t.Value).HasColumnType("nvarchar").HasMaxLength(200).IsRequired().HasComment("Value");
+            builder.Property(t => t.Code).HasColumnType("nvarchar").HasMaxLength(200).IsRequired().HasComment("Code");
             builder.Property(t => t.SortOrder).IsRequired().HasComment("SortOrder");
             builder.Property(t => t.IsActive).IsRequired().HasDefaultValue(true).HasComment("وضعیت اعتبار");
 

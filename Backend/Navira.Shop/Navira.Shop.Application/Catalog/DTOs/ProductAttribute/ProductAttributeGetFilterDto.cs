@@ -1,7 +1,7 @@
 ﻿using Navira.Shop.Application.Common;
 using Navira.Shop.Domain.Catalog;
 
-namespace Navira.Shop.Application.Catalog.DTOs.ProductAttribute
+namespace Navira.Shop.Application.Catalog
 {
     public class ProductAttributeGetFilterDto : PaginationModel
     {

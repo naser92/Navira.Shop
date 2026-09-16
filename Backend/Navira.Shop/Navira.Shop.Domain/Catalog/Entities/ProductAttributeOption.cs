@@ -12,6 +12,7 @@ namespace Navira.Shop.Domain.Catalog
         public int ProductAttributeId { get; set; }
 
         public string Value { get; set; }
+        public string Code { get; set; }
 
         public int SortOrder { get; set; }
 

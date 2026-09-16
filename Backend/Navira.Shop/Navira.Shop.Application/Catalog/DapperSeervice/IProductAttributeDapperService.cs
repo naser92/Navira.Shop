@@ -1,5 +1,4 @@
-﻿using Navira.Shop.Application.Catalog.DTOs.ProductAttribute;
-using Navira.Shop.Core.Dapper;
+﻿using Navira.Shop.Core.Dapper;
 
 namespace Navira.Shop.Application.Catalog
 {

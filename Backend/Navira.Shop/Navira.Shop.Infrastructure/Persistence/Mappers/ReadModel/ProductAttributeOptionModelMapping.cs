@@ -17,6 +17,7 @@ namespace Navira.Shop.Infrastructure.Mappers.ReadModel
             builder.Property(t => t.ProductAttributeId).IsRequired().HasComment("ProductAttributeId");
 
             builder.Property(t => t.Value).HasColumnType("nvarchar").HasMaxLength(200).IsRequired().HasComment("Value");
+            builder.Property(t => t.Code).HasColumnType("nvarchar").HasMaxLength(200).IsRequired().HasComment("Code");
 
             builder.Property(t => t.SortOrder).IsRequired().HasComment("SortOrder");
 
