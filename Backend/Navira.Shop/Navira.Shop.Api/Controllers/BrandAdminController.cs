@@ -64,5 +64,36 @@ namespace Navira.Shop.Api.Controllers
 
         #endregion
 
+        #region Edit
+
+        /// <summary>
+        /// ویرایش  
+        /// </summary>
+        /// <param name="command">
+        /// مشخصات  
+        /// </param>
+        [HttpPut]
+        [Permission("Update", "ویرایش")]
+        public virtual async Task<IActionResult> Put(BrandUpdateCommand command) =>
+            await _bus.Send(command).ApiResultAsync();
+
+        #endregion
+
+        #region Delete
+
+        /// <summary>
+        /// حذف  
+        /// </summary>
+        /// <param name="id">
+        /// شناسه  
+        /// </param>
+        [HttpDelete]
+        [Route("{id}")]
+        [Permission("Delete", "حذف")]
+        public virtual async Task<IActionResult> Delete(int id) =>
+            await _bus.Send(new BrandDeleteCommand(id)).ApiResultAsync();
+
+        #endregion
+
     }
 }
