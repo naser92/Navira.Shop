@@ -62,5 +62,40 @@ namespace Navira.Shop.Api.Controllers
                  await _queryBus.Send<ProductAttributeListCommand, object>(parameters).ApiResultAsync();
 
         #endregion
+
+
+        #region Edit
+
+        /// <summary>
+        /// ویرایش  
+        /// </summary>
+        /// <param name="command">
+        /// مشخصات  
+        /// </param>
+        [HttpPut]
+        [Permission("Update", "ویرایش")]
+        public virtual async Task<IActionResult> Put(ProductAttributeUpdateCommand command) =>
+             await _bus.Send(command).ApiResultAsync();
+
+        #endregion
+
+        #region Delete
+
+        /// <summary>
+        /// حذف  
+        /// </summary>
+        /// <param name="id">
+        /// شناسه  
+        /// </param>
+        [HttpDelete]
+        [Route("{id}")]
+        [Permission("Delete", "حذف")]
+        public virtual async Task<IActionResult> Delete(int id) =>
+             await _bus.Send(new ProductAttributeDeleteCommand(id)).ApiResultAsync();
+
+
+        #endregion
+
+
     }
 }
