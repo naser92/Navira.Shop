@@ -29,7 +29,7 @@ namespace Navira.Shop.Application.Catalog
         public async Task<IResult<TResult>> Get<TResult>(int id)
         {
 
-            return await _repository.Get<TResult>(x => x.Id.Equals(id)).ResultAsync();
+            return await _repository.Get<TResult>(x => x.Id == id).ResultAsync();
 
         }
 

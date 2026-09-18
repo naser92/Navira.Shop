@@ -97,5 +97,21 @@ namespace Navira.Shop.Api.Controllers
         #endregion
 
 
+        #region Get by Id
+
+        /// <summary>
+        /// دریافت جزئیات  
+        /// </summary>
+        /// <param name="id">
+        /// شناسه  
+        /// </param>
+        [HttpGet]
+        [Route("{id}")]
+        [Permission("Detail", "جزئیات")]
+        public virtual async Task<IActionResult> Get(int id) =>
+             await _queryBus.Send<ProductAttributeDetailCommand, ProductAttributeDto>(new ProductAttributeDetailCommand(id)).ApiResultAsync();
+
+        #endregion
+
     }
 }

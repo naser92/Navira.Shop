@@ -1,38 +1,27 @@
 ﻿using Navira.Shop.Core.ViewModels;
+using Navira.Shop.Domain.Catalog;
 using System.ComponentModel.DataAnnotations;
 
 namespace Navira.Shop.Application.Catalog
 {
 
-    /// <summary>
-    ///  
-    /// </summary>
+
     [Display(Name = "", Description = "")]
     public class ProductAttributeUpdateDto : BaseDto<int>
     {
 
-        /// <summary>
-        ///  Name
-        /// </summary>
-        [Display(Name = "Name")]
         public string Name { get; set; }
 
-        /// <summary>
-        ///  ValueType
-        /// </summary>
-        [Display(Name = "ValueType")]
-        public string ValueType { get; set; }
+        public AttributeValueType ValueType { get; set; }
 
-        /// <summary>
-        ///  Usage
-        /// </summary>
-        [Display(Name = "Usage")]
-        public string Usage { get; set; }
+        public bool IsVariantAttribute { get; set; }
 
-        /// <summary>
-        ///  وضعیت اعتبار
-        /// </summary>
-        [Display(Name = "وضعیت اعتبار")]
+        public bool IsFilterable { get; set; }
+
+        public bool IsVisible { get; set; }
+
+        public bool IsSearchable { get; set; }
+
         public bool IsActive { get; set; }
 
     }
