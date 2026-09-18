@@ -23,6 +23,7 @@ namespace Navira.Shop.Application.Catalog
         /// </summary>
         [Display(Name = "Value")]
         public string Value { get; set; }
+        public string Code { get; set; }
 
 
         /// <summary>

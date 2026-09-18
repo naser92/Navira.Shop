@@ -11,17 +11,14 @@ namespace Navira.Shop.Application.Catalog
     public class ProductAttributeOptionUpdateDto : BaseDto<int>
     {
 
-        /// <summary>
-        ///  ProductAttributeId
-        /// </summary>
-        [Display(Name = "ProductAttributeId")]
-        public int ProductAttributeId { get; set; }
+
 
         /// <summary>
         ///  Value
         /// </summary>
         [Display(Name = "Value")]
         public string Value { get; set; }
+        public string Code { get; set; }
 
         /// <summary>
         ///  SortOrder
