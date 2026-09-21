@@ -12,6 +12,9 @@ namespace Navira.Shop.Application.Catalog
         Task<IResult<object>> Get<T>(GridParameters parameters);
         Task<IResult<IList<T>>> Get<T>();
         #endregion
+        Task<bool> IsExisitSlug(string slug);
+        Task<bool> IsExisitName(string name);
+        Task<List<CategorySortListDto>> GetSort();
     }
 
 }

@@ -56,7 +56,59 @@ namespace Navira.Shop.Application.Catalog
 
 
         #endregion
+        public async Task<bool> IsExisitSlug(string slug) =>
+            await _repository.Table.AnyAsync(x => x.Slug == slug);
 
+        public async Task<bool> IsExisitName(string name) =>
+            await _repository.Table.AnyAsync(x => x.Slug == name);
+
+        public async Task<List<CategorySortListDto>> GetSort()
+        {
+            var allCategory = await _repository.GetAll<CategoryListDto>();
+            return BuildCategoryTree(allCategory.ToList());
+        }
+
+        private static List<CategorySortListDto> BuildCategoryTree(List<CategoryListDto> flatList)
+        {
+            if (flatList == null || !flatList.Any())
+                return new List<CategorySortListDto>();
+
+            // دیکشنری برای دسترسی سریع به نودها با Id
+            var lookup = flatList.ToDictionary(
+                x => x.Id,
+                x => new CategorySortListDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Slug = x.Slug,
+                    ParentCategoryId = x.ParentCategoryId,
+                    TaxCategoryId = x.TaxCategoryId,
+                    IsActive = x.IsActive,
+                    Child = new List<CategorySortListDto>()
+                });
+
+            var roots = new List<CategorySortListDto>();
+
+            foreach (var item in flatList)
+            {
+                var node = lookup[item.Id];
+
+                if (item.ParentCategoryId == null)
+                {
+                    // ریشه
+                    roots.Add(node);
+                }
+                else if (lookup.TryGetValue(item.ParentCategoryId.Value, out var parent))
+                {
+                    // اضافه کردن به فرزندان پدر
+                    parent.Child.Add(node);
+                }
+                // اگر ParentCategoryId وجود داشته باشد ولی پدر پیدا نشود، می‌توانید تصمیم بگیرید
+                // که آن را به عنوان ریشه در نظر بگیرید یا نادیده بگیرید
+            }
+
+            return roots;
+        }
     }
 
 }

@@ -23,5 +23,12 @@ namespace Navira.Shop.Domain.Catalog
 
         public virtual ICollection<Product> Product { get; set; }
 
+        public Category() { }
+
+        public void ChangeParentId(int parentId) => ParentCategoryId = parentId;
+
+
+
+
     }
 }

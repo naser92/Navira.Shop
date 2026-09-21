@@ -3,12 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Navira.Shop.Application.Catalog
 {
-
-    /// <summary>
-    ///  
-    /// </summary>
-    [Display(Name = "", Description = "")]
-    public class CategoryUpdateDto : BaseDto<int>
+    public class CategoryListDto : BaseDto<int>
     {
 
         /// <summary>
@@ -23,6 +18,17 @@ namespace Navira.Shop.Application.Catalog
         [Display(Name = "Slug")]
         public string Slug { get; set; }
 
+        /// <summary>
+        ///  شناسه 
+        /// </summary>
+        [Display(Name = "شناسه ")]
+        public int? ParentCategoryId { get; set; }
+
+        /// <summary>
+        ///  عنوان 
+        /// </summary>
+        [Display(Name = "عنوان ")]
+        public string ParentCategoryName { get; set; }
 
         /// <summary>
         ///  TaxCategoryId
@@ -35,6 +41,7 @@ namespace Navira.Shop.Application.Catalog
         /// </summary>
         [Display(Name = "وضعیت اعتبار")]
         public bool IsActive { get; set; }
+
 
     }
 }
