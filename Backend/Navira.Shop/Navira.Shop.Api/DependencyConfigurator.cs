@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Minio;
 using Navira.Shop.Application.Auth;
+using Navira.Shop.Application.Media;
 using Navira.Shop.Core.Configuration;
 using Navira.Shop.Core.Extensions;
 using Navira.Shop.Core.Infrastructure;
@@ -44,6 +47,27 @@ namespace Navira.Shop.Api
                     });
             });
             var serviceProvicder = services.BuildServiceProvider();
+
+            #region MinIO Setting
+            services.AddOptions<MinIOSettings>()
+                   .BindConfiguration("MinIO")
+                    .ValidateDataAnnotations()
+                    .ValidateOnStart();
+
+            services.AddSingleton<IMinioClient>(sp =>
+            {
+                var settings = sp.GetRequiredService<IOptions<MinIOSettings>>().Value;
+
+                return new MinioClient()
+                    .WithEndpoint(settings.Endpoint)
+                    .WithCredentials(settings.AccessKey, settings.SecretKey)
+                    .WithSSL(settings.UseSSL)
+                    .Build();
+            });
+
+
+            #endregion
+
             services.AddScoped<WriteDbContext>();
             services.AddScoped(typeof(IUnitOfWork), p => p.GetService<WriteDbContext>());
             services.AddHttpClient<IIdentityProviderClient, KeycloakIdentityProviderClient>();

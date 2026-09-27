@@ -24,6 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="SixLabors.ImageSharp" Version="4.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Navira.Shop.Core.Bus\Navira.Shop.Core.Bus.csproj" />
     <ProjectReference Include="..\Navira.Shop.Core.Dapper\Navira.Shop.Core.Dapper.csproj" />
     <ProjectReference Include="..\Navira.Shop.Core.Domain\Navira.Shop.Core.Domain.csproj" />
