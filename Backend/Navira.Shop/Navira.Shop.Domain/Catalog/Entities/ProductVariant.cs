@@ -20,7 +20,7 @@ namespace Navira.Shop.Domain.Catalog
 
         public bool IsActive { get; set; }
 
-        public virtual ICollection<ProductVariantAttributeValue> ProductVariantAttributeValue { get; set; }
+        public virtual ICollection<ProductVariantAttributeValue> ProductVariantAttributeValue { get; set; } = new List<ProductVariantAttributeValue>();
 
         public virtual ICollection<Stock> Stock { get; set; }
 
@@ -30,19 +30,26 @@ namespace Navira.Shop.Domain.Catalog
 
         private ProductVariant() { }
 
-        //private ProductVariant(int productId, Sku sku, Money price, decimal weightKg, Money? costPrice)
-        //{
-        //    ProductId = productId;
-        //    Sku = sku;
-        //    Price = price;
-        //    WeightKg = weightKg < 0 ? throw new DomainException("Weight cannot be negative.") : weightKg;
-        //    CostPrice = costPrice;
-        //}
+        private ProductVariant(int productId, string sku, decimal? price, decimal? costPrice, bool isActive = true)
+        {
+            ProductId = productId;
+            Sku = sku;
+            Price = price ?? 0;
+            CostPrice = costPrice;
+            IsActive = isActive;
+        }
 
-        /// <summary>Internal factory — only Product.AddVariant should call this, keeping
-        /// creation funneled through the aggregate root's invariant checks.</summary>
-        //internal static ProductVariant Create(int productId, Sku sku, Money price, decimal weightKg, Money? costPrice) =>
-        //    new(productId, sku, price, weightKg, costPrice);
+
+        public static ProductVariant Create(int productId, string sku, decimal? price, decimal? costPrice, bool isActive = true) =>
+            new(productId, sku, price, costPrice, isActive);
+
+        public void AddOption(int productAttributeId, int productAttributeOptionId)
+        {
+            if (ProductVariantAttributeValue.Any(x => x.ProductAttributeId == productAttributeId))
+                throw new InvalidOperationException("برای هر ویژگی فقط یک گزینه قابل ثبت است.");
+
+            ProductVariantAttributeValue.Add(new ProductVariantAttributeValue(productAttributeId, productAttributeOptionId));
+        }
 
         //internal void ChangePrice(Money newPrice)
         //{

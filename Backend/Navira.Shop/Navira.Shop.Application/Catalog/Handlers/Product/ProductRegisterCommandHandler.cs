@@ -5,7 +5,7 @@ using Navira.Shop.Domain.Catalog;
 
 namespace Navira.Shop.Application.Catalog
 {
-    public class ProductRegisterCommandHandler : CommandHandler, ICommandHandler<ProductRegisterCommand>
+    public class ProductRegisterCommandHandler : CommandHandler, ICommandHandler<ProductRegisterCommand, int>
     {
         private readonly IProductWriteRepository _repository;
 
@@ -15,11 +15,11 @@ namespace Navira.Shop.Application.Catalog
             _repository = repository;
         }
 
-        public async Task<IResult> Handle(ProductRegisterCommand command, CancellationToken cancellationToken = default)
+        public async Task<IResult<int>> Handle(ProductRegisterCommand command, CancellationToken cancellationToken = default)
         {
             var entiy = Product.Create(command.Name, command.Slug, command.ShortDescription, command.Description, command.BrandId.Value, command.CategoryId, command.TaxCategoryId);
             await _repository.Insert(entiy);
-            return await Result.SuccessAsync("اطلاعات با موفقیت ثبت شد");
+            return entiy.Id.SuccessResult("اطلاعات با موفقیت ثبت شد");
         }
     }
 }

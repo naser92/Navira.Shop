@@ -21,5 +21,14 @@ namespace Navira.Shop.Domain.Catalog
 
         public int ProductAttributeOptionId { get; set; }
 
+
+        public ProductVariantAttributeValue(int productAttributeId, int productAttributeOptionId)
+        {
+            ProductAttributeId = productAttributeId;
+            ProductAttributeOptionId = productAttributeOptionId;
+        }
+
+
+
     }
 }
