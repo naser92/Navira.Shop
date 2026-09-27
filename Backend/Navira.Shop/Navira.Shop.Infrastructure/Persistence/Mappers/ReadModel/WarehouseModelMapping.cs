@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Navira.Shop.Application.Warehouse;
+using Navira.Shop.Application.Warehouses;
 using Navira.Shop.Core.Persistence.EF;
 
 namespace Navira.Shop.Infrastructure.Mappers.ReadModel

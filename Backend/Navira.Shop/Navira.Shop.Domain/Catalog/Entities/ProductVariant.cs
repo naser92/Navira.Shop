@@ -1,5 +1,5 @@
 ﻿using Navira.Shop.Core.Domain;
-using Navira.Shop.Domain.Warehouse;
+using Navira.Shop.Domain.Warehouses;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Navira.Shop.Domain.Catalog

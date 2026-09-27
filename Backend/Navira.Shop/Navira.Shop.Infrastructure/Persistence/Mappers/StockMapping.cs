@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Navira.Shop.Core.Persistence.EF;
-using Navira.Shop.Domain.Warehouse;
+using Navira.Shop.Domain.Warehouses;
 
 namespace Navira.Shop.Infrastructure.Persistence.Mappers
 {

@@ -4,9 +4,9 @@ using Navira.Shop.Core.Persistence.EF;
 
 namespace Navira.Shop.Infrastructure.Persistence.Mappers
 {
-    public class WarehouseMapping : EntityMapperBase<Domain.Warehouse.Warehouse, int>, IWriteEntityConfiguration
+    public class WarehouseMapping : EntityMapperBase<Domain.Warehouses.Warehouse, int>, IWriteEntityConfiguration
     {
-        public override void Configure(EntityTypeBuilder<Domain.Warehouse.Warehouse> builder)
+        public override void Configure(EntityTypeBuilder<Domain.Warehouses.Warehouse> builder)
         {
 
             base.Configure(builder);
