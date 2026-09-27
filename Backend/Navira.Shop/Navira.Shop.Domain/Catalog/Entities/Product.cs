@@ -38,33 +38,23 @@ namespace Navira.Shop.Domain.Catalog
 
         private Product() { }
 
-        //private Product(string name, string slug, int categoryId, string brand)
-        //{
-        //    Name = name;
-        //    Slug = slug;
-        //    CategoryId = categoryId;
-        //    Brand = brand;
-        //    CreatedOnUtc = DateTime.UtcNow;
-        //}
+        private Product(string name, string slug, string shortDescription, string description, int brandId, int categoryId, int? taxCategoryId)
+        {
+            Name = name;
+            Slug = slug;
+            ShortDescription = shortDescription;
+            Description = description;
+            CategoryId = categoryId;
+            BrandId = brandId;
+            TaxCategoryId = taxCategoryId;
+            IsActive = true;
+            IsPublished = false;
+            PublishedDate = null;
+        }
 
-        /// <summary>
-        /// The only way to create a Product. Id is left at its default(int) (0) here;
-        /// EF assigns the real value on insert via the database identity/sequence and
-        /// updates this instance's Id (public setter — see Entity&lt;TId&gt;) after SaveChanges.
-        /// </summary>
-        //public static Product Create(string name, string slug, int categoryId, string brand = "Navira")
-        //{
-        //    if (string.IsNullOrWhiteSpace(name))
-        //        throw new DomainException("Product name cannot be empty.");
-        //    if (string.IsNullOrWhiteSpace(slug))
-        //        throw new DomainException("Product slug cannot be empty.");
-        //    if (categoryId <= 0)
-        //        throw new DomainException("Product must belong to a valid category.");
 
-        //    var product = new Product(name.Trim(), slug.Trim().ToLowerInvariant(), categoryId, brand);
-        //    //product.Raise(new ProductCreatedEvent(product.Id, product.Name));
-        //    return product;
-        //}
+        public static Product Create(string name, string slug, string shortDescription, string description, int brandId, int categoryId, int? taxCategoryId) =>
+                            new Product(name, slug, shortDescription, description, brandId, categoryId, taxCategoryId);
 
         //public void UpdateDescription(string? shortDescription, string? description)
         //{
