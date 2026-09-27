@@ -14,8 +14,7 @@ namespace Navira.Shop.Infrastructure.Persistence.Mappers
 
             builder.HasComment(";");
             builder.Property(t => t.Name).HasColumnType("nvarchar").HasMaxLength(300).IsRequired().HasComment("Name");
-            builder.Property(t => t.Slug).HasColumnType("varchar").HasMaxLength(350).IsRequired().HasComment("Slug");
-            builder.Property(t => t.Sku).HasColumnType("varchar").HasMaxLength(100).IsRequired().HasComment("Sku");
+            builder.Property(t => t.Slug).HasColumnType("nvarchar").HasMaxLength(350).IsRequired().HasComment("Slug");
             builder.Property(t => t.ShortDescription).HasColumnType("nvarchar").HasMaxLength(1000).HasComment("ShortDescription");
             builder.Property(t => t.Description).HasColumnType("nvarcharmax").HasMaxLength(-1).HasComment("Description");
             builder.Property(t => t.CategoryId).IsRequired().HasComment("CategoryId");
@@ -23,6 +22,7 @@ namespace Navira.Shop.Infrastructure.Persistence.Mappers
             builder.Property(t => t.TaxCategoryId).HasComment("TaxCategoryId");
             builder.Property(t => t.IsPublished).IsRequired().HasDefaultValue(true).HasComment("IsPublished");
             builder.Property(t => t.IsActive).IsRequired().HasDefaultValue(true).HasComment("وضعیت اعتبار");
+            builder.Property(t => t.PublishedDate).HasComment("PublishedDate");
 
             builder.HasOne(x => x.Brand).WithMany(x => x.Product).HasForeignKey(x => x.BrandId).OnDelete(DeleteBehavior.NoAction);
 

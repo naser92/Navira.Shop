@@ -12,7 +12,7 @@ namespace Navira.Shop.Application.Catalog
 
         public string Sku { get; set; }
 
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
 
         public decimal? CostPrice { get; set; }
 

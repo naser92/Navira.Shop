@@ -12,7 +12,6 @@ namespace Navira.Shop.Infrastructure.Persistence.Mappers
 
             base.Configure(builder);
 
-            builder.HasComment(";");
             builder.Property(t => t.ProductVariantId).IsRequired().HasComment("ProductVariantId");
             builder.Property(t => t.WarehouseId).IsRequired().HasComment("WarehouseId");
             builder.Property(t => t.QuantityOnHand).IsRequired().HasComment("QuantityOnHand");

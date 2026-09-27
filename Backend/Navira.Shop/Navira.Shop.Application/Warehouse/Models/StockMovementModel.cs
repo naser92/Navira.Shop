@@ -7,12 +7,11 @@ namespace Navira.Shop.Application.Warehouse
 {
     public class StockMovementModel : BaseReadModel<long>, IAuditableEntity
     {
-
         public int ProductVariantId { get; set; }
 
         public int WarehouseId { get; set; }
 
-        public string MovementType { get; set; }
+        public int MovementType { get; set; }
 
         public int Quantity { get; set; }
 
@@ -21,6 +20,8 @@ namespace Navira.Shop.Application.Warehouse
         public long? ReferenceId { get; set; }
 
         public string Description { get; set; }
+
+        public Guid OperationId { get; set; }
 
         [ForeignKey("ProductVariantId")]
         public virtual ProductVariantModel ProductVariant { get; set; }

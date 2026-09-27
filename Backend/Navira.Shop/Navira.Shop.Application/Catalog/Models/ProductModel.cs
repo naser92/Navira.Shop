@@ -11,8 +11,6 @@ namespace Navira.Shop.Application.Catalog
 
         public string Slug { get; set; }
 
-        public string Sku { get; set; }
-
         public string ShortDescription { get; set; }
 
         public string Description { get; set; }
@@ -26,6 +24,8 @@ namespace Navira.Shop.Application.Catalog
         public bool IsPublished { get; set; }
 
         public bool IsActive { get; set; }
+
+        public DateTime? PublishedDate { get; set; }
 
         [ForeignKey("BrandId")]
         public virtual BrandModel Brand { get; set; }

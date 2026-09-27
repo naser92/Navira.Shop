@@ -12,13 +12,11 @@ namespace Navira.Shop.Infrastructure.Mappers.ReadModel
         {
             base.Configure(builder);
 
-            builder.HasComment(";");
-
             builder.Property(t => t.ProductId).IsRequired().HasComment("ProductId");
 
             builder.Property(t => t.Sku).HasColumnType("varchar").HasMaxLength(100).IsRequired().HasComment("Sku");
 
-            builder.Property(t => t.Price).HasColumnType("decimal").HasPrecision(18, 2).IsRequired().HasComment("Price");
+            builder.Property(t => t.Price).HasColumnType("decimal").HasPrecision(18, 2).HasComment("Price");
 
             builder.Property(t => t.CostPrice).HasColumnType("decimal").HasPrecision(18, 2).HasComment("CostPrice");
 
