@@ -12,13 +12,12 @@ namespace Navira.Shop.Infrastructure.Persistence.Mappers
 
             base.Configure(builder);
 
-            builder.HasComment(";");
             builder.Property(t => t.ProductId).IsRequired().HasComment("ProductId");
             builder.Property(t => t.ProductVariantId).HasComment("ProductVariantId");
-            builder.Property(t => t.Url).HasColumnType("nvarchar").HasMaxLength(1000).IsRequired().HasComment("Url");
             builder.Property(t => t.AltText).HasColumnType("nvarchar").HasMaxLength(300).HasComment("AltText");
             builder.Property(t => t.SortOrder).IsRequired().HasComment("SortOrder");
             builder.Property(t => t.IsPrimary).IsRequired().HasDefaultValue(true).HasComment("IsPrimary");
+            builder.Property(t => t.MediaFileId).IsRequired().HasComment("MediaFileId");
 
             builder.HasOne(x => x.Product).WithMany(x => x.ProductImage).HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.NoAction);
 

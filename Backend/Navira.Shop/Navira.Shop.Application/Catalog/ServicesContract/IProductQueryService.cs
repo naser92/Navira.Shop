@@ -12,6 +12,7 @@ namespace Navira.Shop.Application.Catalog
         Task<IResult<object>> Get<T>(GridParameters parameters);
         Task<IResult<IList<T>>> Get<T>();
         #endregion
+        Task<bool> IsExist(int productId, int? productVariantId);
     }
 
 }
