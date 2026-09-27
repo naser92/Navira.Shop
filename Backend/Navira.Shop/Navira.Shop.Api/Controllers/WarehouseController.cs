@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Navira.Shop.Application.Warehouses;
 using Navira.Shop.Core.Bus;
 using Navira.Shop.Core.Security;
+using Navira.Shop.Core.Web;
 using System.ComponentModel.DataAnnotations;
 
 namespace Navira.Shop.Api.Controllers
@@ -29,20 +31,66 @@ namespace Navira.Shop.Api.Controllers
         }
 
         #endregion
-        //#region Get main list 
+        #region Get main list 
 
-        ///// <summary>
-        ///// لیست  
-        ///// </summary>
-        ///// <param name="parameters">
-        ///// پارامتر های سفارشی سازی لیست
-        ///// </param>
-        //[HttpGet]
-        ////[Permission("List", "{ControllerName}", "{ ControllerTitle}")]
-        ////[Menu("{ControllerName}", "{ControllerTitle}", "List")]
-        //public virtual async Task<IActionResult> Get([FromQuery] WarehouseListCommandHandler parameters) =>
-        //    await _queryBus.Send<WarehouseListCommandHandler, object>(parameters).ApiResultAsync();
+        /// <summary>
+        /// لیست  
+        /// </summary>
+        /// <param name="parameters">
+        /// پارامتر های سفارشی سازی لیست
+        /// </param>
+        [HttpGet]
+        //[Permission("List", "{ControllerName}", "{ ControllerTitle}")]
+        //[Menu("{ControllerName}", "{ControllerTitle}", "List")]
+        public virtual async Task<IActionResult> Get([FromQuery] WarehouseListCommand parameters) =>
+            await _queryBus.Send<WarehouseListCommand, object>(parameters).ApiResultAsync();
 
-        //#endregion
+        #endregion
+
+        #region Register
+
+        /// <summary>
+        /// ثبت اطلاعات  
+        /// </summary>
+        /// <param name="command">
+        /// مشخصات  
+        /// </param>
+        [HttpPost]
+        [Permission("Create", "ایجاد")]
+        public virtual async Task<IActionResult> Post(WarehouseRegisterCommand command) =>
+             await _bus.Send(command).ApiResultAsync();
+
+        #endregion
+
+        #region Edit
+
+        /// <summary>
+        /// ویرایش  
+        /// </summary>
+        /// <param name="command">
+        /// مشخصات  
+        /// </param>
+        [HttpPut]
+        [Permission("Update", "ویرایش")]
+        public virtual async Task<IActionResult> Put(WarehouseUpdateCommand command) =>
+             await _bus.Send(command).ApiResultAsync();
+
+        #endregion
+
+        #region Delete
+
+        /// <summary>
+        /// حذف  
+        /// </summary>
+        /// <param name="id">
+        /// شناسه  
+        /// </param>
+        [HttpDelete]
+        [Route("{id}")]
+        [Permission("Delete", "حذف")]
+        public virtual async Task<IActionResult> Delete(int id) =>
+             await _bus.Send(new WarehouseDeleteCommand(id)).ApiResultAsync();
+
+        #endregion
     }
 }
