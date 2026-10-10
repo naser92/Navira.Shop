@@ -36,5 +36,10 @@ namespace Navira.Shop.Api.Controllers
         public virtual async Task<IActionResult> Register(ProductRegisterCommand command) =>
           await _bus.Send(command).ApiResultAsync();
 
+        [HttpGet]
+        [Route("{productId}/attributes")]
+        [Permission("ListAttributes", "ایجاد")]
+        public virtual async Task<IActionResult> Attributes([FromRoute] int productId) =>
+            await _queryBus.Send<ProductAllAttributeCommand, object>(new ProductAllAttributeCommand { ProductId = productId }).ApiResultAsync();
     }
 }

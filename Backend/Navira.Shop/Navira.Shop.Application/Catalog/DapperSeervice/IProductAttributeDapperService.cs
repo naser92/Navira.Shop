@@ -5,5 +5,6 @@ namespace Navira.Shop.Application.Catalog
     public interface IProductAttributeDapperService : IDapperService
     {
         Task<object> GetList(ProductAttributeGetFilterDto filter);
+        Task<ProductAttributesResponseDto> GetAttribut(int productId);
     }
 }
