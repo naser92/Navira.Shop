@@ -16,6 +16,7 @@ namespace Navira.Shop.Domain.Catalog
         public bool IsActive { get; set; }
 
         public virtual ICollection<ProductAttributeOption> ProductAttributeOption { get; set; }
+        public virtual ICollection<ProductAttributeValue> ProductAttributeValue { get; set; } = new List<ProductAttributeValue>();
 
         public virtual ICollection<ProductVariantAttributeValue> ProductVariantAttributeValue { get; set; }
 

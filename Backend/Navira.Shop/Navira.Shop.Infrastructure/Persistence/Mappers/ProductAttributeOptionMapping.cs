@@ -19,7 +19,7 @@ namespace Navira.Shop.Infrastructure.Persistence.Mappers
             builder.Property(t => t.SortOrder).IsRequired().HasComment("SortOrder");
             builder.Property(t => t.IsActive).IsRequired().HasDefaultValue(true).HasComment("وضعیت اعتبار");
 
-            builder.HasOne(x => x.ProductAttribute).WithMany(x => x.ProductAttributeOption).HasForeignKey(x => x.ProductAttributeId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(x => x.ProductAttribute).WithMany(x => x.ProductAttributeOption).HasForeignKey(x => x.ProductAttributeId).HasPrincipalKey(x => x.Id).HasConstraintName("FK_ProductAttributeOption_Attribute").OnDelete(DeleteBehavior.NoAction);
 
 
         }

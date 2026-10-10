@@ -11,9 +11,9 @@ namespace Navira.Shop.Api.Controllers
     [ApiController]
     [Display(Name = "", Description = "")]
     [CustomAuthorize(AuthenticationSchemes = "Bearer")]
-    //[Permission("{ControllerName}", AppConsts.SystemBaseInformationName, "{ControllerTitle}")]
-    //[Menu(AppConsts.SystemBaseInformationName, AppConsts.SystemBaseInformationTitle)]
-    public class WarehouseController
+    [Permission("Controller", "انبارها", "Warehouses.Warehouse")]
+    [Menu("Warehouses.Warehouse", "مدیریت انبارها")]
+    public class WarehouseController : ControllerBase
     {
         #region variables 
 
@@ -40,8 +40,8 @@ namespace Navira.Shop.Api.Controllers
         /// پارامتر های سفارشی سازی لیست
         /// </param>
         [HttpGet]
-        //[Permission("List", "{ControllerName}", "{ ControllerTitle}")]
-        //[Menu("{ControllerName}", "{ControllerTitle}", "List")]
+        [Permission("List", "لیست انبارها")]
+        [Menu("Warehouse.List", "لیست انبارها", Action = "WarehouseList")]
         public virtual async Task<IActionResult> Get([FromQuery] WarehouseListCommand parameters) =>
             await _queryBus.Send<WarehouseListCommand, object>(parameters).ApiResultAsync();
 

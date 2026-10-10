@@ -32,6 +32,7 @@ namespace Navira.Shop.Domain.Catalog
 
         public DateTime? PublishedDate { get; set; }
 
+        public virtual ICollection<ProductAttributeValue> ProductAttributeValue { get; set; }
         public virtual ICollection<ProductVariant> ProductVariant { get; set; }
 
         public virtual ICollection<ProductImage> ProductImage { get; set; }
