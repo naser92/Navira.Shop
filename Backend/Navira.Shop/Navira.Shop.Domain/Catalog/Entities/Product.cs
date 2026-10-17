@@ -57,6 +57,8 @@ namespace Navira.Shop.Domain.Catalog
         public static Product Create(string name, string slug, string shortDescription, string description, int brandId, int categoryId, int? taxCategoryId) =>
                             new Product(name, slug, shortDescription, description, brandId, categoryId, taxCategoryId);
 
+        public void ChangeName(string name) => Name = name;
+
         //public void UpdateDescription(string? shortDescription, string? description)
         //{
         //    ShortDescription = shortDescription;

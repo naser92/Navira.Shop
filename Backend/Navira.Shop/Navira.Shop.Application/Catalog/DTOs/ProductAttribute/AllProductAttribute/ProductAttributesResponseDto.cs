@@ -1,6 +1,6 @@
 ﻿namespace Navira.Shop.Application.Catalog
 {
-    public sealed class ProductAttributesResponseDto
+    public class ProductAttributesResponseDto
     {
         public int ProductId { get; set; }
 

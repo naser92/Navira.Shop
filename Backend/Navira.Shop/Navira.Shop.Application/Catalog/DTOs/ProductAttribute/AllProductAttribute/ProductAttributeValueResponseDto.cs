@@ -3,7 +3,7 @@ using Navira.Shop.Domain.Catalog;
 
 namespace Navira.Shop.Application.Catalog
 {
-    public sealed class ProductAttributeValueResponseDto : BaseDto<long>
+    public class ProductAttributeValueResponseDto : BaseDto<long>
     {
         // شناسه رکورد ProductAttributeValue
 
@@ -26,7 +26,7 @@ namespace Navira.Shop.Application.Catalog
 
         public bool? BooleanValue { get; set; }
 
-        public DateOnly? DateValue { get; set; }
+        public DateTime? DateValue { get; set; }
 
         public List<ProductAttributeSelectedOptionDto> SelectedOptions { get; set; } = [];
     }

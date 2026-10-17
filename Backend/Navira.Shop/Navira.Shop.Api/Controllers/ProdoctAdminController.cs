@@ -38,8 +38,17 @@ namespace Navira.Shop.Api.Controllers
 
         [HttpGet]
         [Route("{productId}/attributes")]
-        [Permission("ListAttributes", "ایجاد")]
+        [Permission("ListAttributes", "لیست ویژگی")]
         public virtual async Task<IActionResult> Attributes([FromRoute] int productId) =>
             await _queryBus.Send<ProductAllAttributeCommand, object>(new ProductAllAttributeCommand { ProductId = productId }).ApiResultAsync();
+
+        [HttpPut]
+        [Route("{productId}/attributes")]
+        [Permission("EditAttributes", "بروزرسانی ویژگی ها")]
+        public virtual async Task<IActionResult> EditAttributes([FromRoute] int productId, [FromBody] ProductAllAttributeEditCommand command)
+        {
+            command.ProductId = productId;
+            return await _bus.Send(command).ApiResultAsync();
+        }
     }
 }

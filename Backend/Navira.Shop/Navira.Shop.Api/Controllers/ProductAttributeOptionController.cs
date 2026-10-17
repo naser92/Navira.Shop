@@ -47,6 +47,15 @@ namespace Navira.Shop.Api.Controllers
 
         #endregion
 
+        #region Get by Id
+
+        [HttpGet("{id}")]
+        [Permission("Detail", "جزئیات")]
+        public async Task<IActionResult> Get(int id) =>
+                await _queryBus.Send<ProductAttributeOptionDetailCommand, object>(new ProductAttributeOptionDetailCommand(id)).ApiResultAsync();
+
+        #endregion
+
 
         #region Register
 

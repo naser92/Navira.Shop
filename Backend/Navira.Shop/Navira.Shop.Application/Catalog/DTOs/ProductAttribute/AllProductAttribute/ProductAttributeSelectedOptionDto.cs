@@ -1,6 +1,6 @@
 ﻿namespace Navira.Shop.Application.Catalog
 {
-    public sealed class ProductAttributeSelectedOptionDto
+    public class ProductAttributeSelectedOptionDto
     {
         // شناسه ProductAttributeOption
         public int Id { get; set; }
