@@ -65,6 +65,15 @@ namespace Navira.Shop.Api.Controllers
 
         #endregion
 
+        #region Edit
+
+        [HttpPut]
+        [Permission("Update", "ویرایش")]
+        public async Task<IActionResult> Put([FromBody] ProductVariantUpdateCommand command) =>
+                await _bus.Send(command).ApiResultAsync();
+
+        #endregion
+
 
     }
 }
