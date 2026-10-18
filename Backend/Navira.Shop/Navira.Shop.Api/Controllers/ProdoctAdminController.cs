@@ -29,6 +29,10 @@ namespace Navira.Shop.Api.Controllers
         //public virtual async Task<IActionResult> List() =>
         //   Ok();
 
+        [HttpGet("{id}")]
+        [Permission("Detail", "جزئیات")]
+        public async Task<IActionResult> Get(int id) =>
+          await _queryBus.Send<ProductDetailCommand, object>(new ProductDetailCommand(id)).ApiResultAsync();
 
         [HttpPost]
         [Permission("Register", "ایجاد")]
@@ -39,7 +43,7 @@ namespace Navira.Shop.Api.Controllers
         [HttpPut]
         [Permission("Update", "ویرایش")]
         public async Task<IActionResult> Put([FromBody] ProductUpdateCommand command) =>
-            await _bus.Send(command).ApiResultAsync();
+           await _bus.Send(command).ApiResultAsync();
 
         [HttpGet]
         [Route("{productId}/attributes")]
