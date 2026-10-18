@@ -74,6 +74,15 @@ namespace Navira.Shop.Api.Controllers
 
         #endregion
 
+        #region Delete
+
+        [HttpDelete("{id}")]
+        [Permission("Delete", "حذف")]
+        public async Task<IActionResult> Delete(int id) =>
+                await _bus.Send(new ProductVariantDeleteCommand(id)).ApiResultAsync();
+
+        #endregion
+
 
     }
 }
