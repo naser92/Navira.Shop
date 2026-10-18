@@ -48,12 +48,23 @@ namespace Navira.Shop.Api.Controllers
         #endregion
 
         #region Attributes
+
         [HttpGet("{productId}/attributes")]
         [Permission("ListAttributes", "لیست ویژگی")]
         public virtual async Task<IActionResult> Attributes([FromRoute] int productId) =>
                 await _queryBus.Send<ProductVariantAllAttributeCommand, object>(new ProductVariantAllAttributeCommand(productId)).ApiResultAsync();
 
         #endregion
+
+        #region Get by Id
+
+        [HttpGet("{id}")]
+        [Permission("Detail", "جزئیات")]
+        public async Task<IActionResult> Get(int id) =>
+                await _queryBus.Send<ProductVariantDetailCommand, object>(new ProductVariantDetailCommand(id)).ApiResultAsync();
+
+        #endregion
+
 
     }
 }
