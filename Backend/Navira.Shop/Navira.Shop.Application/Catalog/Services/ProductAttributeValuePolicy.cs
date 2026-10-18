@@ -5,7 +5,7 @@ namespace Navira.Shop.Application.Catalog
     public class ProductAttributeValuePolicy : IProductAttributeValuePolicy
     {
         private const decimal MaxNumber = 99_999_999_999_999.9999m;
-        public AttributeValueValidationResult Validate(ProductAttribute definition, ProductAttributeValueResponseDto input, ProductAttributeValue current, IReadOnlyDictionary<int, ProductAttributeOption> optionsById)
+        public AttributeValueValidationResult Validate(ProductAttribute definition, ProductAttributeValueRegisterOrUpdateDto input, ProductAttributeValue current, IReadOnlyDictionary<int, ProductAttributeOption> optionsById)
         {
             ArgumentNullException.ThrowIfNull(definition);
             ArgumentNullException.ThrowIfNull(input);
@@ -217,7 +217,7 @@ namespace Navira.Shop.Application.Catalog
 
         private static bool HasSameValue(
             AttributeValueType type,
-            ProductAttributeValueResponseDto input,
+            ProductAttributeValueRegisterOrUpdateDto input,
             ProductAttributeValue current)
         {
             return type switch

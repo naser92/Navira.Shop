@@ -14,7 +14,14 @@ namespace Navira.Shop.Infrastructure.Persistence.Mappers
 
             builder.HasComment(";");
             builder.Property(t => t.Name).HasColumnType("nvarchar").HasMaxLength(300).IsRequired().HasComment("Name");
-            builder.Property(t => t.Slug).HasColumnType("nvarchar").HasMaxLength(350).IsRequired().HasComment("Slug");
+            builder.Property(x => x.Slug)
+            .HasConversion(
+                slug => slug.Value,
+                value => Slug.Create(value))
+            .HasColumnName("Slug")
+            .HasColumnType("nvarchar(350)")
+            .HasMaxLength(Slug.MaxLength)
+            .IsRequired();
             builder.Property(t => t.ShortDescription).HasColumnType("nvarchar").HasMaxLength(1000).HasComment("ShortDescription");
             builder.Property(t => t.Description).HasColumnType("nvarcharmax").HasMaxLength(-1).HasComment("Description");
             builder.Property(t => t.CategoryId).IsRequired().HasComment("CategoryId");

@@ -14,7 +14,7 @@ namespace Navira.Shop.Domain.Catalog
 
         public string Name { get; set; }
 
-        public string Slug { get; set; }
+        public Slug Slug { get; set; }
 
         public string ShortDescription { get; set; }
 
@@ -39,7 +39,7 @@ namespace Navira.Shop.Domain.Catalog
 
         private Product() { }
 
-        private Product(string name, string slug, string shortDescription, string description, int brandId, int categoryId, int? taxCategoryId)
+        private Product(string name, Slug slug, string shortDescription, string description, int brandId, int categoryId, int? taxCategoryId)
         {
             Name = name;
             Slug = slug;
@@ -54,7 +54,7 @@ namespace Navira.Shop.Domain.Catalog
         }
 
 
-        public static Product Create(string name, string slug, string shortDescription, string description, int brandId, int categoryId, int? taxCategoryId) =>
+        public static Product Create(string name, Slug slug, string shortDescription, string description, int brandId, int categoryId, int? taxCategoryId) =>
                             new Product(name, slug, shortDescription, description, brandId, categoryId, taxCategoryId);
 
         public void ChangeName(string name) => Name = name;

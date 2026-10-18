@@ -5,6 +5,6 @@ namespace Navira.Shop.Application.Catalog
 {
     public interface IProductAttributeValuePolicy : IBaseService
     {
-        AttributeValueValidationResult Validate(ProductAttribute definition, ProductAttributeValueResponseDto input, ProductAttributeValue? current, IReadOnlyDictionary<int, ProductAttributeOption> optionsById);
+        AttributeValueValidationResult Validate(ProductAttribute definition, ProductAttributeValueRegisterOrUpdateDto input, ProductAttributeValue? current, IReadOnlyDictionary<int, ProductAttributeOption> optionsById);
     }
 }

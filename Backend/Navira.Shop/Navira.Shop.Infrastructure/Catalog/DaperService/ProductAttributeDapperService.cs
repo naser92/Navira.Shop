@@ -20,7 +20,7 @@ namespace Navira.Shop.Infrastructure.Catalog
                 throw new ArgumentOutOfRangeException(nameof(productId));
 
             var data = await QueryMultiple(
-                "SP_ProductAttribute_list",
+                "sp_GetProductAttributes",
                 new { ProductId = productId },
                 reader => new
                 {

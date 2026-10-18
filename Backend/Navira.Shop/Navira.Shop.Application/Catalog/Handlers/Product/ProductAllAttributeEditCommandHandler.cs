@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Navira.Shop.Core.Bus;
-using Navira.Shop.Core.Extensions;
 using Navira.Shop.Core.Mapper;
 using Navira.Shop.Core.Persistence;
 using Navira.Shop.Core.Results;
@@ -36,8 +35,6 @@ namespace Navira.Shop.Application.Catalog
                 if (product == null)
                     return Result.Fail("کالا با این شناسه وجد ندرد");
 
-                if (command.ProductName.IsNullOrWhiteSpace() && product.Name != command.ProductName)
-                    product.ChangeName(command.ProductName);
 
                 var currentValues = await _productAttributeValueWriteRepository.GetAll(x => x.Where(i => i.ProductId == product.Id));
 

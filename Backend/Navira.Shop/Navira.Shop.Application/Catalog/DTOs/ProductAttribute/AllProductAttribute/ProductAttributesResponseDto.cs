@@ -1,11 +1,10 @@
-﻿namespace Navira.Shop.Application.Catalog
+﻿namespace Navira.Shop.Application.Catalog;
+
+public class ProductAttributesResponseDto
 {
-    public class ProductAttributesResponseDto
-    {
-        public int ProductId { get; set; }
+    public int ProductId { get; set; }
 
-        public string ProductName { get; set; } = default!;
+    public string ProductName { get; set; } = default!;
 
-        public List<ProductAttributeValueResponseDto> Attributes { get; set; } = [];
-    }
+    public List<ProductAttributeValueResponseDto> Attributes { get; set; } = [];
 }

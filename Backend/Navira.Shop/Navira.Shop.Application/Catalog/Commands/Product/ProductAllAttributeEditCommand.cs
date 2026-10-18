@@ -2,7 +2,7 @@
 
 namespace Navira.Shop.Application.Catalog
 {
-    public class ProductAllAttributeEditCommand : ProductAttributesResponseDto, ICommand
+    public class ProductAllAttributeEditCommand : ProductAttributesRegisterOrUpdateDto, ICommand
     {
     }
 }
