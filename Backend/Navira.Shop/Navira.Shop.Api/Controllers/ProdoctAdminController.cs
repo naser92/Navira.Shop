@@ -59,5 +59,10 @@ namespace Navira.Shop.Api.Controllers
             command.ProductId = productId;
             return await _bus.Send(command).ApiResultAsync();
         }
+
+        [HttpDelete("{id}")]
+        [Permission("Delete", "حذف")]
+        public async Task<IActionResult> Delete(int id) =>
+          await _bus.Send(new ProductDeleteCommand(id)).ApiResultAsync();
     }
 }
